@@ -1,132 +1,142 @@
 """
-Pipeline de pré-processamento com Regex para uso com spaCy
+Arquivo MAIN
+Pipeline completo: limpeza → NER → grafo de co-ocorrência → análise → visualização
 """
-import matplotlib.pyplot as plt
-import networkx as nx
-import plotly.graph_objects as go
-import pandas as pd
-import numpy as np
-import regex
+
 import os
-# No topo do main.py, adicione:
+import regex
+import create_grafo
 import visualizar_grafo
-from collections import Counter
 
-
-def extrair_entidades(doc):
-    lista = []
-    for sent in doc.sents:
-        ents = list(set([ent.text.strip() for ent in sent.ents if len(ent.text) > 2]))
-        if len(ents) > 1:
-            lista.append(ents)
-    return lista
-
-
-def visualizar_ego_galaxia(G, termo_central):
-    if termo_central not in G:
-        print(f"Termo '{termo_central}' não encontrado no grafo.")
-        return
-
-    ego = nx.ego_graph(G, termo_central, radius=2)
-    centralidade = nx.degree_centrality(ego)
-    pos = nx.spring_layout(ego, center=(0, 0), k=0.5)
-
-    node_sizes = []
-    node_colors = []
-    for node in ego.nodes():
-        if node == termo_central:
-            node_sizes.append(8000)
-            node_colors.append(1.0)
-        else:
-            valor = centralidade[node]
-            node_sizes.append(3000 * valor)
-            node_colors.append(valor)
-
-    plt.figure(figsize=(12, 10))
-    nx.draw_networkx_nodes(ego, pos, node_size=node_sizes,
-                           node_color=node_colors, cmap=plt.cm.plasma, alpha=0.9)
-    nx.draw_networkx_edges(ego, pos, alpha=0.2)
-
-    labels = {n: n for n in ego.nodes()
-              if centralidade[n] > 0.05 or n == termo_central}
-    nx.draw_networkx_labels(ego, pos, labels, font_size=9)
-
-    plt.title(f"Ego Graph - {termo_central}")
-    plt.axis("off")
-    plt.show()
-
-
-def analisar_grafo(G):
-    print("\n─── INFORMAÇÕES DO GRAFO ───")
-    print("Nós:", G.number_of_nodes())
-    print("Arestas:", G.number_of_edges())
-
-    centralidade = nx.degree_centrality(G)
-    print("\nTop 10 entidades mais importantes:")
-    top = sorted(centralidade.items(), key=lambda x: x[1], reverse=True)[:10]
-    for no, valor in top:
-        print(f"  {no} → {valor:.4f}")
-
-
-def buscar_termo(G):
-    while True:
-        termo = input("\nDigite um termo (ou 'sair'): ").strip()
-        if termo.lower() == "sair":
-            break
-        if termo not in G:
-            print(f"Termo '{termo}' não encontrado. Tente novamente.")
-            continue
-        visualizar_grafo.visualizar_ego_interativo(G, termo, raio=2)
-
-
-def criar_grafo(lista_entidades):
-    G = nx.Graph()
-    for ents in lista_entidades:
-        for i in range(len(ents)):
-            for j in range(i + 1, len(ents)):
-                if G.has_edge(ents[i], ents[j]):
-                    G[ents[i]][ents[j]]["weight"] += 1
-                else:
-                    G.add_edge(ents[i], ents[j], weight=1)
-    return G
+# ─────────────────────────────────────────────
+# CONFIGURAÇÕES
+# ─────────────────────────────────────────────
+PASTA           = "./output"               # pasta com os .txt extraídos dos PDFs
+K_CHARS         = 500                      # tamanho da janela k-caracteres
+ESTRATEGIA      = "sentenca"               # estratégia para visualização principal
+PASTA_FIGURAS   = "./figuras"              # onde salvar as imagens
 
 
 if __name__ == "__main__":
-    PASTA = "./output"
-    arquivos = sorted(os.listdir(PASTA))
+    os.makedirs(PASTA_FIGURAS, exist_ok=True)
 
-    print(f"Encontrados {len(arquivos)} arquivos:")
+    print("\n─── Inicializando o Programa ───")
+
+    # 1. Lista arquivos
+    arquivos = sorted([
+        f for f in os.listdir(PASTA)
+        if os.path.isfile(os.path.join(PASTA, f))
+    ])
+    print(f"Encontrados {len(arquivos)} arquivo(s):")
     for a in arquivos:
         print(f"  {a}")
 
-    todas_entidades = []
+    # 2. Processa cada arquivo — limpeza + NER + coleta de janelas
+    janelas_sentenca  = []
+    janelas_paragrafo = []
+    janelas_kchars    = []
 
-    for nome in arquivos:                          # itera sobre nomes, não range(23)
-        CAMINHO = os.path.join(PASTA, nome)        # caminho completo como string
-        print(f"\n─── {nome} ───")
+    for nome in arquivos:
+        caminho = os.path.join(PASTA, nome)
+        print(f"\n{'═'*50}")
+        print(f"  Arquivo: {nome}")
+        print(f"{'═'*50}")
 
-        texto_limpo = regex.preprocessar(CAMINHO)  # passa string, não lista
-        print(f"Caracteres limpos: {len(texto_limpo)}")
-        print(f"Parágrafos: {texto_limpo.count(chr(10) * 2) + 1}")
-        print("\n── Amostra ──")
+        texto_limpo = regex.preprocessar(caminho, diagnostico=False)
+        print(f"  Caracteres limpos : {len(texto_limpo)}")
+        print(f"  Parágrafos        : {texto_limpo.count(chr(10)*2) + 1}")
+        print("\n  ── Amostra (500 chars) ──")
         print(texto_limpo[:500])
-
         regex.diagnosticar(texto_limpo)
+
+        print("\n  Processando NER...")
         doc = regex.processar_spacy(texto_limpo)
 
-        print("Extraindo entidades...")
-        lista_entidades = extrair_entidades(doc)
-        todas_entidades.extend(lista_entidades)
+        janelas_sentenca.extend(create_grafo.janela_sentenca(doc))
+        janelas_paragrafo.extend(create_grafo.janela_paragrafo(texto_limpo, doc))
+        janelas_kchars.extend(create_grafo.janela_k_caracteres(texto_limpo, doc, k=K_CHARS))
 
-    print("\nCriando grafo consolidado...")
-    G = criar_grafo(todas_entidades)
+    print(f"\n  Janelas coletadas:")
+    print(f"    sentença     → {len(janelas_sentenca)}")
+    print(f"    parágrafo    → {len(janelas_paragrafo)}")
+    print(f"    k={K_CHARS}chars → {len(janelas_kchars)}")
 
-    print("\nAnalisando grafo...")
-    analisar_grafo(G)
+    # 3. Constrói os 3 grafos
+    print("\n  Construindo grafos...")
+    G_sentenca  = create_grafo.criar_grafo(janelas_sentenca,  estrategia="sentenca")
+    G_paragrafo = create_grafo.criar_grafo(janelas_paragrafo, estrategia="paragrafo")
+    G_kchars    = create_grafo.criar_grafo(janelas_kchars,    estrategia=f"k{K_CHARS}chars")
 
-# No lugar de nx.ego_graph(...) e visualizar_ego_galaxia(...):
-    print("\nCriando visualização interativa...")
-    visualizar_grafo.visualizar_grafo_interativo(G, salvar_html="grafo_entidades.html")
+    grafos = {
+        "sentenca"        : G_sentenca,
+        "paragrafo"       : G_paragrafo,
+        f"k{K_CHARS}chars": G_kchars,
+    }
 
-    print("Entrando no modo de busca...")
-    buscar_termo(G)
+    # 4. Análise e métricas
+    resultados = {}
+    for nome_e, G in grafos.items():
+        metricas = create_grafo.analisar_grafo(G)
+        resultados[nome_e] = {"grafo": G, "metricas": metricas}
+
+    # 5. Figuras estáticas — uma por estratégia + comparativa + distribuição de grau
+    print("\n\n  Gerando figuras estáticas...")
+
+    for nome_e, G in grafos.items():
+        visualizar_grafo.figura_grafo_completo(
+            G,
+            salvar=os.path.join(PASTA_FIGURAS, f"grafo_{nome_e}.png"),
+            top_nos=80,
+        )
+        visualizar_grafo.figura_distribuicao_grau(
+            G,
+            salvar=os.path.join(PASTA_FIGURAS, f"dist_grau_{nome_e}.png"),
+        )
+
+    visualizar_grafo.figura_comparativa(
+        resultados,
+        salvar=os.path.join(PASTA_FIGURAS, "comparacao_estrategias.png"),
+    )
+
+    # 6. HTMLs interativos — um por estratégia
+    print("\n  Gerando HTMLs interativos...")
+    for nome_e, G in grafos.items():
+        visualizar_grafo.visualizar_grafo_interativo(
+            G,
+            salvar_html=os.path.join(PASTA_FIGURAS, f"grafo_{nome_e}.html"),
+            filtro_peso_min=2,
+        )
+
+    # 7. Ego-grafo do nó mais central — interativo + figura
+    G_principal = grafos[ESTRATEGIA]
+    no_top = max(dict(G_principal.degree()).items(), key=lambda x: x[1])[0]
+    print(f"\n  Nó mais central em '{ESTRATEGIA}': {no_top}")
+
+    visualizar_grafo.visualizar_ego_interativo(
+        G_principal, no_top, raio=2,
+        salvar_html=os.path.join(PASTA_FIGURAS, f"ego_{no_top}.html"),
+        abrir_browser=True,
+    )
+    visualizar_grafo.figura_ego(
+        G_principal, no_top, raio=2,
+        salvar=os.path.join(PASTA_FIGURAS, f"ego_{no_top}.png"),
+    )
+
+    # 8. Busca interativa por termo
+    print("\n  Entrando no modo de busca interativa...")
+    create_grafo.buscar_termo(
+        G_principal,
+        visualizar_ego_fn=lambda G, termo, raio: (
+            visualizar_grafo.visualizar_ego_interativo(
+                G, termo, raio=raio,
+                salvar_html=os.path.join(PASTA_FIGURAS, f"ego_{termo}.html"),
+                abrir_browser=True,
+            ),
+            visualizar_grafo.figura_ego(
+                G, termo, raio=raio,
+                salvar=os.path.join(PASTA_FIGURAS, f"ego_{termo}.png"),
+            )
+        )
+    )
+
+    print(f"\n  ✓ Tudo salvo em '{PASTA_FIGURAS}/'")

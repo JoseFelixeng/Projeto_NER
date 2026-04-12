@@ -1,76 +1,108 @@
-import re # Regex 
-import spacy # Biblioteca para a analise de linguagem natural 
+import re
+import unicodedata
+from collections import Counter
+import spacy
 
-
+# ─────────────────────────────────────────────
 # MAPA DE SUBSTITUIÇÕES (ligaduras e artefatos de PDF)
+# ─────────────────────────────────────────────
 SUBSTITUICOES = [
-    # Artefato específico deste arquivo (ê corrompido)
-    (r"Ÿ",          "ê"),
-    # Ligaduras tipográficas comuns em PDFs
-    (r"ﬁ",          "fi"),
-    (r"ﬂ",          "fl"),
-    (r"ﬀ",          "ff"),
-    (r"ﬃ",         "ffi"),
-    (r"ﬄ",         "ffl"),
-    # Espaços especiais
-    (r"\u00A0",     " "),   # non-breaking space
-    (r"\u2009",     " "),   # thin space
-    # Traços tipográficos → hífen simples
-    (r"[\u2013\u2014]", "-"),
-    # Aspas tipográficas → aspas simples
+    (r"Ÿ",               "ê"),
+    (r"ﬁ",               "fi"),
+    (r"ﬂ",               "fl"),
+    (r"ﬀ",               "ff"),
+    (r"ﬃ",              "ffi"),
+    (r"ﬄ",              "ffl"),
+    (r"\u00A0",          " "),    # non-breaking space
+    (r"\u2009",          " "),    # thin space
+    (r"[\u2013\u2014]",  "-"),    # traços tipográficos
     (r"[\u201C\u201D\u201E]", '"'),
-    (r"[\u2018\u2019]",       "'"),
+    (r"[\u2018\u2019]",  "'"),
 ]
 
-nlp = spacy.load("pt_core_news_sm")
+# Abreviações comuns em TCCs de Eng. Comp. que NÃO encerram parágrafo
+# Adicionado para evitar quebra errada na restaurar_paragrafos
+ABREVIACOES = re.compile(
+    r"\b("
+    r"[Pp]rof|[Dd]r|[Ss]r|[Ss]ra|[Ee]ng|[Aa]dv|"   # títulos
+    r"[Ee]t al|[Aa]pud|[Oo]p\.?\s*cit|[Ii]bid|"      # citações
+    r"fig|tab|eq|cap|vol|num|n[uú]m|p[aá]g|pp|"       # referências
+    r"jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez|" # meses
+    r"[A-Z]"                                            # iniciais (ex: "J. Silva")
+    r")\.",
+    re.IGNORECASE,
+)
 
+# Siglas técnicas que NÃO devem ser removidas pelo filtro de caixa alta
+SIGLAS_TECNICAS = re.compile(
+    r"^("
+    r"LSTM|CNN|RNN|GAN|NLP|NER|API|GPU|CPU|RAM|"
+    r"UFRN|UFPB|UFC|USP|UFMG|UFSC|"
+    r"HTTP|REST|SQL|NoSQL|JSON|XML|CSV|PDF|"
+    r"BFS|DFS|KNN|SVM|MLP|DBN|AE|DAE|SAE|"
+    r"IoT|ML|DL|AI|LLM|RAG|PLN|"
+    r"IEEE|ACM|ABNT|NBR"
+    r")$"
+)
+
+
+# ─────────────────────────────────────────────
 # ETAPA 1 — Leitura
-def ler_arquivo(caminhos: str) -> str:
+# ─────────────────────────────────────────────
+def ler_arquivo(caminho: str) -> str:
     """Lê o arquivo garantindo UTF-8; substitui bytes inválidos."""
-    with open(caminhos, encoding="utf-8", errors="replace") as f:
+    with open(caminho, encoding="utf-8", errors="replace") as f:
         return f.read()
 
-# ETAPA 2 — Normalização de caracteres com Regex
 
+# ─────────────────────────────────────────────
+# ETAPA 2 — Normalização de caracteres
+# ─────────────────────────────────────────────
 def normalizar_caracteres(texto: str) -> str:
-    """
-    Aplica todas as substituições de ligaduras e artefatos de PDF
-    usando re.sub, que é mais rápido e legível que múltiplos str.replace.
-    """
+    """Substitui ligaduras, artefatos de PDF e caracteres especiais."""
     for padrao, substituto in SUBSTITUICOES:
         texto = re.sub(padrao, substituto, texto)
     return texto
 
 
-# ETAPA 3 — Remoção de seções irrelevantes
-
+# ─────────────────────────────────────────────
+# ETAPA 3 — Recorte do corpo técnico
+# ─────────────────────────────────────────────
 def recortar_corpo(texto: str) -> str:
     """
     Extrai o corpo técnico do TCC:
-    começa no RESUMO, termina antes das REFERÊNCIAS.
-    re.search localiza os marcadores sem precisar iterar linha a linha.
+    começa no RESUMO (ou ABSTRACT), termina antes das REFERÊNCIAS.
+    Aceita variações tipográficas comuns em PDFs mal extraídos.
     """
-    inicio = re.search(r"\bRESUMO\b", texto)
-    fim    = re.search(r"\bREFER[ÊE]NCIAS?\b|\bREFERĹNCIAS\b", texto)
+    inicio = re.search(
+        r"\b(RESUMO|ABSTRACT)\b",
+        texto
+    )
+    fim = re.search(
+        r"\b(REFER[ÊEĹ]NCIAS?|BIBLIOGRAPHY|BIBLIOGRAF[ÍI]A)\b",
+        texto
+    )
 
-    if inicio and fim:
-        return texto[inicio.start() : fim.start()]
-    return texto  # fallback: retorna tudo se não encontrar
+    if inicio and fim and inicio.start() < fim.start():
+        return texto[inicio.start(): fim.start()]
+    return texto  # fallback: retorna tudo
 
 
-# ETAPA 4 — Remoção de ruídos estruturais com Regex
+# ─────────────────────────────────────────────
+# ETAPA 4 — Remoção de ruídos estruturais
+# ─────────────────────────────────────────────
 def remover_ruidos(texto: str) -> str:
     """
-    Remove com re.sub (flags MULTILINE para ^ e $ por linha):
-      • Números de página isolados
-      • Legendas de figura/tabela
-      • Cabeçalhos repetitivos (nome do autor, título da obra)
-      • Linhas muito curtas (sobras de layout)
+    Remove ruídos de layout sem apagar entidades técnicas relevantes para o NER.
+
+    MUDANÇAS em relação à versão anterior:
+    - Filtro de caixa alta agora preserva siglas técnicas (LSTM, CNN, UFRN etc.)
+    - Removido filtro de linhas curtas agressivo que apagava siglas de 2-3 chars
     """
-    # Números de página isolados (linha só com dígitos)
+    # Números de página isolados
     texto = re.sub(r"^\d{1,4}\s*$", "", texto, flags=re.MULTILINE)
 
-    # Legendas: "Figura 3 –", "Tabela 1 –", "Gráfico 2 –" etc.
+    # Legendas: "Figura 3 –", "Tabela 1 –", etc.
     texto = re.sub(
         r"^(Figura|Tabela|Gráfico|Quadro|Esquema|Imagem)\s+\d+[\s\-–—].*$",
         "",
@@ -78,78 +110,91 @@ def remover_ruidos(texto: str) -> str:
         flags=re.MULTILINE | re.IGNORECASE,
     )
 
-    # Fonte: linhas de rodapé de tabela
+    # Linhas de fonte de tabela
     texto = re.sub(r"^Fonte:.*$", "", texto, flags=re.MULTILINE | re.IGNORECASE)
 
-    # Cabeçalhos de seção em caixa alta (ex: "CAPÍTULO 1", "INTRODUÇÃO")
-    # Mantemos apenas se forem curtos demais para ter conteúdo real
-    texto = re.sub(r"^[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ\s]{2,40}$\n", "", texto, flags=re.MULTILINE)
+    # Cabeçalhos em CAIXA ALTA — mas preserva siglas técnicas
+    def _remover_se_nao_sigla(m):
+        linha = m.group(0).strip()
+        if SIGLAS_TECNICAS.match(linha):
+            return m.group(0)   # preserva
+        return ""               # remove
 
-    # Linhas com menos de 3 caracteres não-espaço (sobras de layout)
-    texto = re.sub(r"^\s{0,5}\S{1,2}\s*$", "", texto, flags=re.MULTILINE)
+    texto = re.sub(
+        r"^[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ\s]{2,60}$",
+        _remover_se_nao_sigla,
+        texto,
+        flags=re.MULTILINE,
+    )
+
+    # Linhas com 1 único caractere não-espaço (sobras de layout)
+    # MUDANÇA: era \S{1,2}, agora só remove linhas de 1 char
+    # para não apagar siglas como "ML", "AI", etc.
+    texto = re.sub(r"^\s*\S\s*$", "", texto, flags=re.MULTILINE)
+
     return texto
 
+
+# ─────────────────────────────────────────────
 # ETAPA 5 — Restauração de parágrafos
+# ─────────────────────────────────────────────
 def restaurar_paragrafos(texto: str) -> str:
     """
-    O texto de PDF vem colado numa linha só.
-    Estratégia com Regex:
-      1. Insere quebra dupla após ponto/exclamação/interrogação
-         seguido de espaço e letra maiúscula (início de nova frase).
-      2. Normaliza espaços internos.
-      3. Colapsa linhas em branco excessivas.
+    Reconstrói parágrafos a partir de texto linearizado de PDF.
+
+    MUDANÇA PRINCIPAL: antes de quebrar em parágrafo, verifica se o ponto
+    pertence a uma abreviação conhecida (Prof., Dr., et al., fig., etc.)
+    para evitar fragmentação incorreta de sentenças.
     """
-    # Quebra de parágrafo após pontuação final + letra maiúscula
+    # Marcador temporário para proteger abreviações
+    MARCA = "\x00"
+
+    # Protege abreviações substituindo o ponto final por marcador
+    texto = ABREVIACOES.sub(lambda m: m.group(0).replace(".", MARCA), texto)
+
+    # Agora quebra parágrafos somente em pontuação real
     texto = re.sub(
-        r"([.!?])\s+([A-ZÁÉÍÓÚÀÂÊÔÃÕÇ])",
+        r"([.!?])\s{2,}([A-ZÁÉÍÓÚÀÂÊÔÃÕÇ])",
         r"\1\n\n\2",
         texto,
     )
 
-    # Remove espaços múltiplos dentro de uma linha
-    texto = re.sub(r"[ \t]{2,}", " ", texto)
+    # Restaura os pontos protegidos
+    texto = texto.replace(MARCA, ".")
 
-    # Colapsa mais de 2 quebras de linha consecutivas
+    # Normaliza espaços e quebras excessivas
+    texto = re.sub(r"[ \t]{2,}", " ", texto)
     texto = re.sub(r"\n{3,}", "\n\n", texto)
 
     return texto.strip()
 
+
+# ─────────────────────────────────────────────
 # ETAPA 6 — Limpeza final
+# ─────────────────────────────────────────────
 def limpeza_final(texto: str) -> str:
     """
-    Polimento final:
-      • Remove caracteres de controle (exceto \n e \t)
-      • Remove caracteres da área de uso privado (U+E000–U+F8FF)
-      • Remove caracteres não imprimíveis diversos
-      • Trim em cada parágrafo
+    Polimento final: remove caracteres de controle, PUA e não-imprimíveis.
+    Preserva \n, \t e espaço.
     """
-    # 1. Caracteres de controle indesejados (já existente)
     texto = re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]", "", texto)
-
-    # 2. Remove toda a faixa de uso privado (Private Use Area)
     texto = re.sub(r"[\uE000-\uF8FF]+", "", texto)
 
-    # 3. Remove outros caracteres Unicode não comuns em texto legível
-    #    (categoria "Other, Control", "Other, Format", "Other, Surrogate")
-    import unicodedata
-    texto = ''.join(
+    texto = "".join(
         c for c in texto
-        if unicodedata.category(c)[0] not in ('C', 'Z') or c in ('\n', '\t', ' ')
+        if unicodedata.category(c)[0] not in ("C", "Z") or c in ("\n", "\t", " ")
     )
 
-    # 4. Trim por parágrafo
     paragrafos = texto.split("\n\n")
     paragrafos = [p.strip() for p in paragrafos if p.strip()]
     return "\n\n".join(paragrafos)
 
-# DIAGNÓSTICO — chars suspeitos que restaram
-def diagnosticar(texto: str, n: int = 20) -> None:
-    """
-    Lista os N caracteres não-ASCII mais frequentes que sobraram.
-    Útil para descobrir artefatos que o pipeline ainda não cobre.
-    """
-    from collections import Counter
 
+# ─────────────────────────────────────────────
+# DIAGNÓSTICO
+# ─────────────────────────────────────────────
+def diagnosticar(texto: str, n: int = 20) -> None:
+    """Lista os N caracteres não-ASCII mais frequentes que sobraram."""
     letras_pt = set("áéíóúàâêôãõçüÁÉÍÓÚÀÂÊÔÃÕÇÜ")
     suspeitos  = [c for c in texto if ord(c) > 127 and c not in letras_pt]
     contagem   = Counter(suspeitos).most_common(n)
@@ -159,24 +204,41 @@ def diagnosticar(texto: str, n: int = 20) -> None:
         print(f"  U+{ord(char):04X}  '{char}'  →  {freq}×")
 
 
+# ─────────────────────────────────────────────
 # PIPELINE COMPLETO
-def preprocessar(caminhos: str) -> str:
-    texto = ler_arquivo(caminhos)
+# ─────────────────────────────────────────────
+def preprocessar(caminho: str, diagnostico: bool = False) -> str:
+    """
+    Executa o pipeline completo de limpeza.
+    Se diagnostico=True, imprime chars suspeitos ao final.
+    """
+    texto = ler_arquivo(caminho)
     texto = normalizar_caracteres(texto)
     texto = recortar_corpo(texto)
     texto = remover_ruidos(texto)
     texto = restaurar_paragrafos(texto)
     texto = limpeza_final(texto)
+
+    if diagnostico:
+        diagnosticar(texto)
+
     return texto
 
+
+# ─────────────────────────────────────────────
+# PROCESSAMENTO COM SPACY
+# ─────────────────────────────────────────────
 def processar_spacy(texto: str):
     """
     Carrega o modelo português e processa o texto limpo.
-    Instale antes:  python -m spacy download pt_core_news_lg
-    """
-    nlp = spacy.load("pt_core_news_lg")
-    nlp.max_length = 2_000_000  # TCC pode ser longo
 
+    MUDANÇA: modelo definido em um único lugar (evita inconsistência
+    entre sm no topo do arquivo e lg aqui dentro).
+    """
+    MODELO = "pt_core_news_lg"  # troque por sm se não tiver o lg instalado
+
+    nlp = spacy.load(MODELO)
+    nlp.max_length = 2_000_000
     doc = nlp(texto)
 
     print(f"\n─── Sentenças detectadas: {len(list(doc.sents))} ───")
@@ -185,8 +247,8 @@ def processar_spacy(texto: str):
             break
         print(f"  [{i+1}] {sent.text[:90]}")
 
-    print(f"\n─── Entidades nomeadas (primeiras 10) ───")
-    for ent in list(doc.ents)[:10]:
+    print(f"\n─── Entidades nomeadas (primeiras 20) ───")
+    for ent in list(doc.ents)[:20]:
         print(f"  {ent.text:<30} → {ent.label_}")
 
     print(f"\n─── Tokens relevantes (sem stopwords, primeiros 15) ───")
