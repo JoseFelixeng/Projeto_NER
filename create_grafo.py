@@ -1,27 +1,61 @@
+"""
+create_grafo.py
+Criação, análise e busca interativa do grafo de co-ocorrência NER.
+"""
+
 import time
 import networkx as nx
 from itertools import combinations
+from regex import filtrar_entidade
 
 # ─────────────────────────────────────────────
-# ESTRATÉGIAS DE JANELA (sentença / parágrafo / k-caracteres)
+# UTILITÁRIO INTERNO
 # ─────────────────────────────────────────────
 
-def janela_sentenca(doc):
+def _limpar_janela(ents: list) -> list:
     """
-    Cada sentença detectada pelo spaCy é uma janela de co-ocorrência.
-    Retorna lista de listas de (texto, label).
+    Aplica filtrar_entidade() e normaliza texto.
+    - descarta entidades com > 3 tokens (reduzido de 5 para cortar mais ruído)
+    - normaliza para lowercase
+    - deduplica dentro da janela
     """
-    return [
-        [(ent.text.strip(), ent.label_) for ent in sent.ents]
-        for sent in doc.sents
-        if len(list(sent.ents)) >= 2   # só janelas com ao menos 2 entidades
-    ]
+    vistos = set()
+    resultado = []
+    for nome, tipo in ents:
+        nome_norm = nome.lower().strip()
+        # filtra vazios, muito curtos e duplicados
+        if not nome_norm or len(nome_norm) <= 2:
+            continue
+        if not filtrar_entidade(nome_norm, tipo):
+            continue
+        if nome_norm not in vistos:
+            vistos.add(nome_norm)
+            resultado.append((nome_norm, tipo))
+    return resultado
 
 
-def janela_paragrafo(texto_limpo, doc):
+# ─────────────────────────────────────────────
+# ESTRATÉGIAS DE JANELA
+# ─────────────────────────────────────────────
+
+def janela_sentenca(doc) -> list:
     """
-    Cada parágrafo (separado por \n\n) é uma janela de co-ocorrência.
-    Reanota as entidades usando o doc completo, filtrando pelo char offset.
+    Sentença como janela de co-ocorrência.
+    Mais preciso semanticamente — captura relações diretas.
+    """
+    janelas = []
+    for sent in doc.sents:
+        ents = [(ent.text.strip(), ent.label_) for ent in sent.ents]
+        ents = _limpar_janela(ents)
+        if len(ents) >= 2:
+            janelas.append(ents)
+    return janelas
+
+
+def janela_paragrafo(texto_limpo: str, doc) -> list:
+    """
+    Parágrafo como janela de co-ocorrência.
+    Captura mais contexto mas gera mais ruído em parágrafos longos.
     """
     paragrafos = texto_limpo.split("\n\n")
     janelas = []
@@ -35,17 +69,18 @@ def janela_paragrafo(texto_limpo, doc):
             for ent in doc.ents
             if ent.start_char >= inicio and ent.end_char <= fim
         ]
+        ents = _limpar_janela(ents)
         if len(ents) >= 2:
             janelas.append(ents)
-        offset = fim + 2   # +2 pelo \n\n
+        offset = fim + 2
 
     return janelas
 
 
-def janela_k_caracteres(texto_limpo, doc, k: int = 500):
+def janela_k_caracteres(texto_limpo: str, doc, k: int = 500) -> list:
     """
-    Janelas deslizantes de k caracteres (sem sobreposição).
-    Útil para capturar co-ocorrências além do limite de sentença/parágrafo.
+    Janela deslizante de k caracteres.
+    Equilíbrio entre precisão (sentença) e contexto (parágrafo).
     """
     janelas = []
     total   = len(texto_limpo)
@@ -57,6 +92,7 @@ def janela_k_caracteres(texto_limpo, doc, k: int = 500):
             for ent in doc.ents
             if ent.start_char >= inicio and ent.end_char <= fim
         ]
+        ents = _limpar_janela(ents)
         if len(ents) >= 2:
             janelas.append(ents)
 
@@ -69,35 +105,21 @@ def janela_k_caracteres(texto_limpo, doc, k: int = 500):
 
 def criar_grafo(lista_entidades: list, estrategia: str = "") -> nx.Graph:
     """
-    Recebe lista de janelas:
-        [ [("UFRN","ORG"), ("Natal","LOC")], ... ]
-
-    Constrói grafo ponderado onde:
-        - nó   = entidade (texto normalizado)
-        - aresta = co-ocorrência dentro da mesma janela
-        - peso = frequência de co-ocorrência
-
-    Atributos do nó: tipo (label NER), count (freq. total), estrategia
+    Constrói grafo ponderado de co-ocorrência NER.
+      nó    = entidade normalizada
+      aresta = co-ocorrência dentro da mesma janela
+      peso  = frequência de co-ocorrência
     """
     G = nx.Graph()
     G.graph["estrategia"] = estrategia
 
     for janela in lista_entidades:
-        # normaliza e deduplica dentro da janela
-        ents_unicas = list({
-            (nome.lower().strip(), tipo)
-            for nome, tipo in janela
-            if nome.strip()
-        })
-
-        # adiciona / atualiza nós
-        for nome, tipo in ents_unicas:
+        for nome, tipo in janela:
             if not G.has_node(nome):
                 G.add_node(nome, tipo=tipo, count=0)
             G.nodes[nome]["count"] += 1
 
-        # cria arestas (combinações par a par)
-        for (n1, _), (n2, _) in combinations(ents_unicas, 2):
+        for (n1, _), (n2, _) in combinations(janela, 2):
             if G.has_edge(n1, n2):
                 G[n1][n2]["weight"] += 1
             else:
@@ -112,13 +134,13 @@ def criar_grafo(lista_entidades: list, estrategia: str = "") -> nx.Graph:
 
 def analisar_grafo(G: nx.Graph, top_n: int = 10) -> dict:
     """
-    Calcula e exibe métricas estruturais do grafo.
-    Retorna dicionário com os resultados para comparação entre estratégias.
+    Calcula métricas estruturais e retorna dict para comparação.
+    Imprime análise crítica por estratégia.
     """
     estrategia = G.graph.get("estrategia", "?")
-    print(f"\n{'═'*50}")
+    print(f"\n{'═'*55}")
     print(f"  ESTRATÉGIA: {estrategia.upper()}")
-    print(f"{'═'*50}")
+    print(f"{'═'*55}")
 
     n_nos     = G.number_of_nodes()
     n_arestas = G.number_of_edges()
@@ -126,169 +148,188 @@ def analisar_grafo(G: nx.Graph, top_n: int = 10) -> dict:
     print(f"  Arestas  : {n_arestas}")
 
     if n_nos == 0:
-        print("  [Grafo vazio]")
+        print("  [Grafo vazio — nenhuma entidade passou pelos filtros]")
         return {}
 
-    # densidade
     densidade = nx.density(G)
-    print(f"  Densidade: {densidade:.4f}")
+    print(f"  Densidade: {densidade:.4f}", end="")
+    # interpretação automática da densidade
+    if densidade > 0.15:
+        print("  ⚠ ALTA — janela provavelmente grande demais")
+    elif densidade < 0.005:
+        print("  ⚠ BAIXA — janela provavelmente pequena demais / grafo fragmentado")
+    else:
+        print("  ✓ adequada")
 
-    # componentes conectados
     componentes = list(nx.connected_components(G))
-    print(f"  Componentes conectados: {len(componentes)}")
     maior = max(componentes, key=len)
-    print(f"  Maior componente      : {len(maior)} nós")
+    print(f"  Componentes conectados : {len(componentes)}")
+    print(f"  Maior componente       : {len(maior)} nós "
+          f"({100*len(maior)/n_nos:.1f}% do total)")
 
-    # clustering
     clustering_medio = nx.average_clustering(G, weight="weight")
-    print(f"  Clustering médio      : {clustering_medio:.4f}")
+    print(f"  Clustering médio       : {clustering_medio:.4f}")
 
-    # diâmetro (apenas no maior componente para evitar erro)
     subgrafo = G.subgraph(maior)
     try:
         diametro = nx.diameter(subgrafo)
-        print(f"  Diâmetro              : {diametro}")
+        print(f"  Diâmetro               : {diametro}")
     except Exception:
         diametro = None
-        print(f"  Diâmetro              : N/A")
+        print(f"  Diâmetro               : N/A")
 
     # centralidades
-    centralidade_grau       = nx.degree_centrality(G)
-    centralidade_entre      = nx.betweenness_centrality(G, weight="weight")
-    centralidade_prox       = nx.closeness_centrality(G)
+    centralidade_grau  = nx.degree_centrality(G)
+    centralidade_entre = nx.betweenness_centrality(G, weight="weight")
+    centralidade_prox  = nx.closeness_centrality(G)
 
-    print(f"\n  Top {top_n} por grau (nós mais conectados):")
+    print(f"\n  Top {top_n} por grau (hubs — mais conectados):")
     top_grau = sorted(centralidade_grau.items(), key=lambda x: x[1], reverse=True)[:top_n]
     for no, val in top_grau:
         tipo = G.nodes[no].get("tipo", "?")
         freq = G.nodes[no].get("count", 0)
-        print(f"    {no:<30} [{tipo}]  grau={val:.4f}  freq={freq}")
+        print(f"    {no:<35} [{tipo}]  grau={val:.4f}  freq={freq}")
 
     print(f"\n  Top {top_n} por betweenness (pontes entre comunidades):")
     top_entre = sorted(centralidade_entre.items(), key=lambda x: x[1], reverse=True)[:top_n]
     for no, val in top_entre:
         tipo = G.nodes[no].get("tipo", "?")
-        print(f"    {no:<30} [{tipo}]  between={val:.4f}")
+        print(f"    {no:<35} [{tipo}]  between={val:.4f}")
 
-    # distribuição por tipo de entidade
+    print(f"\n  Top {top_n} por closeness (acesso rápido à rede):")
+    top_prox = sorted(centralidade_prox.items(), key=lambda x: x[1], reverse=True)[:top_n]
+    for no, val in top_prox:
+        tipo = G.nodes[no].get("tipo", "?")
+        print(f"    {no:<35} [{tipo}]  close={val:.4f}")
+
     print(f"\n  Distribuição por tipo NER:")
     tipos = {}
     for _, dados in G.nodes(data=True):
         t = dados.get("tipo", "?")
         tipos[t] = tipos.get(t, 0) + 1
     for tipo, qtd in sorted(tipos.items(), key=lambda x: x[1], reverse=True):
-        print(f"    {tipo:<10} → {qtd} nós")
+        pct = 100 * qtd / n_nos
+        print(f"    {tipo:<10} → {qtd:4d} nós  ({pct:.1f}%)")
+
+    # arestas mais pesadas (relações mais fortes)
+    print(f"\n  Top 10 arestas mais frequentes (relações mais fortes):")
+    top_arestas = sorted(
+        G.edges(data=True), key=lambda x: x[2].get("weight", 0), reverse=True
+    )[:10]
+    for u, v, d in top_arestas:
+        print(f"    {u:<25} ↔ {v:<25}  peso={d.get('weight',1)}")
 
     return {
-        "estrategia"         : estrategia,
-        "nos"                : n_nos,
-        "arestas"            : n_arestas,
-        "densidade"          : densidade,
-        "componentes"        : len(componentes),
-        "maior_componente"   : len(maior),
-        "clustering_medio"   : clustering_medio,
-        "diametro"           : diametro,
-        "top_grau"           : top_grau,
-        "top_betweenness"    : top_entre,
-        "distribuicao_tipos" : tipos,
+        "estrategia"        : estrategia,
+        "nos"               : n_nos,
+        "arestas"           : n_arestas,
+        "densidade"         : densidade,
+        "componentes"       : len(componentes),
+        "maior_componente"  : len(maior),
+        "clustering_medio"  : clustering_medio,
+        "diametro"          : diametro,
+        "top_grau"          : top_grau,
+        "top_betweenness"   : top_entre,
+        "top_closeness"     : top_prox,
+        "distribuicao_tipos": tipos,
+        "top_arestas"       : [(u, v, d["weight"]) for u, v, d in top_arestas],
     }
 
 
 # ─────────────────────────────────────────────
-# COMPARAÇÃO DE DESEMPENHO ENTRE ESTRATÉGIAS
+# RESUMO COMPARATIVO
 # ─────────────────────────────────────────────
 
-def comparar_estrategias(texto_limpo: str, doc, k: int = 500) -> dict:
+def resumo_comparativo(resultados: dict) -> None:
     """
-    Executa as 3 estratégias, mede tempo, constrói grafos e compara métricas.
-    Retorna dicionário com os 3 grafos e suas métricas.
+    Imprime tabela comparativa e conclusão automática entre estratégias.
     """
-    estrategias = {
-        "sentenca"     : lambda: janela_sentenca(doc),
-        "paragrafo"    : lambda: janela_paragrafo(texto_limpo, doc),
-        f"k{k}chars"   : lambda: janela_k_caracteres(texto_limpo, doc, k=k),
-    }
-
-    resultados = {}
-
-    print("\n" + "═"*50)
-    print("  COMPARAÇÃO DE ESTRATÉGIAS DE JANELA")
-    print("═"*50)
-
-    for nome, fn_janela in estrategias.items():
-        t0      = time.perf_counter()
-        janelas = fn_janela()
-        G       = criar_grafo(janelas, estrategia=nome)
-        t1      = time.perf_counter()
-
-        metricas          = analisar_grafo(G)
-        metricas["tempo"] = round(t1 - t0, 4)
-
-        print(f"  ⏱ Tempo de construção: {metricas['tempo']}s")
-        resultados[nome] = {"grafo": G, "metricas": metricas}
-
-    # resumo comparativo
-    print("\n" + "═"*50)
-    print("  RESUMO COMPARATIVO")
+    print("\n" + "═"*70)
+    print("  RESUMO COMPARATIVO DAS ESTRATÉGIAS")
     print(f"  {'Estratégia':<15} {'Nós':>6} {'Arestas':>8} "
-          f"{'Densidade':>10} {'Clustering':>11} {'Tempo(s)':>9}")
-    print("  " + "-"*65)
+          f"{'Densidade':>10} {'Clustering':>11} {'Componentes':>13}")
+    print("  " + "-"*68)
+
+    melhor = None
+    melhor_score = -1
+
     for nome, r in resultados.items():
-        m = r["metricas"]
-        print(
-            f"  {nome:<15} {m.get('nos',0):>6} {m.get('arestas',0):>8} "
-            f"{m.get('densidade',0):>10.4f} {m.get('clustering_medio',0):>11.4f} "
-            f"{m.get('tempo',0):>9.4f}"
-        )
+        m = r.get("metricas", {})
+        nos       = m.get("nos", 0)
+        arestas   = m.get("arestas", 0)
+        dens      = m.get("densidade", 0)
+        clust     = m.get("clustering_medio", 0)
+        comp      = m.get("componentes", 0)
 
-    return resultados
+        # score heurístico: penaliza densidade extrema e fragmentação
+        if nos > 0:
+            score = clust - abs(dens - 0.05) * 5 - (comp / nos)
+            if score > melhor_score:
+                melhor_score = score
+                melhor = nome
+
+        flag = "  ←" if nome == melhor else ""
+        print(f"  {nome:<15} {nos:>6} {arestas:>8} "
+              f"{dens:>10.4f} {clust:>11.4f} {comp:>13}{flag}")
+
+    print("\n  CONCLUSÃO AUTOMÁTICA:")
+    print(f"  Estratégia com melhor equilíbrio densidade/clustering: "
+          f"'{melhor}'")
+    print("  (score = clustering - penalidade_densidade - fragmentação)")
+    print("═"*70)
 
 
 # ─────────────────────────────────────────────
-# BUSCA INTERATIVA (EGO GRAPH)
+# BUSCA INTERATIVA
 # ─────────────────────────────────────────────
 
-def buscar_termo(G: nx.Graph, visualizar_ego_fn=None):
+def buscar_termo(G: nx.Graph, visualizar_ego_fn=None) -> None:
     """
-    Loop de busca interativa por termo no grafo.
-    Se visualizar_ego_fn for passada, chama a visualização.
+    Busca interativa por termo com informações detalhadas do nó.
+    Suporta busca parcial e exibe vizinhos ordenados por peso.
     """
     nos_disponiveis = sorted(G.nodes())
-    print(f"\n  Grafo com {len(nos_disponiveis)} entidades disponíveis.")
+    print(f"\n  Grafo com {len(nos_disponiveis)} entidades.")
     print("  Digite parte do nome para buscar, ou 'sair' para encerrar.\n")
 
     while True:
         termo = input("  Termo: ").strip().lower()
-
         if termo == "sair":
             break
 
-        # busca parcial — útil quando não se lembra do nome exato
         matches = [n for n in nos_disponiveis if termo in n]
 
         if not matches:
-            print(f"  Nenhuma entidade contém '{termo}'.")
+            print(f"  ✗ Nenhuma entidade contém '{termo}'.")
             continue
 
         if len(matches) > 1:
-            print(f"  Encontrados {len(matches)}: {', '.join(matches[:10])}")
-            termo = input("  Digite o nome exato: ").strip().lower()
-            if termo not in G:
+            print(f"  Encontrados {len(matches)}:")
+            for i, m in enumerate(matches[:15]):
+                print(f"    [{i}] {m}")
+            escolha = input("  Digite o nome exato (ou número): ").strip()
+            if escolha.isdigit() and int(escolha) < len(matches):
+                termo = matches[int(escolha)]
+            elif escolha in G:
+                termo = escolha
+            else:
                 print("  Não encontrado.")
                 continue
-
         else:
             termo = matches[0]
 
-        # informações do nó
-        dados = G.nodes[termo]
+        dados    = G.nodes[termo]
         vizinhos = sorted(
             G[termo].items(), key=lambda x: x[1].get("weight", 0), reverse=True
         )
-        print(f"\n  [{dados.get('tipo','?')}] {termo}  (freq={dados.get('count',0)})")
-        print(f"  Vizinhos ({len(vizinhos)}):")
+
+        print(f"\n  ┌─ [{dados.get('tipo','?')}] {termo}")
+        print(f"  │  Frequência : {dados.get('count', 0)}")
+        print(f"  │  Grau       : {G.degree(termo)}")
+        print(f"  └─ Top vizinhos ({min(10, len(vizinhos))}/{len(vizinhos)}):")
         for viz, attrs in vizinhos[:10]:
-            print(f"    → {viz:<30} peso={attrs.get('weight',1)}")
+            tipo_viz = G.nodes[viz].get("tipo", "?")
+            print(f"       → [{tipo_viz}] {viz:<35}  peso={attrs.get('weight',1)}")
 
         if visualizar_ego_fn:
             visualizar_ego_fn(G, termo, raio=2)
