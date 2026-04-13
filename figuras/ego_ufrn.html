@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #0f0f23;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"borderWidth": 2, "borderWidthSelected": 4, "color": "#2196F3", "font": {"color": "#e0e0e0"}, "id": "united nations children\u0027s fund", "label": "united nations children\u0027s fund", "shape": "square", "size": 10.0, "title": "\u003cb\u003eunited nations children\u0027s fund\u003c/b\u003e\u003cbr\u003eTipo: ORG\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#4CAF50", "font": {"color": "#e0e0e0"}, "id": "rn j agradecimentos", "label": "rn j agradecimentos", "shape": "dot", "size": 10.0, "title": "\u003cb\u003ern j agradecimentos\u003c/b\u003e\u003cbr\u003eTipo: PER\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#FF5722", "font": {"color": "#e0e0e0"}, "id": "npad", "label": "npad", "shape": "triangle", "size": 10.0, "title": "\u003cb\u003enpad\u003c/b\u003e\u003cbr\u003eTipo: LOC\u003cbr\u003eFreq: 1"}, {"borderWidth": 1, "borderWidthSelected": 3, "color": "#FF572288", "font": {"color": "#e0e0e0"}, "id": "brasil", "label": "brasil", "shape": "triangle", "size": 8, "title": "\u003cb\u003ebrasil\u003c/b\u003e\u003cbr\u003eTipo: LOC\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#9C27B0", "font": {"color": "#e0e0e0"}, "id": "application programming inter-", "label": "application programming inter-", "shape": "diamond", "size": 10.0, "title": "\u003cb\u003eapplication programming inter-\u003c/b\u003e\u003cbr\u003eTipo: MISC\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#4CAF50", "font": {"color": "#e0e0e0"}, "id": "p. d. mf ufrgn-", "label": "p. d. mf ufrgn-", "shape": "dot", "size": 10.0, "title": "\u003cb\u003ep. d. mf ufrgn-\u003c/b\u003e\u003cbr\u003eTipo: PER\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#FF5722", "font": {"color": "#e0e0e0"}, "id": "alto desempenho", "label": "alto desempenho", "shape": "triangle", "size": 10.0, "title": "\u003cb\u003ealto desempenho\u003c/b\u003e\u003cbr\u003eTipo: LOC\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#2196F3", "font": {"color": "#e0e0e0"}, "id": "general data protection regu- lation", "label": "general data protection regu- lation", "shape": "square", "size": 10.0, "title": "\u003cb\u003egeneral data protection regu- lation\u003c/b\u003e\u003cbr\u003eTipo: ORG\u003cbr\u003eFreq: 1"}, {"borderWidth": 1, "borderWidthSelected": 3, "color": "#2196F388", "font": {"color": "#e0e0e0"}, "id": "censo da educa\u00e7\u00e3o", "label": "censo da educa\u00e7\u00e3o", "shape": "square", "size": 8, "title": "\u003cb\u003ecenso da educa\u00e7\u00e3o\u003c/b\u003e\u003cbr\u003eTipo: ORG\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#9C27B0", "font": {"color": "#e0e0e0"}, "id": "portal", "label": "portal", "shape": "diamond", "size": 10.0, "title": "\u003cb\u003eportal\u003c/b\u003e\u003cbr\u003eTipo: MISC\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#2196F3", "font": {"color": "#e0e0e0"}, "id": "oms", "label": "oms", "shape": "square", "size": 10.0, "title": "\u003cb\u003eoms\u003c/b\u003e\u003cbr\u003eTipo: ORG\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#FF5722", "font": {"color": "#e0e0e0"}, "id": "processamento de linguagem natural", "label": "processamento de linguagem natural", "shape": "triangle", "size": 10.0, "title": "\u003cb\u003eprocessamento de linguagem natural\u003c/b\u003e\u003cbr\u003eTipo: LOC\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#9C27B0", "font": {"color": "#e0e0e0"}, "id": "linguagem natural rnn", "label": "linguagem natural rnn", "shape": "diamond", "size": 10.0, "title": "\u003cb\u003elinguagem natural rnn\u003c/b\u003e\u003cbr\u003eTipo: MISC\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#FF5722", "font": {"color": "#e0e0e0"}, "id": "rio grande do norte", "label": "rio grande do norte", "shape": "triangle", "size": 10.0, "title": "\u003cb\u003erio grande do norte\u003c/b\u003e\u003cbr\u003eTipo: LOC\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#2196F3", "font": {"color": "#e0e0e0"}, "id": "organiza\u00e7\u00e3o mundial da sa\u00fade", "label": "organiza\u00e7\u00e3o mundial da sa\u00fade", "shape": "square", "size": 10.0, "title": "\u003cb\u003eorganiza\u00e7\u00e3o mundial da sa\u00fade\u003c/b\u003e\u003cbr\u003eTipo: ORG\u003cbr\u003eFreq: 1"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#2196F3", "font": {"color": "#e0e0e0"}, "id": "inep", "label": "inep", "shape": "square", "size": 17.142857142857142, "title": "\u003cb\u003einep\u003c/b\u003e\u003cbr\u003eTipo: ORG\u003cbr\u003eFreq: 2"}, {"borderWidth": 2, "borderWidthSelected": 4, "color": "#FF5722", "font": {"color": "#e0e0e0"}, "id": "natal", "label": "natal", "shape": "triangle", "size": 10.0, "title": "\u003cb\u003enatal\u003c/b\u003e\u003cbr\u003eTipo: LOC\u003cbr\u003eFreq: 1"}, {"borderWidth": 4, "borderWidthSelected": 6, "color": "#FFD700", "font": {"color": "#e0e0e0"}, "id": "ufrn", "label": "ufrn", "shape": "triangle", "size": 55, "title": "\u003cb\u003eufrn\u003c/b\u003e\u003cbr\u003eTipo: LOC\u003cbr\u003eFreq: 8"}]);
+                  edges = new vis.DataSet([{"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "united nations children\u0027s fund", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "united nations children\u0027s fund", "title": "Peso: 1", "to": "oms", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "united nations children\u0027s fund", "title": "Peso: 1", "to": "organiza\u00e7\u00e3o mundial da sa\u00fade", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "united nations children\u0027s fund", "title": "Peso: 1", "to": "general data protection regu- lation", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "united nations children\u0027s fund", "title": "Peso: 1", "to": "application programming inter-", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "rn j agradecimentos", "title": "Peso: 1", "to": "p. d. mf ufrgn-", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "rn j agradecimentos", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "rn j agradecimentos", "title": "Peso: 1", "to": "natal", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "npad", "title": "Peso: 1", "to": "alto desempenho", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "npad", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "brasil", "title": "Peso: 1", "to": "inep", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "brasil", "title": "Peso: 1", "to": "censo da educa\u00e7\u00e3o", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "application programming inter-", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "application programming inter-", "title": "Peso: 1", "to": "oms", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "application programming inter-", "title": "Peso: 1", "to": "organiza\u00e7\u00e3o mundial da sa\u00fade", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "application programming inter-", "title": "Peso: 1", "to": "general data protection regu- lation", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "p. d. mf ufrgn-", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "p. d. mf ufrgn-", "title": "Peso: 1", "to": "natal", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "alto desempenho", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "general data protection regu- lation", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "general data protection regu- lation", "title": "Peso: 1", "to": "oms", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "general data protection regu- lation", "title": "Peso: 1", "to": "organiza\u00e7\u00e3o mundial da sa\u00fade", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "censo da educa\u00e7\u00e3o", "title": "Peso: 1", "to": "inep", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "portal", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "oms", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#3a3a5a", "highlight": "#ffffff"}, "from": "oms", "title": "Peso: 1", "to": "organiza\u00e7\u00e3o mundial da sa\u00fade", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "processamento de linguagem natural", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "linguagem natural rnn", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "rio grande do norte", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "organiza\u00e7\u00e3o mundial da sa\u00fade", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "inep", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}, {"color": {"color": "#FFD700", "highlight": "#ffffff"}, "from": "natal", "title": "Peso: 1", "to": "ufrn", "value": 1, "width": 5.5}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": true, "forceAtlas2Based": {"gravitationalConstant": -60, "centralGravity": 0.005, "springLength": 120, "springConstant": 0.08, "damping": 0.4, "avoidOverlap": 0.5}, "solver": "forceAtlas2Based", "stabilization": {"enabled": true, "iterations": 300, "updateInterval": 25, "fit": true}}, "interaction": {"hover": true, "tooltipDelay": 80, "navigationButtons": true, "dragNodes": true, "zoomView": true}, "edges": {"smooth": {"type": "continuous"}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
