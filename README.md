@@ -23,15 +23,6 @@ Analise do minimundo dos TCCs desenvolvidos durante o periodo de janeiro de 2025
 
 ## Resultados
 
-
-# Necessário 
-```python 
-# Instalar o Python 
-# Criar um Ambiente Virtual 
-# pip install pymupdf
-
-``` 
-
 ### Referência
     * https://pymupdf.readthedocs.io/en/latest/
     * https://docs.python.org/3/library/re.html

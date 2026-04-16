@@ -1,3 +1,8 @@
+"""
+Extract_pdf 
+Usado para extrais os textos dos TCCs de pdf -> txt
+"""
+
 import os
 import fitz  # PyMuPDF
 import re

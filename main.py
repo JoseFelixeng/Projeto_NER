@@ -1,20 +1,23 @@
 """
-Arquivo MAIN
-Pipeline completo: limpeza → NER → grafo de co-ocorrência → análise → visualização
+main.py
+Pipeline completo: limpeza → NER → grafo de co-ocorrência
+                            ↓
+                   metadados → grafo relacional acadêmico
+                   (UNIV → DEPT → ORIENTADOR → AUTOR → TRABALHO)
 """
 
 import os
-import regex
+import preprocessamento
 import create_grafo
 import visualizar_grafo
 
 # ─────────────────────────────────────────────
 # CONFIGURAÇÕES
 # ─────────────────────────────────────────────
-PASTA           = "./output"               # pasta com os .txt extraídos dos PDFs
-K_CHARS         = 500                      # tamanho da janela k-caracteres
-ESTRATEGIA      = "sentenca"               # estratégia para visualização principal
-PASTA_FIGURAS   = "./figuras"              # onde salvar as imagens
+PASTA           = "./output"          # pasta com os .txt extraídos dos PDFs
+K_CHARS         = 500
+ESTRATEGIA      = "sentenca"
+PASTA_FIGURAS   = "./figuras"
 
 
 if __name__ == "__main__":
@@ -22,7 +25,6 @@ if __name__ == "__main__":
 
     print("\n─── Inicializando o Programa ───")
 
-    # 1. Lista arquivos
     arquivos = sorted([
         f for f in os.listdir(PASTA)
         if os.path.isfile(os.path.join(PASTA, f))
@@ -31,10 +33,13 @@ if __name__ == "__main__":
     for a in arquivos:
         print(f"  {a}")
 
-    # 2. Processa cada arquivo — limpeza + NER + coleta de janelas
+    # ── Coleta de janelas (co-ocorrência) e metadados ──────────────────────
     janelas_sentenca  = []
     janelas_paragrafo = []
     janelas_kchars    = []
+
+    lista_metadados = []   # ← para o grafo relacional
+    lista_docs      = []   # ← para associar áreas temáticas
 
     for nome in arquivos:
         caminho = os.path.join(PASTA, nome)
@@ -42,15 +47,20 @@ if __name__ == "__main__":
         print(f"  Arquivo: {nome}")
         print(f"{'═'*50}")
 
-        texto_limpo = regex.preprocessar(caminho, diagnostico=False)
+        # ── leitura bruta para metadados (antes do recorte do corpo) ──────
+        texto_bruto = preprocessamento.ler_arquivo(caminho)
+        meta = preprocessamento.extrair_metadados(texto_bruto, nome_arquivo=nome)
+        lista_metadados.append(meta)
+
+        # ── limpeza e NER ──────────────────────────────────────────────────
+        texto_limpo = preprocessamento.preprocessar(caminho, diagnostico=False)
         print(f"  Caracteres limpos : {len(texto_limpo)}")
         print(f"  Parágrafos        : {texto_limpo.count(chr(10)*2) + 1}")
-        print("\n  ── Amostra (500 chars) ──")
-        print(texto_limpo[:500])
-        regex.diagnosticar(texto_limpo)
+        preprocessamento.diagnosticar(texto_limpo)
 
         print("\n  Processando NER...")
-        doc = regex.processar_spacy(texto_limpo)
+        doc = preprocessamento.processar_spacy(texto_limpo)
+        lista_docs.append(doc)
 
         janelas_sentenca.extend(create_grafo.janela_sentenca(doc))
         janelas_paragrafo.extend(create_grafo.janela_paragrafo(texto_limpo, doc))
@@ -61,27 +71,31 @@ if __name__ == "__main__":
     print(f"    parágrafo    → {len(janelas_paragrafo)}")
     print(f"    k={K_CHARS}chars → {len(janelas_kchars)}")
 
-    # 3. Constrói os 3 grafos
-    print("\n  Construindo grafos...")
+    # ── Grafos de co-ocorrência ────────────────────────────────────────────
+    print("\n  Construindo grafos de co-ocorrência...")
     G_sentenca  = create_grafo.criar_grafo(janelas_sentenca,  estrategia="sentenca")
     G_paragrafo = create_grafo.criar_grafo(janelas_paragrafo, estrategia="paragrafo")
     G_kchars    = create_grafo.criar_grafo(janelas_kchars,    estrategia=f"k{K_CHARS}chars")
 
     grafos = {
-        "sentenca"        : G_sentenca,
-        "paragrafo"       : G_paragrafo,
+        "sentenca":         G_sentenca,
+        "paragrafo":        G_paragrafo,
         f"k{K_CHARS}chars": G_kchars,
     }
 
-    # 4. Análise e métricas
+    # ── Grafo relacional acadêmico ─────────────────────────────────────────
+    print("\n  Construindo grafo relacional acadêmico...")
+    G_relacional = create_grafo.criar_grafo_relacional(lista_metadados, lista_docs)
+    create_grafo.analisar_grafo_relacional(G_relacional)
+
+    # ── Análise co-ocorrência ──────────────────────────────────────────────
     resultados = {}
     for nome_e, G in grafos.items():
         metricas = create_grafo.analisar_grafo(G)
         resultados[nome_e] = {"grafo": G, "metricas": metricas}
 
-    # 5. Figuras estáticas — uma por estratégia + comparativa + distribuição de grau
-    print("\n\n  Gerando figuras estáticas...")
-
+    # ── Figuras estáticas ──────────────────────────────────────────────────
+    print("\n  Gerando figuras estáticas...")
     for nome_e, G in grafos.items():
         visualizar_grafo.figura_grafo_completo(
             G,
@@ -98,7 +112,14 @@ if __name__ == "__main__":
         salvar=os.path.join(PASTA_FIGURAS, "comparacao_estrategias.png"),
     )
 
-    # 6. HTMLs interativos — um por estratégia
+    # ── Figura do grafo relacional ─────────────────────────────────────────
+    print("\n  Gerando figura do grafo relacional...")
+    visualizar_grafo.figura_grafo_relacional(
+        G_relacional,
+        salvar=os.path.join(PASTA_FIGURAS, "grafo_relacional.png"),
+    )
+
+    # ── HTMLs interativos ──────────────────────────────────────────────────
     print("\n  Gerando HTMLs interativos...")
     for nome_e, G in grafos.items():
         visualizar_grafo.visualizar_grafo_interativo(
@@ -107,7 +128,13 @@ if __name__ == "__main__":
             filtro_peso_min=2,
         )
 
-    # 7. Ego-grafo do nó mais central — interativo + figura
+    # HTML interativo do grafo relacional
+    visualizar_grafo.visualizar_grafo_relacional_interativo(
+        G_relacional,
+        salvar_html=os.path.join(PASTA_FIGURAS, "grafo_relacional.html"),
+    )
+
+    # ── Ego-grafo do nó mais central ───────────────────────────────────────
     G_principal = grafos[ESTRATEGIA]
     no_top = max(dict(G_principal.degree()).items(), key=lambda x: x[1])[0]
     print(f"\n  Nó mais central em '{ESTRATEGIA}': {no_top}")
@@ -122,7 +149,7 @@ if __name__ == "__main__":
         salvar=os.path.join(PASTA_FIGURAS, f"ego_{no_top}.png"),
     )
 
-    # 8. Busca interativa por termo
+    # ── Busca interativa ───────────────────────────────────────────────────
     print("\n  Entrando no modo de busca interativa...")
     create_grafo.buscar_termo(
         G_principal,
