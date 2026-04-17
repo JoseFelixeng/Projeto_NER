@@ -1,1 +1,2409 @@
-Adson Emanuel Santos Amaral Desenvolvimento de um sistema supervisório para monitoramento contínuo de sinais Natal – RN Janeiro de Adson Emanuel Santos Amaral Desenvolvimento de um sistema supervisório para monitoramento contínuo de sinais Trabalho de Conclusão de Curso de Engenha- ria de Computação da Universidade Federal do Rio Grande do Norte, apresentado como requisito parcial para a obtenção do grau de Bacharel em Engenharia de Computação Orientador: Andrés Ortiz Salazar Universidade Federal do Rio Grande do Norte – UFRN Departamento de Engenharia de Computação e Automação – DCA Curso de Engenharia de Computação Natal – RN Janeiro de Adson Emanuel Santos Amaral Desenvolvimento de um sistema supervisório para monitoramento contínuo de sinais Trabalho de Conclusão de Curso de Engenha- ria de Computação da Universidade Federal do Rio Grande do Norte, apresentado como requisito parcial para a obtenção do grau de Bacharel em Engenharia de Computação Orientador: Andrés Ortiz Salazar Trabalho aprovado. Natal – RN, de Janeiro de : Prof. Dr. Andrés Ortiz Salazar - Orientador UFRN Dr. Diego Antônio de Moura FonsŸca UFRN Me. Rodrigo de Andrade Teixeira UFRN Natal – RN Janeiro de AGRADECIMENTOS Agradeço a Deus, pela dádiva da vida e por ter me dado forças em todos os momentos em que pensei em desistir. Aos meus pais Eliene Generosa dos Santos Amaral e Admilson Fernandes do Amaral, pelo amor incondicional e apoio incessante. Suas presenças foram fundamentais para minha formação pessoal e acadŸmica. Aos meus familiares, que sempre me incentivaram e nunca mediram esforços em me ajudar. Em especial, aos meus tios Luzinente Generosa e Miguel José, por terem me acolhido em sua casa e por todo o suporte que me deram durante a graduação. À minha companheira Ana Paula de Oliveira, pela assistŸncia inabalável e paciŸncia constante. Aos amigos que z durante a graduação. Sem os momentos de descontração e as várias horas de estudos em grupo que compartilhamos jamais teria conseguido chegar tão longe. Ao meu orientador, Prof. Dr. Andrés Ortiz Salazar pelos ensinamentos e pela conança depositada em mim desde o início da iniciação cientica até este ponto. Ao pessoal que faz parte do Laboratório de Avaliação de Medição em Petróleo (LAMP), pela colaboração, troca de conhecimentos e companheirismo. RESUMO A visualização de sinais em tempo real é um fator crucial quando se deseja entender o comportamento de sistemas, uma vez que, a análise de dados instantâneos permite que o operador detecte padrões e tome decisões de maneira mais rápida e oportuna. Nesse contexto, este trabalho apresenta o desenvolvimento de um sistema supervisório para sinais digitais. A m de atingir esse objetivo, fez-se uso do Processador Digitais de Sinais (DSP) modelo TMSFpara enviar dados via Interface de Comunicação Serial (SCI) para um computador a parte. Em seguida os dados são interpretados e exibidos utilizando-se a biblioteca PyQT. Palavras-chaves: Sinais; DSP; Supervisório; SCI; PyQt. ABSTRACT The visualization of real-time signals is a crucial factor in understanding system behavior, as the analysis of instantaneous data enables operators to detect patterns and make decisions more quickly and eectively. In this context, this work presents the development of a supervisory system for digital signals. To achieve this goal, a Digital Signal Processor (DSP) model TMSFwas utilized to send data via a Serial Communication Interface (SCI) to an external computer. The data is then processed and displayed using the PyQtlibrary. Keywords: Signals; DSP; Supervisory; SCI; PyQt. LISTA DE ILUSTRAÇÕES Figura – Estrutura básica da comunicação de dados. . . . . . . . . . . . . . . . Figura – Modos do uxo de dados. . . . . . . . . . . . . . . . . . . . . . . . . . Figura – Conexões físicas nas comunicações Parelela e Serial. . . . . . . . . . . . Figura – Tranmissão de um frame no formato -N-. . . . . . . . . . . . . . . . Figura – DSP . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Figura – Diagrama de Multiplexação das interrupções usando o bloco PIE. . . . Figura – Diagrama de blocos do módulo SCI. . . . . . . . . . . . . . . . . . . . Figura – Amostragem dos bits no modo assíncrono do SCI. . . . . . . . . . . . . Figura – Formato de dados no modo multiprocessador de linha ociosa. . . . . . . Figura – Formato de dados no modo multiprocessador de bit de endereço. . . . . Figura – Ambiente de Desenvolvimento Code Composer Studio. . . . . . . . . . Figura – Módulo Conversor FTDI FTRL. . . . . . . . . . . . . . . . . . . . . Figura – Montagem dos dispositivos do projeto. . . . . . . . . . . . . . . . . . . Figura – Fluxograma do algoritmo implementado no DSP. . . . . . . . . . . . . Figura – Frame do caractere . . . . . . . . . . . . . . . . . . . . . . . . . . . . Figura – Frame do caractere . . . . . . . . . . . . . . . . . . . . . . . . . . . . Figura – Tela inicial do Qt Designer. . . . . . . . . . . . . . . . . . . . . . . . . Figura – Tela inicial do supervisório. . . . . . . . . . . . . . . . . . . . . . . . . Figura – Tela . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Figura – Exibição no tempo de um sinal de Hz. . . . . . . . . . . . . . . . . . Figura – Exibição no tempo de um sinal de Hz. . . . . . . . . . . . . . . . . . Figura – Exibição no tempo de um sinal de Hz com zoom horizontal aplicado. Figura – Exibição no tempo de dois sinais de Hz defasados em °. . . . . . Figura – Exibição no tempo de dois sinais de Hz defasados em ° com zoom horizontal aplicado. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Figura – Exibição no formato de Lissajous. . . . . . . . . . . . . . . . . . . . . . Figura – Exibição no tempo de um sinal de corrente com zoom de % aplicado Figura – Sinal de corrente medido pelo osciloscópio. . . . . . . . . . . . . . . . . Figura – Exibição no tempo de dois sinais de corrente. . . . . . . . . . . . . . . Figura – Dois sinais de corrente medidos pelo osciloscópio. . . . . . . . . . . . . LISTA DE TABELAS Tabela – Tabela ASCII dos caracteres utilizados. . . . . . . . . . . . . . . . . . . LISTA DE ABREVIATURAS E SIGLAS BPS Bits por segundo CCS Code Composer Studio CPU Central Processing Unit DSC Digital Signal Controller DSP Digital Signal Processor FTDI Future Technology Devices Internationa IRS Interrupt Service Routine IC Inter-Integrated Circuit LAMP Laboratório de Avaliação de Medição em Petróleo NRZ Non-Return-to-Zero PIE Peripheral Interrupt Expansion RPM Rotações por Minuto SCI Serial Communication Interface SPI Serial Peripheral Interface TTL Transistor–Transistor Logic USB Universal Serial Bus UART Universal Asynchronous Receiver/Transmitter LISTA DE SÍMBOLOS k Prexo quilo () M Prexo Mega () n Prexo nano (−) µ Prexo micro (−) SUMÁRIO INTRODUÇÃO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Contextualização . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Objetivos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Objetivos especíﬁcos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Estrutura do Trabalho . . . . . . . . . . . . . . . . . . . . . . . . . . . FUNDAMENTAÇÃO TEÓRICA . . . . . . . . . . . . . . . . . . . . .Comunicação de dados . . . . . . . . . . . . . . . . . . . . . . . . . . ..Componentes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Fluxo de dados . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Transmissão digital de dados . . . . . . . . . . . . . . . . . . . . . . . . . ..Taxas de Transmissão . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Interface UART . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Processo de Comunicação . . . . . . . . . . . . . . . . . . . . . . . . . . .Sistema Supervisório . . . . . . . . . . . . . . . . . . . . . . . . . . . . FERRAMENTAS E TECNOLOGIAS UTILIZADAS . . . . . . . . . .Processador Digital de Sinais . . . . . . . . . . . . . . . . . . . . . . . ..Sistema de Interrupção . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Interface de Comunicação Serial - SCI . . . . . . . . . . . . . . . . . . . . ..Code Composer Studio - CCS . . . . . . . . . . . . . . . . . . . . . . . . .Módulo de conversão USB para TTL . . . . . . . . . . . . . . . . . . .ASCII . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .PyQt- Comprehensive Python Bindings for Qt v. . . . . . . . . . METODOLOGIA . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Montagem . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Programação do DSP. . . . . . . . . . . . . . . . . . . . . . . . ..Conﬁguração da Interface de Comunicação Serial . . . . . . . . . . . . . . ..Função para conversão de tipo de dados . . . . . . . . . . . . . . . . . . . ..Funções para envio de dados . . . . . . . . . . . . . . . . . . . . . . . . . ..Análises do tempo de envio . . . . . . . . . . . . . . . . . . . . . . . . . . .Desenvolvimento do supervisório . . . . . . . . . . . . . . . . . . . . . ..Interface do Supervisório . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Estrutura da lógica da aplicação . . . . . . . . . . . . . . . . . . . . . . . RESULTADOS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Testes simulados . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Testes com motor em Operação . . . . . . . . . . . . . . . . . . . . . CONCLUSÃO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . REFERĹNCIAS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . APĹNDICES APĹNDICE A – CÓDIGO-FONTE DO DSP . . . . . . . . . . . . . APĹNDICE B – CÓDIGO-FONTE DA INTERFACE GRÁFICA DO SUPERVISÓRIO . . . . . . . . . . . . . . . . . . . APĹNDICE C – CÓDIGO-FONTE DA APLICAÇÃO . . . . . . . . INTRODUÇÃO O processamento digital de sinais é um ramo da ciŸncia da computação que trata da matemática, dos algoritmos e das técnicas utilizadas para manipular sinais que geralmente foram convertidos para o formato digital. (YU et al., ). Os dispositivos projetados para lidar especicamente com a manipulação de sinais são chamados de Processadores Digitais de Sinal (do inglŸs, Digital Signal Processors - DSP’s) e podem ser aplicados em diversas áreas como: comunicação, medicina, geofísica e engenharia. Durante a execução de um sistema que utiliza o DSP, o processamento de sinais ocorre de forma sequencial e frequentemente em alta velocidade, o que diculta a análise em tempo real do impacto desses sinais no desempenho e no comportamento geral do sistema. Nesse contexto, sistemas supervisórios apresentam-se como ferramentas relevantes ao viabilizar o monitoramento contínuo e eciente dos sinais, sendo uma abordagem que supera não só as limitações das análises oﬄine, mas também contribui para uma maior precisão e conabilidade na tomada de decisões. Dessa forma, este trabalho propõe o desenvolvimento de um sistema supervisório capaz de interpretar sinais digitais provenientes do DSP e exibi-los em grácos, utilizando a comunicação serial do DSP para a transmissão dos dados durante a execução dos programas. .Contextualização Este trabalho foi desenvolvido em parceria com o Laboratório de Avaliação de Medição em Petróleo (LAMP) da Universidade Federal do Rio Grande do Norte - UFRN. O LAMP possui pesquisas vinculadas a área de petróleo, energias renováveis e máquinas elétricas, onde na última área citada faz-se uso de DSP’s. Desse modo, o estudo de caso ao qual será aplicado o projeto será feito neste laboratório. .Objetivos O projeto proposto apresenta dois objetivos gerais. O primeiro, diz respeito ao envio de dados do DSP via Interface de Comunicação Serial - SCI, sejam eles gerados a partir de cálculos internos ao microcontrolador ou resultados do processamento de conversões Capítulo . Introdução analógicas digitais. O segundo, está relacionado a criação de um supervisório que irá rodar em uma máquina, doravante chamada de computador de supervisão. Desse modo, o supervisório deve ser capaz de interpretar os dados que chegam ao computador de supervisão e exibi-los em grácos previamente congurados pelo usuário. ..Objetivos especíﬁcos Os objetivos especícos são: • Congurar a SCI do processador digital de sinais; • Integrar a um código já existente a funcionalidade de envio de dados utilizando SCI; • Denir uma forma de converter informações seriais TTL (Transistor–Transistor Logic) em sinais seriais USB (Universal Serial Bus); • Desenvolver um código em Python capaz de ler a porta USB do computador e transmitir as informações processadas à interface de supervisão; • Desenvolver um supervisório que permita ao usuário denir a quantidade de curvas a serem exibidas (uma ou duas) e o formato do gráco (no tempo ou Lissajous). • Garantir que o sistema supervisório seja capaz de apresentar corretamente sinais com frequŸncia mínima de Hz. .Estrutura do Trabalho Este trabalho apresenta uma introdução sobre o processador digital de sinais, mostrando a importância de um sistema supervisório nos contextos em que esse dispositivo é utilizado. Em sequŸncia, o Capítulo apresenta a teoria que embase o desenvolvimento da pesquisa, ao passo que o Capítulo aborda as ferramentas e tecnologias que foram utilizadas para implementação do projeto. O Capítulo , por sua vez, explica a metodologia aplicada para estruturar os códigos do DSP e do supervisório. O Capítulo contém os resultados obtidos durante a implementação do projeto. Por m, o Capítulo traz as principais conclusões deste trabalho. FUNDAMENTAÇÃO TEÓRICA Este capítulo é dedicado a apresentar os principais conceitos nos quais se baseia o projeto, sendo dividido em trŸs seções distintas. Inicialmente, será apresentada a seção sobre comunicação de dados, que discutirá alguns princípios fundamentais para a troca de informações entre sistemas. Em seguida, a seção sobre UART explorará as características e o funcionamento dessa interface de comunicação. Por m, a seção sobre sistemas supervisórios abordará o que são esses sistemas e como eles se aplicam a este trabalho. .Comunicação de dados A comunicação de dados refere-se a troca de informações entre dispositivos através de algum meio de transmissão. Para que ela ocorra, é necessário que os dispositivos façam parte de um sistema de comunicação, que consiste em uma combinação de Hardware e Software. Forouzan () arma que a eciŸncia desses sistemas depende de quatro características essenciais: • Entrega: o sistema deve entregar os dados ao destino correto, fazendo com que eles sejam recebidos apenas pelo dispositivo ou usuário pretendido; • Precisão: é necessário que o sistema entregue os dados de forma precisa, tornando-se inutilizáveis dados que forem alterados durante a transmissão e não corrigidos; • Pontualidade: os dados devem ser entregues pelo sistema de maneira pontual. Entregas tardias comprometem sua utilidade; • Jitter: diz respeito à variação no tempo de chegada dos pacotes, caracterizada pelo atraso desigual na entrega de dados de áudios e vídeo; ..Componentes A estrutura básica de um sistema de comunicação de dados é composta por componentes e pode ser vista na Figura . Capítulo . Fundamentação Teórica Figura – Estrutura básica da comunicação de dados. Fonte: Elaborada pelo autor. A mensagem, disposta como elemento central na Figura , diz respeito a informação que se deseja transmitir e pode possuir diversos formatos, como: textos, números, imagens, áudio e vídeo. O dispositivo responsável por enviá-la é chamado de remetente ou transmissor, ao passo que o dispositivo encarregado de recebŸ-la é nomeado destinatário ou receptor. Interligando transmissor ao receptor, tem-se o meio ou linha de transmissão, sendo este o caminho físico por onde a mensagem se desloca. Alguns exemplos desse componente são o cabo coaxial e o o par trançado. Por m, para que a mensagem enviada seja compreendida corretamente pelo destinatário, é necessário que haja um protocolo na comunicação. Este elemento estabelece um conjunto de regras que os dispositivos devem seguir para se comunicarem de maneira correta. ..Fluxo de dados O uxo de dados refere-se ao movimento de informações entre elementos que compõem a comunicação e pode ocorrer em trŸs modos: simplex, half-duplex e full-duplex. A Figura mostra como são realizadas as conexões em cada um deles. Capítulo . Fundamentação Teórica Figura – Modos do uxo de dados Fonte: Elaborada pelo autor. No modo simplex a comunicação é feita em um único sentido e somente um dos dois dispositivos pode transmitir dados, enquanto o outro apenas recebe. Já no modo half-duplex, cada dispositivo pode transmitir e receber dados, desde que essas tarefas não ocorram ao mesmo tempo, logo, quando um está enviando o outro está recebendo e vice-versa. No modo full-duplex, os dois dispositivos podem enviar e receber dados simultaneamente (FOROUZAN, ). ..Transmissão digital de dados A transmissão digital de dados é o envio de informações em formato de dados digitais, que são representados por sequŸncias de bits ’s e ’s. Ela pode ser realizada em dois modos: paralelo ou serial. Para Forouzan (), a transmissão paralela é um método em que bits são enviados por n canais de comunicação a cada pulso de clock, enquanto na transmissão serial um bit segue o outro, sendo necessário apenas um canal. A Figura ilusta como são feitas as ligações para uma transmissão paralela com canais e para a transmissão serial. Capítulo . Fundamentação Teórica Figura – Conexões físicas nas comunicações Parelela e Serial Fonte: (FOROUZAN, ) Ainda segundo Forouzan (), em termos de usabilidade, as principais diferenças entre os dois modos de transmissão de dados são a velocidade e o custo. A transmissão paralela possui a capacidade de aumentar a velocidade de transferŸncia em um fator de n em relação à transmissão serial. Porém, essa abordagem vem acompanhada de um alto custo de transmissão, uma vez que são necessários mais canais apenas para enviar o uxo de dados. Desse modo, a comunicação paralela geralmente é limitada a curtas distâncias, enquanto a comunicação serial é mais ecaz em longas distâncias. Além de apresentar redução nos curtos e simplicidade, a comunicação serial ocorre de duas maneiras que inuenciam diretamente sua eciŸncia e aplicabilidade, sendo elas: comunicação serial síncrona e assíncrona. Conforme Axelson (), em um protocolo síncrono, a interface possui uma linha de clock controlada por um dos dispositivos e todos os bits transmitidos são sincronizados com esse clock. Assim, a transmissão de cada um deles é tida como válida em um instante especíco após a transição de subida ou descida do sinal da linha. Algumas interfaces seriais síncronas são a IC (Inter-Integrated Circuit), SPI (Serial Peripheral Interface) e Microwire. Já sobre o protocolo assíncrono, Axelson () aponta que não há a presença de Capítulo . Fundamentação Teórica uma linha de transmissão especíca para compartilhamento do clock que sincroniza a troca de dados, em vez disso, uma frequŸncia é acordada entre os dispositivos que participam da comunicação e cada um utiliza seu próprio clock como referŸncia de tempo. Dessa forma, a sincronia entre os dispositivos é feita a partir do envio de um bit especíco chamado bit de início. Dentre os exemplos de comunicação assíncrona existem a UART e RS-. ..Taxas de Transmissão As taxas de transmissão determinam a velocidade com que ocorre a transferŸncia de dados. Desse modo, a literatura aborda dois conceitos importantes envolvendo essas taxas: o bit rate e o baud rate. Segundo Axelson (), bit rate é o número de bits que são transmitidos ou recebidos por unidade de tempo, sendo geralmente expresso em bits por segundo, enquanto o baud rate, diz respeito ao número de transições de sinais por segundo. Neste trabalho, cada transição de dados representa a mudança de um bit, fazendo com que bit rate e baud rate sejam os mesmos. Portanto, o termo adotado pra se referir a taxa de transmissão será baud rate. .UART A UART (Universal Asynchronous Receiver/Transmitter) é uma interface de comu- nicação serial assíncrona que dene um protocolo para a troca de dados entre dispositivos de maneira sequencial, bit a bit. Os elementos que a compõem são um transmissor (TX), um receptor (RX) e um o de terra. A conexão física entre eles é feita com o transmissor de um dispositivo conectado ao receptor do outro (assim como mostrado no formato Full Duplex da subseção ..) e com um aterramento comum. ..Processo de Comunicação Tendo em vista a característica assíncrona da UART, as informações transmitidas seguem um padrão de formatação que as dividem em blocos geralmente chamados de frames. Cada frame é formado por: um bit de início, bits de dados (que podem ser chamados de palavra), um bit opcional de paridade e um ou mais bits de parada. A partir da quantidade de bits conguráveis, existem diversos tipos de formatos para os frames. Em um dos mais comuns, o -N-, o frame possui oito bits de dados, nenhum bit de paridade e um bit de parada. Tal formato tem seus níveis lógicos em uma Capítulo . Fundamentação Teórica linha de transmissão retratados na Figura e será utilizado para ilustrar como funciona o processo de comunicação UART. Figura – Tranmissão de um frame no formato -N-. Fonte: Elaborada pelo autor. Quando não está ocorrendo comunicação, a linha de transmissão encontra-se em estado de meio ocioso com o transmissor em nível lógico alto (). Para indicar o início de uma transmissão, o transmissor envia um sinal de referŸncia conhecido como bit de início, que possui nível lógico baixo () e é responsável por alertar ao receptor sobre a chegada de um novo frame. A partir da chegada do bit de início, o receptor tenta amostrar os bits seguintes considerando o período do bit, que diz respeito ao tempo que se leva para transmitir um único bit e matematicamente pode ser representado como o inverso do baud rate. Em seguida, são enviados bits de dados em sequŸncia começando pelo bit menos signicativo. Os bits de dados contém a informação útil que se deseja transmitir e sua quantidade pode variar de a , a depender do dispositivo ao qual a UART está vinculada. Após os bits de dados, o transmissor envia o bit de parada para nalizar a trans- missão. Este bit possui valor lógico alto e pode ser de uma, uma e meia ou duas vezes o tempo do período do bit. Além dos bits explicitados, é importante comentar sobre o bit de paridade, que não foi utilizado no exemplo em questão. Tal bit, se congurado, atua como uma forma simples de vericação de erros, sendo calculado pelo transmissor com base na palavra e adicionado ao frame depois desta e antes do bit de parada. Desse modo, existem quatro tipos de paridade: par (even), ímpar (odd), de marca e de espaço, representadas nos formatos de frames respectivamente pelas letras "E", "O", "M" e "S". Em contextos onde a paridade é denida como par ou ímpar, o número total de bits "" no frame tem que ser par para o primeiro caso e ímpar para o segundo. Assim, o bit paridade é congurado como ou para fazer com que o valor total de bits atinja a paridade desejada. Nos casos em que a paridade é denida como de marca, o bit de paridade é sempre e quando é denida como de espaço, o bit de paridade é sempre . Quando um frame que possui a paridade congurada chega ao receptor, este verica se ela está correta para identicar se houveram ou não erros na transmissão. Capítulo . Fundamentação Teórica Ademais, para que a comunicação UART funcione corretamente, transmissor e receptor precisam concordar a respeitos do baud rate e do formato do frame. Caso contrário, a sincronização entre os dispositivos pode ser comprometida e a interpretações dos dados feita de maneira errônea. .Sistema Supervisório Um sistema computacional considerado como supervisório opera em torno de dados, possuindo como características: a capacidade de estabelecer comunicação entre computa- dores e equipamentos de aquisição, a manipulação e análise dos dados e a exibição dos resultados destes processamentos ao usuário, em um formato previamente denido (TI- BOLA, ). Os sistemas supervisórios fornecem uma interface visual amigável para visualização de variáveis do sistema em tempo real, permitindo que o operador compreenda e atue sobre o processo de maneira facilitada. No presente trabalho, o supervisório desenvolvido apresenta as seguintes caracterís- ticas: suporte aos protocolos de comunicação utilizados pelo DSP; mecanismos que buscam assegurar a sincronia, de modo que os dados exibidos representem o estado atual do processo; e possibilidade de ajustes dinâmicos na visualização dos parâmetros monitorados. FERRAMENTAS E TECNOLOGIAS UTI- LIZADAS Este capítulo contém as descrições do componentes eletrônicos e do software utilizados para desenvolvimento e uso do supervisório. Inicialmente é apresentada uma visão geral do Processador Digital de Sinais e de seus periféricos empregados. Em seguida, é abordado o módulo de conversão UART para USB. Por m, é discutido o PyQt, destacando suas funcionalidades e programação. .Processador Digital de Sinais Neste trabalho, o termo Processador Digital de Sinais, refere-se a um conjunto composto por um Controlador Digital de Sinais (do inglŸs, Digital Signal Controller - DSC) e sua placa de desenvolvimento. O modelo de DSC utilizado é o TMSF. Ele faz parte da família CT M de microcontroladores em tempo real desenvolvida pela Texas Instruments, sendo projetado para atuar em sistemas que precisem de controle rápido e preciso. O módulo stand-alone associado ao TMSFé o eZdspT MFfabricado pela Spectrum Digital. Esta placa permite o acesso facilitado a pinos, o que simplica a conexão de periféricos e sensores; e oferece recursos como conectores de alimentação e interfaces de comunicação. Nesse viés, o DSP(forma como, por simplicidade, será chamado no texto o conjunto descrito) pode ser visto na Figura e apresenta como características principais conforme Instruments (): • Chip de alta performance com unidade de ponto utuante de bits; • FrequŸncia de operação de MHz (ciclo de clock ,ns); • Consumo de energia de ,V/,V para o processador e ,V para dispositivos de entrada e saída; • Interface JTAG USB embutido; • Memórias RAM de k bytes, Flash de k bytes e SRAM de k bytes; • Conversor analógico-digital (A/D) de bits no chip com canais de entrada; • Relógio de entrada de MHz; Capítulo . Ferramentas e tecnologias utilizadas Figura – DSP . Fonte: Elaborada pelo autor. Para a realização do projeto, foi necessário implementar o envio controlado de sinais para outro dispositivo, assegurando que não houvesse interferŸncia no processamento desses sinais. Os periféricos do DSPutilizados para atender a essas requisitos foram: o Sistema de Interrupção e o Módulo SCI. Além disso, fez-se uso do Code Composer Studio (CCS) versão .para realizar a programação e depuração do código fonte desenvolvido. As subseções a seguir contém uma descrição detalhada a respeito da conguração e do funcionamento desses periféricos e do CCS. ..Sistema de Interrupção A interrupção é um mecanismo em que o processador tem a execução do seu loop principal interrompida para lidar com um evento especíco sem a necessidade de se vericar constantemente a ocorrŸncia desse evento. Quando uma interrupção é inicializada, o controle da execução do programa atual é transferido para uma rotina de tratamento de interrupção (também conhecida como ISR - Interrupt Service Routine), que se encarrega de identicar qual rotina foi ativada e executar as instruções associadas a ela. Nesse viés, o núcleo de DSP suporta trabalhar com interrupções, podendo atender a uma interrupção não mascarável (NMI) e a solicitações de interrupções mascaráveis (INT-INT, RTOSINT e DLOGINT), onde a interrupção não mascarável é um tipo de interrupção que não pode ser temporariamente desativada ou ignorada pelo sistema, ao passo que a mascarável pode, a depender de sua prioridade em relação as outras interrupções. No entanto, como as interrupções podem ser geradas por diversas fontes, a Unidade Capítulo . Ferramentas e tecnologias utilizadas Central de Processamento (do inglŸs, Central Processing Unit - CPU) não possui capacidade suciente para tratar todas as solicitações de interrupção em seu nível. Logo, as interrupções geradas por periféricos e outros pinos externos são gerenciadas por um bloco de expansão de interrupção de periféricos (Peripheral Interrupt Expansion - PIE). O PIE realiza a multiplexação das várias fontes de interrupções em um conjunto menor de entrada de interrupções, dessa forma, ele organiza as fontes presentes no DSP em grupos, que são nomeados de grupo PIE até o grupo PIE , e cada um desses grupos possui possíveis fontes de interrupção. Para as interrupções não multiplexadas, o PIE passa a solicitação diretamente para a CPU. A partir do diagrama da Figura , se faz possível esmiuçar o sequenciamento lógico de funcionamento do PIE. Figura – Diagrama de Multiplexação das interrupções usando o bloco PIE. Fonte: Instruments (). Tal sequenciamento é dividido em trŸs níveis: • Nível do Periférico: quando uma interrupção ocorre devido um evento em um periférico, um bit ag (IF) relacionado a esse evento é congurado em um registrador próprio para esse periférico. Se o bit enable (IE) correspondente está congurado, o periférico faz um pedido de interrupção ao controlador PIE, caso contrário, o bit IF ca ativo até ser reiniciado via software. Se por algum motivo o bit enable foi ativado um tempo depois e o bit IF ainda estiver congurado, o pedido de interrupção é enviado ao PIE; • Nível PIE: cada grupo de interrupção no bloco PIE possui um registrador de ag (PIEIFRx) e um registrador enable (PIEIERx). Além disso, há um bit de Capítulo . Ferramentas e tecnologias utilizadas reconhecimento (PIEACKx) associado a cada grupo. Nos casos, o ‘x’ referencia o grupo, variando de a , e o ‘y’ a interrupção, variando de a . Quando uma solicitação de interrupção chega ao controlador PIE, o bit PIEIFRx,y correspondente é ativado. Se o bit PIEIERx,y estiver ativo para a mesma interrupção, o PIE verica se o bit PIEACKx correspondente também está ativo. Se o PIEACKx estiver desativado para esse grupo, o PIE envia o pedido de interrupção para a CPU, caso contrário ele aguarda até ser desativado para enviar o pedido para INTx; • Nível de CPU: quando uma solicitação de interrupção é enviada à CPU, o bit de ag de interrupção da CPU (IFR) correspondente à INTx é ativado. Então a interrupção correspondente só é atendida quando o registrador de habilitação de interrupção da CPU (IER) ou o registrador de habilitação de interrupção de depuração (DGBIER) estão corretamente habilitados, e o bit de máscara global de interrupção (INTM) está ativo. Após chegar na CPU a solicitação de interrupção deve ser atendida, mas para isso se faz necessário saber qual ISR deve ser chamada. Dessa forma, cada uma das fontes de interrupção citada é identicada por um vetor individual que ca armazenado em um bloco de RAM (Dynamic Random Acess Memory), então há uma tabela de vetores PIE para mapear as ISR correspondentes às suas respectivas fontes. Assim, quando uma interrupção é gerada o DSP faz uma consulta a tabela para determinar qual ISR deve ser executada. ..Interface de Comunicação Serial - SCI O DSPapresenta trŸs módulos de Interface de Comunicação Serial - SCI (o SCI-A, SCI-B e SCI-C), sendo eles portas seriais assíncronas baseadas em UART, que podem ser programados para atuar com uma taxa de transmissão de até mil valores. A transmissão e recepção de dados efetuada por meio do SCI é feita a partir de pinos externos chamados respectivamente SCITXD e SCIRXD. Ambos possuem uma la FIFO (First In, First Out) de níveis de profundidade cada e tŸm seus próprios pinos bits de habilitação e interrupção, além de poderem operar no modo half-duplex ou full-duplex. A Figura mostra o diagrama de blocos do módulo SCI, onde é possível observar blocos referentes às características descritas e demais funcionalidades, como a seleção de paridade. Este periférico suporta comunicações digitais entre a CPU e periféricos assíncronos que usam o formato NRZ (non-return-to-zero). No NRZ, cada bit é representado por um nível de tensão constante, com o nível do sinal em alto quando o bit é "" e em nível baixo quando é "". Capítulo . Ferramentas e tecnologias utilizadas Figura – Diagrama de blocos do módulo SCI. Fonte: Instruments (). O formato de comunicação do SCI pode ser unidirecional ou bidirecional e os frames consistem em um bit de início, de um a oito bits de dados, um bit de paridade opcional (par ou ímpar) e um ou dois bits de parada. A leitura dos bits depende diretamente do sinal de clock denido para o SCI, chamado SCICLK. O padrão é que existam períodos de SCICLK por bit de dados, ou seja, o clock de recepção é vezes superior a taxa de bits suportada. Capítulo . Ferramentas e tecnologias utilizadas Dessa maneira, considerando o processo de comunicação UART discutido na subse- ção .., o receptor inicia a operação ao receber um bit de início válido, que segundo as especicações do módulo SCI, é identicado por quatro períodos seguidos de SCICLK com o bit em ’’. Caso alguma leitura não seja , o processador reinicia e começa a procurar por outro bit de início. A Figura exemplica como é feita essa amostragem dos bits é feita. Figura – Amostragem dos bits no modo assíncrono do SCI. Fonte: Instruments (). Para os bits que vem após o de início, o processador determina seus valores ao fazer a amostragem do sinal nos períodos intermediários de SCICLK, que são: quatro, cinco e seis. O valor nal atribuído ao bit é baseado na maioria das trŸs amostras. As várias vericações feitas nos bits durante a comunicação assíncrona buscam garantir a integridade da comunicação, minimizando erros, uma vez que a amostragem do bit em diferentes momentos utilizando o SCICLK, possibilita a identicação correta do valor do bit, mesmo que haja ruído ou utuações rápidas no sinal. Ademais, o módulo SCI oferece dois modos de operação visando exibilidade para adaptar a comunicação a diversas congurações. Eles são: os modos multiprocessador de linha ociosa (idle-line) e de bit de endereço (address-bit), que como o nome sugere, permitem a comunicação entre processadores no mesmo link serial. Nos modos multiprocessador, são criados blocos de frames que organizam os dados de forma estruturada, o que facilita a identicação e processamento das informações. O modo de linha ociosa é caracterizado por um período de ociosidade em que não há transmissão de dados. Dessa forma, os blocos são separados por um tempo ocioso mais longo do que os intervalos de ociosidade entre frames dentro de cada bloco, assim como mostrado na Figura , onde um tempo ocioso de ou mais períodos do bit em nível alto indica o início de um novo bloco. Já no modo multiprocessador de bit de endereço, um bit extra chamado bit de endereçamento é inserido nos frames após o último bit de dados. Ele é denido como no Capítulo . Ferramentas e tecnologias utilizadas Figura – Formato de dados no modo multiprocessador de linha ociosa. Fonte: Instruments (). primeiro frame do bloco e como nos demais. A Figura mostra como é o formato da comunicação nesse modo. Figura – Formato de dados no modo multiprocessador de bit de endereço. Fonte: Instruments (). ..Code Composer Studio - CCS O Code Composer Studio (CCS) é um ambiente de ambiente de desenvolvimento integrado (IDE) associado ao DSP e aos demais microcontroladores e processadores embarcados da Texas Instruments. Capítulo . Ferramentas e tecnologias utilizadas Ele oferece ferramentas úteis quando se deseja programar e gerenciar projetos, tais como: editor de código fonte, depurador e proler. Além disso, possui suporte para programação nas linguagens C, C++ e Assembly. A Figura mostra uma imagem do ambiente do Code Composer Studio. Figura – Ambiente de Desenvolvimento Code Composer Studio. Fonte: Elaborada pelo autor. Vale ressaltar que a interface de comunicação JTAG USB é responsável por promover a interação entre o DSPe o CCS. .Módulo de conversão USB para TTL O módulo FTDI FTRL (ver Figura ) desempenha no projeto o papel de converter os dados de UART para USB, atuando como um elo de conexão entre os elementos da comunicação que utilizam diferentes interfaces. Este dispositivo proporciona a conversão de sinal serial TTL para USB (MiniUSB, especicamente), através do uso do chip FTR. Tal chip é fabricado pela empresa Future Technology Devices International - FTDI e apresenta como características principais, conforme International (): • Protocolo USB genrenciado no chip; • Taxas de transferŸncia de dados de baud a Mbaud em níveis TTL; • Buer de recebimento de bytes e buer de transmissão de bytes. Ademais, faz-se importante abordar a lógica TTL, uma vez que esta é fundamental para funcionamento do conversor. Dito isso, TTL é uma família de circuitos digitais Capítulo . Ferramentas e tecnologias utilizadas Figura – Módulo Conversor FTDI FTRL. Fonte: Elaborado pelo autor. composto por transistores bipolares junção, diodos e resistores. Ela se relaciona com sistemas de comunicação ao implementar, segundo Tocci, Widmer e Moss (), níveis de tensão especícos para representar os estados lógicos, sendo o nível baixo indicado por valores de V a ,V e o alto indicado por valores de ,V a ,V. .ASCII O Código Padrão Americano para o Intercâmbio de Informação (do inglŸs, American Standard Code for Information Interchange - ASCII) é um código binário para caracteres alfanuméricos que usa sete bits para codicar caracteres (MANO; CILETTI, ). Os sete bits do código são identicados como ba b, onde brepresenta o bit mais signicativo. No entanto, a maioria dos computadores trabalha com oito bits como unidade básica, formando o byte. Portanto, os caracteres ASCII normalmente são armazenados em bytes, com o bit extra sendo utilizado para outros propósitos como extensão de conjunto de caracteres. O ASCII geralmente é visto em forma de tabela, dessa forma, na Tabela é apresentado um recorte especíco da tabela ASCII, contendo apenas números, os caracteres especiais menos (‘-’) e ponto (‘.’); e os caracteres de controle, caractere nulo (NUL) e quebra de linha (LF). Essa seleção se justica pelo fato de que apenas esses caracteres são Capítulo . Ferramentas e tecnologias utilizadas utilizados pela SCI durante a comunicação. Ademais, o bit extra será designado na tabela por conveniŸncia como b. Tabela – Tabela ASCII dos caracteres utilizados no projeto. Binário Caractere Código ASCII bbbbbbbbNULL LF - . Fonte: Elaborado pelo autor. Por meio da Tabela , é possível observar que se for necessário fazer o envio do caractere , por exemplo, o programa irá interpretá-lo como para realizar a transmissão. .PyQt- Comprehensive Python Bindings for Qt vA interface gráca do supervisório foi desenvolvida utilizando o PyQt, uma ferramenta baseada em Qt. O Qt é um conjunto de bibliotecas C++ multiplataforma que fornece Interfaces de Programação de Aplicação de alto nível capazes de interagir com diversos aspectos de sistemas modernos para desktop e dispositivos móveis (COMPUTING, ). O Comprehensive Python Bindings for Qt v, por sua vez, é um binding que permite utilizar a linguagem de programação Python como alternativa ao C++ na criação de aplicações com o Qt v(versão ) (COMPUTING, ). Optou-se por utilizar o Qt devido sua riqueza de recursos e desempenho otimizado. Além disso, a escolha da programação em Python se deu pela maior exibilidade e simplicidade que essa linguagem apresenta em detrimento ao C++. METODOLOGIA O presente capítulo tem objetivo de descrever o setup do projeto, a rotina de envio dos dados efetuada pela DSP e o desenvolvimento do sistema supervisório utilizando o PyQt. .Montagem O início da implementação do projeto se dá pela montagem de seu setup. Dessa forma, a Figura retrata como foram feitas as conexões dos dispositivos envolvidos. Figura – Montagem dos dispositivos do projeto. Fonte: Elaborado pelo autor. Para efetuar a transferŸncia de dados, utilizou-se a porta SCITXDA do módulo SCI-A, correspondente ao pino da placa DSP. Este pino foi conectado à entrada RX do módulo FTRL. Além disso, foi estabelecido um aterramento comum, conectando o pino da placa ao terminal GND do módulo. A transmissão de dados do FTRL para o computador de supervisão foi realizada por meio de um cabo MiniUSB para USB-A. .Programação do DSPO algorítimo desenvolvido integrou uma funcionalidade de envio de dados a um código-fonte base, escrito em linguagem C, utilizado no LAMP para realizar o controle de máquinas elétricas. Devido a políticas de privacidade do laboratório, o algoritmo completo não pôde ser disponibilizado. No entanto, as partes relacionadas à conguração da comunicação e um exemplo de envio de dados foram incluídas no ApŸndice A. Desse modo, o uxograma que descreve o funcionamento da rotina está apresentado na Figura e organiza-se a partir da interação entre uma interrupção gerada por periféricos e o envio de dados implementado no laço innito da main. Capítulo . Metodologia Figura – Fluxograma do algoritmo implementado no DSP. Fonte: Elaborado pelo autor. O código-fonte base tem como estrutura principal uma interrupção vinculada aos módulos PWM (Pulse Width Modulation) e ADC (Analog-to-Digital Converter). O módulo PWM opera a uma frequŸncia de kHz e o disparo para início da conversão analógica- digital é realizado junto ao início de cada ciclo PWM. Quando as conversões são concluídas, o ADC dispara uma interrupção e é chamada a função onde está a rotina de controle do sistema, que processa dados convertidos e atualiza variáveis necessárias conforme o algoritmo de controle implementado. Assim, a rotina de envio de dados utiliza um contador que registra o número de vezes em que a interrupção ocorre e é monitorado continuamente na main. Ao atingir interrupções, o contador é reiniciado e os dados são enviados. Como a parte de comunicação está inserida na main, sempre que a interrupção é disparada durante uma transmissão, ocorre uma troca de contexto que modica o uxo do programa. Nesse momento, a transmissão é temporariamente pausada, sendo retomada após o término da ISR. Contudo, é importante destacar que, caso a transmissão de um Capítulo . Metodologia dado já tenha sido iniciada pelo registrador de transmissão, o envio do caractere em curso será nalizado, porque a SCI opera independentemente do núcleo da CPU. Com base nesses aspectos, o tempo disponível para execução da rotina de envio corresponde a µs, sendo este o intervalo entre as interrupções, subtraído do tempo de execução da ISR. Durante os testes, constatou-se que a interrupção demora em média de µs, resultando em µs disponíveis para execução das demais tarefas. Como o tempo máximo para execução da rotina de envio é de aproximadamente ,µs (conforme será mostrado na subseção ..), ao dividi-lo por µS, obtém-se o valor de aproximadamente ,. Esse resultado indica que são necessárias quatro interrupções para realizar todo processo de comunicação. Outra questão envolvendo a quantidade de interrupções apresentada é a amostragem associada à reconstrução do sinal que chega ao receptor. Considerando que geração dos dados de interesse ocorre a cada kHz e que um dado é transmitido a cada quatro interrupções, tem-se uma nova amostragem de Hz. Como informado na subseção .., um dos requisitos do projeto é que o sistema supervisório seja capaz de apresentar corretamente sinais com frequŸncia mínima de Hz. Portanto, é preciso determinar se o dado que chega ao receptor ainda representa corretamente o sinal original. Segundo Haykin (), um sinal é completamente recuperado quando sua frequŸncia de amostragem é de pelo menos, o dobro da frequŸncia máxima presente no sinal original, sendo esta chamada de taxa de Nyquist. Assim, como Hz é um valor superior a Hz, esse é atendido. Neste ponto se faz importante mencionar que devido limitações relacionadas ao driver encontrado para o Conversor FTDI FTRL, o máximo baud rate aplicado a comunicação foi bits por segundo (bps). Implicando no tempo de envio mencionando e, consequentemente, na quantidade de interrupções. ..Conﬁguração da Interface de Comunicação Serial A conguração deste periférico, bem como a implementação das funções responsáveis pelo envio de dados, foi realizada por meio da manipulação direta dos registradores do dispo- sitivo e teve como base um código exemplo chamado Example_xSci_Echoback.c presente na documentação do DSP. Dessa maneira, dentre os modos de comunicação disponíveis para interface, o adotado para este projeto foi o modo multiprocessador de linha ociosa, tendo em vista que ele não adiciona um bit extra ao frame e é compatível com a comunicação do tipo RS. Além disso, se fez necessário habilitar o pino GPIO (General-Purpose Input/Output, ou Entrada/Saída de Propósito Geral) , vinculado ao módulo SCI-A, para atuar como transmissor (SCITXDA). Capítulo . Metodologia Em se tratando das congurações do frame, tem-se que foi empregado o formato -N-, uma vez que ele permite a transmissão de bits de dados por frame, sendo suciente para representar, conforme a tabela ASCII, todos os caracteres necessários a representação dos dados. Considerando que o tempo de envio da mensagem é um fator crucial, optou- se por não empregar o bit de paridade e mais de um bit de parada, de modo a evitar sobrecarga na comunicação. Outra etapa da conguração da comunicação é a denição do baud rate. No entanto, antes de se abordar diretamente esse valor, é preciso mencionar que ele depende de uma constante chamada LSPCLK ou Clock de baixa frequŸncia. Essa constante, é um sinal de clock utilizado pelo DSPpara operar periféricos de baixa velocidade, como o SCI, SPI e IC, e é calculada por padrão como um quarto da frequŸncia de funcionamento da CPU. Desse modo, sabendo que a frequŸncia de CPU utilizada no projeto é MHz, temos LSPCLK igual a ,MHz. O baud rate é ajustado por meio de dois registradores de oito bits: SCIHBAUD (onde ca o byte mais signicativo) e SCILBAUD (onde ca o byte menos signicativo), que são concatenados para formar um baud de até bits, denominado BRR. Assim, o BRR é calculado de acordo com a Equação .: BRR = LSPCLK baud rate SCI · −= · −=⇒BRR ≈, (.) Logo, o valor de BRR utilizado para alcançar um baud rate de foi , considerando que os registradores operam exclusivamente com valores inteiros. Ademais, foi necessário apenas o uso do registrador SCILBAUD, dado que o resultado obtido está contido em bits, não exigindo registros adicionais. Por m, fez-se a conguração das las FIFO do módulo SCI. Conforme Axelson (), FIFO é um espaço de armazenamento cujo conteúdo é lido na mesma ordem em que foi armazenado. Desse modo, foi habilitado o uso da la de transmissão e desativada a geração de interrupções baseadas em seu nível de preenchimento. ..Função para conversão de tipo de dados As variáveis presentes em códigos aplicados a processadores digitais de sinais geralmente utilizam tipos de dados numéricos, como int, long, oat e double. No entanto, esses tipos de dados não podem ser enviados diretamente pela SCI, pois são representados internamente por estruturas binárias especícas, cujo tamanho e codicação variam de acordo com o tipo. Dada a complexidade de criar uma função que lide de maneira eciente e precisa com todos esses tipos de dados, optou-se por trabalhar especicamente com o formato Capítulo . Metodologia oat. Esse formato tem capacidade de representar números com parte inteira e decimal, com precisão suciente para a maioria dos casos práticos, além de exigir menos memória e processamento em comparação com o double. Assim, foi desenvolvida uma função chamada numeroParaString() que converte valores no formato oat para uma sequŸncia de caracteres, armazenada em um vetor de char (ponteiro para char). Essa conversão transforma os dados em uma sequŸncia de códigos numéricos compatíveis com a tabela ASCII, permitindo que sejam transmitidos de maneira padronizada. Para armazenar a sequŸncia de caracteres que representa o número convertido, o vetor de char utilizado possui tamanho oito. Esse tamanho foi escolhido para acomodar até sete dígitos da representação numérica, garantindo um equilíbrio entre o espaço ocupado e a capacidade de representar os números mais comuns com precisão adequada. O caractere adicional é reservado para o terminador nulo (\), utilizado em C para indicar o nal da string. Dito isso, a função numeroParaString() começa vericando se o número é negativo, adicionando o sinal de menos à primeira posição do vetor de char em caso armativo. Em seguida, processa a parte inteira e a parte decimal do número separadamente. Para a parte inteira, os dígitos são extraídos e convertidos para caracteres, sendo armazenados um a um no vetor de char. Caso haja uma parte decimal, ela é processada até quatro dígitos após o ponto decimal, convertendo cada dígito para o formato de caractere. Por m, a função adiciona um caractere nulo (\) ao nal da string para indicar o término. ..Funções para envio de dados O envio de dados no módulo SCI é realizado pela integração entre as funções scia_xmit() e scia_msg(), utilizando o registrador SCITXBUF como ponto central. O SCITXBUF armazena temporariamente os dados a serem transmitidos, transferindo-os para a FIFO de transmissão, que organiza o envio sequencial pelo barramento serial. A função scia_xmit() realiza a transmissão de um único caractere, garantindo que a FIFO de transmissão esteja disponível antes de carregar o dado no SCITXBUF. Já a função scia_msg() permite o envio de uma mensagem completa, percorrendo caractere por caractere do vetor de caracteres recebido como parâmetro e chamando scia_xmit() para transmitir cada dado de forma individual e ordenada. ..Análises do tempo de envio O tempo gasto pela rotina de envio para realizar a transmissão dos dados é calculado a partir do tempo necessário para transmitir um frame. No formato -N-, com um baud rate de bps, o tempo de transmissão de um frame (Tframe) pode ser obtido pela Capítulo . Metodologia razão entre o número total de bits no frame (bits) e o baud rate, como mostrado na Equação .: Tframe = num_bits baud_rate = = ▷s =⇒Tframe ≈, µs (.) A rotina foi projetada para enviar números com até dígitos e para delimitar o término de cada número, foi utilizado o caractere especial de quebra de linha (\n). Essa abordagem resulta em um total de frames transmitidos por número, considerando os dígitos e o caractere delimitador. O uso do caractere \n é essencial para garantir que o receptor interprete corretamente a mensagem, identicando de forma clara onde termina cada número. A transmissão inclui o envio de dois números consecutivos, o que requer a transmis- são de frames no total. Além do tempo necessário para transmitir esses frames, deve-se incluir o tempo de execução da função de conversão de tipos de dados numeroParaS- tring(), a qual consome µs. Esse tempo extra foi de relevante para o cálculo do tempo total de execução da rotina, pois é preciso considerar tanto os aspectos de transmissão quanto os de processamento no desempenho geral do sistema. Portanto, o tempo total do envio de dados Tenvio é: (, µ ∗) + ≈, µs. Além dos cálculos realizados para determinar os tempos envolvidos na transmissão de dados, foram capturadas imagens da tela de um osciloscópio, onde é possível observar e validar os tempos descritos matematicamente. Dessa forma, a Figura apresenta os sinais seriais enviados durante a transmissão do caractere . Tais sinais foram obtidos conectando-se a ponteiro do osciloscópio ao pino referente a porta SCITXDA. A partir da Figura , observa-se que o tempo medido experimentalmente para a transmissão do frame analisado se aproxima do tempo teórico. Além disso, conrma-se a teoria previamente discutida na subseção ..acerca da organização e disposição dos bits no processo de comunicação UART, onde tŸm-se da esquerda para direta: o bit de início em estado lógico baixo, os bits de dados , conforme previsto pela Tabela ASCII e o bit de parada, que está implícito, pois tem o mesmo estado da linha de transmissão. A Figura contém os sinais monitorados durante a execução do algoritmo imple- mentado e descrito nesta seção. Nela, são exibidos sinais distintos correspondentes trŸs processos: a execução da rotina de interrupção, em rosa; a transmissão de dois dados via SCI, em verde; e a execução completa da rotina de envio de dados, em azul. Para realizar a visualização desses sinais, além da conexão da ponteira descrita para Figura , as demais conexões foram feitas a pinos digitais congurados via software para assumir o estado lógico no início de cada evento e retornam ao estado lógico ao nal. Dessa maneira, o primeiro pulso azul, da esquerda para a direita, indica o início Capítulo . Metodologia Figura – Frame do caractere . Fonte: Elaborado pelo autor. Figura – Frame do caractere . Fonte: Elaborado pelo autor. do envio de um frame. Esse evento pode ser identicado como tal, pois é precedido pela queda de um pulso rosa, que indica o término da execução da rotina de interrupção, e Capítulo . Metodologia seguido por uma sequŸncia de sinais alternados, os quais correspondem aos pulsos que compõem o frame. Mais adiante, o intervalo presente entre os sinais do frame representa a troca de contexto para execução da ISR. Esse processo se repete até que todos os dados tenham sido enviados, fazendo com que o pulso azul volte para . Após isso, tem-se a quarta interrupção e uma nova execução da rotina de envio. .Desenvolvimento do supervisório O desenvolvimento do supervisório foi dividido em duas etapas principais: a cons- trução da interface gráca do usuário (do inglŸs, Graphical User Interface - GUI) e a programação de sua lógica de funcionamento. Na primeira etapa, a GUI foi projetada utilizando o Qt Designer, uma ferramenta visual e interativa que simplica a criação de interfaces grácas por permitir o desen- volvimento sem a necessidade de escrever manualmente o código de layout. Através do Qt Designer, foi possível estruturar a aplicação, organizando widgets, além de denir a disposição desses componentes na janela principal. "No Qt, widget é o nome dado a um componente da interface do usuário com o qual o usuário pode interagir" (FITZPATRICK, , p. ). A Figura mostra a tela inicia do Qt Designer. Figura – Tela inicial do Qt Designer. Fonte: Elaborado pelo autor. A segunda etapa consistiu na programação da lógica de funcionamento da GUI desenvolvida no ambiente programção Visual Studio Code (VS Code). O VS Code é um Capítulo . Metodologia editor de código-fonte multiplataforma, gratuito e de código aberto, desenvolvido pela Microsoft, que oferece depuração integrada, congurações personalizáveis e uma ampla biblioteca de extensões para diversas linguagens e frameworks. Nessa fase, os elementos visuais foram conectados às funcionalidades do sistema, denindo como a aplicação responde às interações do usuário. Essas conexões são feitas por meio da lógica de sinais e slots. Sinais são noticações emitidas por widgets para indicar a ocorrŸncia de eventos, como o clique de um botão. Eles podem ser desencadeados por ações do usuário ou gerados automaticamente pelo sistema. Além de indicar o evento, os sinais são capazes de transmitir dados para contextualizar sua ocorrŸncia. Já os slots são os receptores dos sinais. Em python qualquer função ou método pode atuar como um slot, desde que um sinal esteja associado a ele. Nos casos em que o sinal envia dados, o slot os recebe automaticamente (FITZPATRICK, ). ..Interface do Supervisório A interface do supervisório foi construída visando atender os seguintes requisitos do usuário: • Seleção da porta serial para comunicação. • Conguração da quantidade e do tipo de curvas a serem exibidas. Desse modo, a gura Figura apresenta a tela inicial do interface, destacando os elementos que permitem realizar essas congurações de forma prática e intuitiva. Para o correto funcionamento do supervisório, é necessário seguir um passo a passo de conguração previamente denido. O processo inicia-se na aba "Congurações", na seção "Seleção Inicial". Ao executar o supervisório com um ou mais dispositivos conectados à porta serial, o usuário pode, por meio de uma caixa de combinação, selecionar a porta pela qual será estabelecida a comunicação. Após realizar a escolha, é necessário pressionar o botão "Conrme" para concluir esta etapa da conguração. Em seguida, o usuário deve decidir se os sinais serão exibidas em função do tempo ou no formato Lissajous. Em ambos os casos, o quadro preto é destinado à exibição das curvas. A conguração da exibição dos sinais em função do tempo é feita na seção "Plotagem no tempo". Nesse caso, o usuário pode optar por visualizar um ou dois sinais e, ao pressionar o botão "Conrme", um ou dois eixos de coordenadas são automaticamente inseridos no quadro preto, conforme a opção selecionada. A Subgure mostra a interface congurada para apresentar os dados nos casos descritos. Capítulo . Metodologia Figura – Tela inicial do supervisório. Fonte: Elaborado pelo autor. Figura – Interface congura para plotagem de sinais em função do tempo (a) Quantidade de sinais igual a (b) Quantidade de sinais igual a Fonte: Elaborado pelo autor. A exibição dos sinais no formato Lissajous, é feita ao se pressionar o botão "Con- rme" na seção "Lissajous". Nesse caso, um eixo cartesiano será inserido no quadro preto similar ao que foi mostrado na Subgure (a). Após congurar a porta serial e denir o modo de visualização e a quantidade de Capítulo . Metodologia sinais a serem traçados, o usuário deve pressionar o botão "Iniciar". Esse comando dispara o evento de leitura da porta serial e a consequente exibição dos sinais na interface. Com o sistema em funcionamento, no caso em que foi escolhido ver sinais em função do tempo, o usuário pode ainda ajustar o zoom horizontal das curvas utilizando o slider localizado ao lado do botão "Conrme" nesta mesma seção. Essa funcionalidade permite ampliar ou reduzir a escala temporal das curvas exibidas, proporcionando uma análise mais detalhada ou uma visão geral dos dados. Ademias, a criação da interface gerou um arquivo no formato .ui, que contém a descrição da estrutura visual da aplicação e está no ApŸndice B. Esse arquivo .ui é posteriormente chamado e utilizado na programação da aplicação, permitindo a integração da interface gráca com o código funcional de maneira eciente. ..Estrutura da lógica da aplicação A aplicação (ver ApŸndice C) foi implementada com base em duas classes principais, organizadas de forma a separar a interface gráca da aquisição de dados: • class MyGUI(QMainWindow): é responsável pela interface gráca e pela intera- ção com o usuário, implementando sinais e slots que gerenciam os eventos. • class DataAcquisitionThread(QThread): gerŸncia a leitura dos dados e os disponibiliza de forma síncrona para a exibição em tempo real. A divisão foi adotada porque a leitura da porta serial ocorre de forma contínua e assíncrona. Caso fosse realizada no mesmo contexto da interface gráca, a execução simultânea das tarefas poderia gerar atrasos ou travamentos. Para mitigar esses problemas, optou-se por isolar a aquisição de dados, adotando uma abordagem que possibilite a execução independente de múltiplas tarefas. Assim, a abordagem escolhida foi o uso de threads, que são unidades básicas de execução da CPU. No contexto do PyQt, a classe QThread é utilizada para implementar threads de maneira eciente em aplicações grácas, evitando que tarefas intensivas ou blo- queantes, como a leitura contínua de dados da porta serial, interrompam ou comprometam a uidez da interface gráca. Para permitir que os dados lidos pela porta serial sejam transferidos de uma thread para outra foram utilizados buers compartilhados e a execução da conexão entre as duas threads é iniciada quando o botão "Iniciar" da interface gráca é pressionado. Nesse momento, a lógica presente na classe MyGUI congura a aquisição de dados, ajusta os parâmetros dos grácos, cria uma instância da classe DataAcquisitionThread e aciona um temporizador. Capítulo . Metodologia O temporizador é congurado para executar uma rotina responsável por atualizar em intervalos constantes de segundo os grácos com as informações presentes nos buers compartilhados. A justicativa que embasa essa escolha de tempo é que com ele a quantidade de ciclos exibidos corresponde exatamente à frequŸncia do sinal mostrado, proporcionando uma visualização alinhada ao comportamento do dado. Tendo sido instanciada, a thread de aquisição é iniciada. A leitura dos dados recebidos pela porta serial é gerenciada de maneira a lidar com diferentes congurações de sinais, podendo ser um único dado ou pares de dados. Desse modo, os dados são lidos caractere por caractere por meio do método read() e armazenados em um buer temporário. Quando o caractere \n é detectado, o conteúdo do buer é tratado como um dado completo, que é então convertido para um número em ponto utuante. Caso a conversão seja bem-sucedida, o dado é processado; caso contrário, o buer é descartado, e o sistema aguarda novos dados, assegurando que apenas informações válidas sejam utilizadas No caso em que apenas um dado é lido por ciclo de aquisição, o valor convertido é armazenado em um buer local denominado buer_y. Paralelamente, o marcador de tempo correspondente é calculado e armazenado no vetor buer_x. Esse vetor é preenchido de maneira a manter correspondŸncia temporal com os dados da coordenada y. A base temporal é gerada a partir do período de amostragem T = , , correspondente ao intervalo de tempo entre as amostras do sinal recebido. Inicialmente, o valor de x é denido como zero e, a cada dado recebido, é incrementado pelo valor de T, garantindo que os valores de x reitam o intervalo de tempo entre as amostras. Quando dois sinais são lidos simultaneamente, o programa adota uma estratégia de pareamento. O primeiro valor lido é temporariamente armazenado na variável pending_pair. O segundo valor, ao ser recebido, é associado ao primeiro, formando um par. Ambos os valores são então armazenados nos buers, buer_ye buer_y, enquanto os marcadores temporais correspondentes são adicionados ao vetor buer_x. Caso a sequŸncia de leitura dos dados não seja respeitada, o pareamento não é realizado, e o dado é descartado, reforçando a consistŸncia da aquisição. Independentemente do cenário, os buers locais são congurados para armazenar até amostras. Quando esse limite é alcançado, os dados são transferidos para estruturas de armazenamento compartilhadas (eixo_x, eixo_y, eixo_y). Durante essa transferŸncia, utiliza-se um mecanismo de exclusão mútua (mutex) para evitar condições de corrida, assegurando que a interface gráca possa acessar os dados de forma segura. Após a transferŸncia, os buers locais são esvaziados e preparados para o processamento das próximas amostras. Na atualização dos grácos, o temporizador dispara uma rotina que acessa os buers compartilhados, bloqueando temporariamente outras operações que os envolvam. Assim, Capítulo . Metodologia os grácos são atualizados a depender da quantidade de sinais e formato predenidos. Se o tipo de exibição for no tempo, as informações são inseridos no gráco como (x,y), caso seja Lissajous os dois dados referentes ao eixo y são exibidos no formato (y,y). A atualização do espaço horizontal da curva é realizada em tempo real conforme o ajuste do slider, permitindo controlar os limites do eixo xx e ajustar o intervalo exibido no gráco. Esse controle atua como um zoom horizontal para os grácos plotados em função do tempo. Como os dados são enviados a cada ,segundos e os grácos atualizados a cada segundo, o buer compartilhado contém, em média, valores. O ajuste do slider dene a fração de valores do buer a ser utilizada na plotagem. Por exemplo, ao congurar o slider para o valor , % dos valores iniciais e nais do vetor são descartados, resultando na exibição de valores no gráco. Isso facilita a visualização detalhada de regiões especícas do sinal analisado. RESULTADOS Foram realizados dois conjuntos de testes para validar a integração entre a rotina de envio de dados do DSPe a exibição desses dados no sistema supervisório. No primeiro conjunto de testes, os sinais exibidos nos grácos foram gerados internamente pelo DSP, com o objetivo de avaliar a funcionalidade básica do sistema de supervisão. No segundo conjunto de testes, o supervisório foi utilizado para monitorar sinais gerados durante o acionamento de um motor presente nas instalações do LAMP, permitindo a análise do desempenho em condições de aplicação real. .Testes simulados Para os testes a seguir foi implementada na rotina de interrupção a geração de duas senoides com de amplitude. Já no computador de supervisão, foi seguido o passo a passo de conguração descrito na subseção ... Inicialmente, foi feito o envio de apenas uma das senoides. A Figura e a Figura ilustram o funcionamento do supervisório com curvas de Hz e Hz, respectivamente, sendo representadas gracamente em função do tempo. Figura – Exibição no tempo de um sinal de Hz. Fonte: Elaborado pelo autor. Capítulo . Resultados Figura – Exibição no tempo de um sinal de Hz. Fonte: Elaborado pelo autor. Ao observar a Figura , é possível notar que o sinal exposto apresenta difícil visualização, devido sua frequŸncia ser relativamente alta para o intervalo de tempo amostrado na tela. Assim, a Subgure ilustra dois casos de uso do zoom horizontal. Figura – Exibição no tempo de um sinal de Hz com zoom horizontal aplicado (a) Zoom horizontal de % (b) Zoom horizontal de % Fonte: Elaborado pelo autor. Em seguida, alterou-se o código do DSP para realizar o envio de duas senoides. Desse modo, a Figura fornece uma visualização do supervisório com dois sinais de Hz em função do tempo, enquanto a Subgure apresenta a mesma visualização com o zoom aplicado. Capítulo . Resultados Figura – Exibição no tempo de dois sinais de Hz defasados em °. Fonte: Elaborado pelo autor. Figura – Exibição no tempo de dois sinais de Hz defasados em ° com zoom horizontal aplicado. (a) Zoom horizontal de % (b) Zoom horizontal de % Fonte: Elaborado pelo autor. Ainda com o DSP enviando dados referentes a duas senoides, é possível utilizar a opção de exibição no formato Lissajous, ilustrado na Figura . Capítulo . Resultados Figura – Exibição no formato de Lissajous.. Fonte: Elaborado pelo autor. .Testes com motor em Operação Neste conjunto de testes, as variáveis monitoradas foram correntes que percorrem os enrolamentos de um motor enquanto sua velocidade era de Rotações por Minuto (RPM). Inicialmente, o código do DSPe o supervisório foram congurados para, respectivamente, enviar e exibir apenas um dado de corrente. Desse modo a Figura ilustra o funcionamento do supervisório para o caso descrito. Capítulo . Resultados Figura – Exibição no tempo de um sinal de corrente. Fonte: Elaborado pelo autor. Am de estabelecer um nível de comparação e observar se os dados exibidos pelo supervisório estavam corretos, foram feitas capturas de tela de um osciloscópio que monitorava a mesma corrente do supervisório. Desse modo, a Figura retrata a leitura de corrente feita pelo osciloscópio. Figura – Sinal de corrente medido pelo osciloscópio. Fonte: Elaborado pelo autor. Capítulo . Resultados Ao observar o sinal presente na Figura , é possível constatar que sua amplitude é de aproximadamente Amperes (A) e que sua frequŸncia é Hz. Já no sinal presente na Figura , a amplitude oscila, mas ca numa faixa próxima dos A e há aproximadamente períodos do sinal dentro de um intervalo de milissegundos, o que resulta em uma frequŸncia de Hz. Em seguida, foram feitos testes com dois sinais de corrente. A Figura e a Figura ilustram, respectivamente, o funcionamento do supervisório e a medição do osciloscópio, para as duas curvas. Figura – Exibição no tempo de dois sinais de corrente. Fonte: Elaborado pelo autor. De maneira análoga, a análise realizada para um sinal de corrente, é possível perceber que os sinais exibidos no supervisório são semelhantes aos registrados no osciloscópio. Logo, é possível armar que a exibição feita pelo supervisório retrata corretamente os sinais interesse. Capítulo . Resultados Figura – Dois sinais de corrente medidos pelo osciloscópio. Fonte: Elaborado pelo autor. CONCLUSÃO A implementação do sistema supervisório para monitoramento de sinais provenientes do DSP foi concluída com Ÿxito, uma vez que foi possível utilizar o projeto proposto em um caso prático onde se observou a exibição de curvas que permitem avaliar o comportamento de variáveis escolhida e em diferentes formatos. Contudo, algumas limitações foram identicadas e apontam para possíveis melhorias. A velocidade de transferŸncia de dados pela comunicação SCI utilizada mostrou-se limitada, resultando na perda de informações, pois novos dados eram gerados enquanto informações anteriores ainda estavam sendo transmitidas. Uma solução para esse problema seria empregar drivers que suportem taxas de comunicação mais altas ou adotar protocolos mais rápidos, como SPI ou IC. Além disso, embora a taxa de atualização de um segundo tenha sido adequada para os objetivos iniciais, uma maior uidez na exibição dos dados seria desejável, o que poderia ser alcançado com otimizações no software ou no método de visualização utilizado. Assim, os resultados obtidos demonstram o potencial do sistema, mas eviden- ciam oportunidades para aprimoramentos futuros, visando maior eciŸncia e precisão no monitoramento. REFERĹNCIAS AXELSON, J. Serial Port Complete: COM Ports, USB Virtual COM Ports, and Ports for Embedded Systems. . ed. Madison, WI : Lakeview Research, . ISBN ---. COMPUTING, R. PyQt... . Disponível em: https://pypi.org/project/PyQt/. Acesso em: out. . COMPUTING, R. What is PyQt? . Disponível em: https://www.riverbankcomputing.com/software/pyqt/. Acesso em: jan. . FITZPATRICK, M. Create GUI Applications with Python & Qt(PyQtEdition): The hands-on guide to making apps with Python. [S.l.]: Martin Fitzpatrick, . FOROUZAN, B. A. Data Communications and Networking. . ed. New York: The McGraw-Hill Companies, Inc, . HAYKIN, S. Digital Communication Systems. Wiley, . ISBN . Disponível em: <https://books.google.com.br- /books?id=YGZXAAAACAAJ>https://books.google.com.br/books?id=YGZXAAAACAAJ. INSTRUMENTS, T. TMSFx, TMSFx Real-Time Microcontrollers. . Disponível em: https://www.ti.com/lit/ds/symlink/tmsf.pdf. Acesso em: dez. . INSTRUMENTS, T. TMSxx, x Serial Communications Interface (SCI) Reference Guide. . Disponível em: http://mil.u.edu//docs/TI_DSP/TI- docs/sprufza.pdf. Acesso em: dez. . INSTRUMENTS, T. TMSxx, TMSxx Technical Reference Manual. . Disponível em: https://www.ti.com/lit/ug/sprui/sprui.pdf. Acesso em: nov. . INTERNATIONAL, F. T. D. FTR USB UART IC Datasheet. . Disponível em: https://ftdichip.com/wp-content/uploads///DS_FTR.pdf. Acesso em: dez. . MANO, M.; CILETTI, M. Digital Design: With an Introduc- tion to the Verilog HDL. Pearson, . (Always learning). ISBN . Disponível em: <https://books.google.com.br- /books?id=bmsmAEACAAJ>https://books.google.com.br/books?id=bmsmAEACAAJ. TIBOLA, L. R. Geração de Sistemas Supervisórios a partir de Modelos Orientados a Objetos. Dissertação (Mestrado) — Universidade Federal do Rio Grande do Sul, Porto Alegre, . TOCCI, R. J.; WIDMER, N. S.; MOSS, G. L. Sistemas Digitais: Princípios e aplicações. . ed. Rua Nelson Francisco, , Limão: Pearson Education do Brasil, . ReferŸncias YU, X. et al. The new frontier of smart grids. IEEE Industrial Electronics Magazine, IEEE, v. , n. , p. –, . ApŸndices APĹNDICE A – CÓDIGO-FONTE DO DSP Listing A.– Código-fonte do algoritmo desenvolvido em C no CCS // Funcoes SCI void scia_echoback_init (void); void scia_fifo_init (void); void scia_xmit (int a); void scia_msg(char *msg); void numeroParaString (float numero , char* str); interrupt void adc_isr(void); unsigned int adcInterruptCount= ; // Variaveis SCI char *msg_aux = "\n\"; char buffer_ad []; char buffer_ad []; float ang= , senoide_ad = ., senoide_ad = ., ad_freq = →., ad_freq_aux = .; void main(void) { // Step . Initialize System Control: // PLL , WatchDog , enable Peripheral Clocks InitSysCtrl (); // Step . Initalize GPIO: // Init GPIO pins for ePWMA , ePWMB , ePWMA , ePWMB , ePWMA e →ePWMB e EcapInitEPwmGpio (); InitECapGpio (); InitEQepGpio (); // Step . Clear all interrupts and initialize PIE vector table: // Disable CPU interrupts DINT; APĹNDICE A. Código-Fonte do DSP // Initialize the PIE control registers to their default state. InitPieCtrl (); // Disable CPU interrupts and clear all CPU interrupt flags: IER = x; IFR = x; // Initialize the PIE vector table with pointers to the shell →Interrupt // Service Routines (ISR). InitPieVectTable (); // Interrupts are re -mapped to ISR functions found within this →file. EALLOW; PieVectTable .ADCINT = &adc_isr; EDIS; // Step . Initialize A/D Peripheral : InitAdc (); scia_fifo_init (); // Initialize the SCI FIFO scia_echoback_init (); // Initalize SCI for echoback // Stop PWM counter timer ( TBCLKSYNC - Sincroniza os clocks e →Parando todos os moduloas PWM) EALLOW; SysCtrlRegs .PCLKCR.bit.TBCLKSYNC = ; // - reseta TBCLKSYNC EDIS; InitEPwm(); // Start PWM counter timer. All PWM Channels are syncronized EALLOW; SysCtrlRegs .PCLKCR.bit.TBCLKSYNC = ; EDIS; // Step . User specific code , enable interrupts: IER |= M_INT; // interrupcao do Timer& ADC APĹNDICE A. Código-Fonte do DSP // Enable ADCINT in PIE PieCtrlRegs .PIEIER.bit.INTx= ; // Utilizar a interrupcao →do ADC // Enable global Interrupts and higher priority real -time debug →events: EINT; // Enable Global interrupt INTM ERTM; // Enable Global realtime interrupt DBGM // Step . IDLE loop. ConfigGPIO (); // Configura os pinos IO // Funcao que configura o ADC para realizar a conversao via →interrupcao do PWM ConfigCAD (); for (;;){ if( adcInterruptCount== ){ adcInterruptCount=; numeroParaString (senoide_ad , buffer_ad); numeroParaString (senoide_ad , buffer_ad); scia_msg( buffer_ad); scia_msg(msg_aux); scia_msg( buffer_ad); scia_msg(msg_aux); } } } // fim do main interrupt void adc_isr(void){ adcInterruptCount++; ad_freq = ad_freq_aux ; ang= ang+ .e -* ad_freq; if (ang> .) ang= ang- .; APĹNDICE A. Código-Fonte do DSP if (ang< -.) ang= .+ ang; senoide_ad = * sin(ang); senoide_ad = * sin(ang+ .); } void ConfigGPIO (void) { // Configura GPIO EALLOW; GpioCtrlRegs .GPAPUD.bit.GPIO= ; // Enable pull -up for →GPIO(SCIRXDA) GpioCtrlRegs .GPAPUD.bit.GPIO= ; // Enable pull -up for →GPIO(SCITXDA) // Configura os pinos GPIOe GPIOcomo SCI -A GpioCtrlRegs .GPAMUX.bit.GPIO= ; // SCITXDA GpioCtrlRegs .GPAMUX.bit.GPIO= ; // SCIRXDA EDIS; } void scia_echoback_init () { SciaRegs.SCICCR.all =x; // stop bit , No loopback // No parity ,char bits , // async mode , idle -line →protocol SciaRegs.SCICTL.all =x; SciaRegs.SCICTL.all =x; SciaRegs.SCICTL.bit.TXINTENA =; SciaRegs.SCICTL.bit.RXBKINTENA =; #if ( CPU_FRQ_MHZ ) SciaRegs.SCIHBAUD = x; SciaRegs.SCILBAUD = x; // baud @LSPCLK = .→MHz #endif SciaRegs.SCICTL.all =x; // Relinquish SCI from Reset APĹNDICE A. Código-Fonte do DSP } // Transmit a character from the SCI void scia_xmit (int a) { while (SciaRegs.SCIFFTX.bit.TXFFST != ) {} SciaRegs.SCITXBUF=a; } void scia_msg(char * msg) { int i = ; while(msg[i] != '\') { scia_xmit(msg[i]); i++; } } // Initalize the SCI FIFO void scia_fifo_init () { SciaRegs.SCIFFTX.all =xE; SciaRegs.SCIFFRX.all =xf; SciaRegs.SCIFFCT.all =x; } void numeroParaString (float numero , char *str) { int posicao_buffer = ; if(numero < ){ numero *= -; str[ posicao_buffer ] = '-'; posicao_buffer ++; } int parteInteira = (int)numero; float parteDecimal = numero - parteInteira ; APĹNDICE A. Código-Fonte do DSP // Converte a parte inteira para string if ( parteInteira == ) { str[ posicao_buffer ++] = ''; } else { int temp = parteInteira ; int numDigitos = ; // Conta o numero de digitos na parte inteira while (temp > ) { temp /= ; numDigitos ++; } // Escreve os digitos da parte inteira no buffer temp = parteInteira ; int i; for (i = numDigitos - ; i >= && posicao_buffer < ; i →--) { str[ posicao_buffer + i] = (temp % ) + ''; temp /= ; } posicao_buffer += numDigitos; } if ( parteDecimal != ){ // Adiciona o ponto decimal , se ainda houver espaco if ( posicao_buffer < ) { str[ posicao_buffer ++] = '.'; } int i = ; for (i = ; i < && posicao_buffer < ; i++) { parteDecimal *= ; int digit = (int) parteDecimal ; if (digit == && parteDecimal == .) { // Para →evitar zeros desnecessarios str[ posicao_buffer ++] = ''; break; } str[ posicao_buffer ++] = digit + ''; parteDecimal -= digit; } } APĹNDICE A. Código-Fonte do DSP // Adiciona o caractere nulo para terminar a string str[ posicao_buffer ] = '\'; } APĹNDICE B – CÓDIGO-FONTE DA INTERFACE GRÁFICA DO SUPERVISÓRIO Listing B.– Código-fonte da interface desenvolvida com QtDesigner <?xml version="." encoding="UTF -"?> <ui version="."> <class >MainWindow </class > <widget class=" QMainWindow " name="MainWindow"> <property name="geometry"> <rect > <x></x> <y></y> <width ></ width > <height ></ height > </rect > </property > <property name=" windowTitle "> <string >MainWindow </ string > </property > <widget class="QWidget" name=" centralwidget "> <widget class="QGroupBox" name="groupBox"> <property name="geometry"> <rect > <x></x> <y></y> <width ></ width > <height ></ height > </rect > </property > <property name="title"> <string > C o n f i g u r a e s </ string > </property > <widget class="QWidget" name=" gridLayoutWidget_"> <property name="geometry"> <rect > <x ></x> <y></y> <width ></ width > APĹNDICE B. Código-Fonte da Interface Gráﬁca do Supervisório <height ></ height > </rect > </property > <layout class=" QGridLayout " name=" gridLayout_plotTemp "> <item row="" column=""> <widget class="QLabel" name=" label_PlotTempo "> <property name="text"> <string >&lt;html&gt;&lt;head /&gt;&lt;body&gt;&lt;p align →=& quot;center&quot ;&gt;&lt;span style =& quot; font - →size :pt; font -weight :;& quot ;&gt;Plotagem no →tempo&lt;/ span&gt;&lt;/p&gt;&lt;/ body&gt;&lt;/ html& →gt;</string > </property > </widget > </item > <item row="" column=""> <layout class=" QHBoxLayout " name=" horizontalLayout_"> <item > <spacer name=" horizontalSpacer_"> <property name=" orientation "> <enum >Qt:: Horizontal </enum > </property > <property name="sizeHint" stdset=""> <size > <width ></ width > <height ></ height > </size > </property > </spacer > </item > <item > <widget class=" QPushButton " name=" pushButton_plotTemp "> <property name="text"> <string >Confirme </ string > </property > </widget > </item > </layout > </item > <item row="" column=""> <layout class=" QHBoxLayout " name=" horizontalLayout_"> APĹNDICE B. Código-Fonte da Interface Gráﬁca do Supervisório <item > <widget class="QLabel" name="label_"> <property name="text"> <string > N m e r o de sinais </ string > </property > </widget > </item > <item > <widget class="QComboBox" name=" comboBox_plotTemp "/> </item > </layout > </item > </layout > </widget > <widget class="QWidget" name=" gridLayoutWidget "> <property name="geometry"> <rect > <x></x> <y></y> <width ></ width > <height ></ height > </rect > </property > <layout class=" QGridLayout " name="gridLayout"> <item row="" column=""> <layout class=" QHBoxLayout " name=" horizontalLayout_"> <item > <widget class="QLabel" name=" label_portaComSer "> <property name="text"> <string >Porta </ string > </property > </widget > </item > <item > <widget class="QComboBox" name=" comboBox_portas "/> </item > <item > <layout class=" QHBoxLayout " name=" horizontalLayout_"> <item > <widget class="QLabel" name=" label_baudrate "> <property name="text"> APĹNDICE B. Código-Fonte da Interface Gráﬁca do Supervisório <string >Baudrate :</string > </property > </widget > </item > <item > <widget class="QLabel" name="label"> <property name="text"> <string ></ string > </property > </widget > </item > </layout > </item > </layout > </item > <item row="" column=""> <widget class="QLabel" name=" label_selecInicial "> <property name="text"> <string >&lt;html&gt;&lt;head /&gt;&lt;body&gt;&lt;p align →=& quot;center&quot ;&gt;&lt;span style =& quot; font - →size :pt; font -weight :;& quot ;&gt; S e l e o →Inicial&lt;/ span&gt;&lt;/p&gt;&lt;/ body&gt;&lt;/ →html&gt;</string > </property > </widget > </item > <item row="" column=""> <layout class=" QHBoxLayout " name=" horizontalLayout_"> <item > <layout class=" QHBoxLayout " name=" horizontalLayout "> <item > <widget class="QLabel" name=" label_status "> <property name="text"> <string >Status :</string > </property > </widget > </item > <item > <widget class="QLabel" name=" label_alteraStatus "> <property name="text"> <string >Status </ string > APĹNDICE B. Código-Fonte da Interface Gráﬁca do Supervisório </property > </widget > </item > </layout > </item > <item > <spacer name=" horizontalSpacer "> <property name=" orientation "> <enum >Qt:: Horizontal </enum > </property > <property name="sizeHint" stdset=""> <size > <width ></ width > <height ></ height > </size > </property > </spacer > </item > <item > <widget class=" QPushButton " name=" pushButton_selInicial " →> <property name="text"> <string >Confirme </ string > </property > </widget > </item > </layout > </item > </layout > </widget > <widget class=" QPushButton " name=" pushButton_iniciar "> <property name="geometry"> <rect > <x ></x> <y></y> <width ></ width > <height ></ height > </rect > </property > <property name="text"> <string >Iniciar </ string > APĹNDICE B. Código-Fonte da Interface Gráﬁca do Supervisório </property > </widget > <widget class="QWidget" name=" layoutWidget "> <property name="geometry"> <rect > <x ></x> <y></y> <width ></ width > <height ></ height > </rect > </property > <layout class=" QGridLayout " name=" gridLayout_"> <item row="" column=""> <layout class=" QHBoxLayout " name=" horizontalLayout_"> <item > <widget class="QLabel" name="label_"> <property name="text"> <string >Zoom horizontal (%):</string > </property > </widget > </item > <item > <widget class="QLabel" name=" label_horizontalSlider "> <property name="text"> <string >&lt;html&gt;&lt;head /&gt;&lt;body&gt;&lt;p&gt →;-&lt;/p&gt;&lt;/ body&gt;&lt;/ html&gt;</string > </property > </widget > </item > </layout > </item > <item row="" column=""> <widget class="QSlider" name=" horizontalSlider "> <property name=" orientation "> <enum >Qt:: Horizontal </enum > </property > </widget > </item > </layout > </widget > <widget class="QWidget" name=" layoutWidget "> APĹNDICE B. Código-Fonte da Interface Gráﬁca do Supervisório <property name="geometry"> <rect > <x ></x> <y></y> <width ></ width > <height ></ height > </rect > </property > <layout class=" QGridLayout " name=" gridLayout_"> <item row="" column=""> <layout class=" QHBoxLayout " name=" horizontalLayout_"> <item > <spacer name=" horizontalSpacer_"> <property name=" orientation "> <enum >Qt:: Horizontal </enum > </property > <property name="sizeHint" stdset=""> <size > <width ></ width > <height ></ height > </size > </property > </spacer > </item > <item > <widget class=" QPushButton " name=" →pushButton_plotLissajous "> <property name="text"> <string >Confirme </ string > </property > </widget > </item > <item > <spacer name=" horizontalSpacer_"> <property name=" orientation "> <enum >Qt:: Horizontal </enum > </property > <property name="sizeHint" stdset=""> <size > <width ></ width > <height ></ height > APĹNDICE B. Código-Fonte da Interface Gráﬁca do Supervisório </size > </property > </spacer > </item > </layout > </item > <item row="" column=""> <widget class="QLabel" name=" label_plotLissajous "> <property name="text"> <string >&lt;html&gt;&lt;head /&gt;&lt;body&gt;&lt;p align →=& quot;center&quot ;&gt;&lt;span style =& quot; font - →size :pt; font -weight :;& quot ;&gt;Lissajous&lt;/ →span&gt;&lt;/p&gt;&lt;/ body&gt;&lt;/ html&gt;</ →string > </property > </widget > </item > </layout > </widget > </widget > <widget class="QWidget" name="widget_" native="true"> <property name="geometry"> <rect > <x></x> <y ></y> <width ></ width > <height ></ height > </rect > </property > <property name="styleSheet"> <string notr="true">background -color:rgb (,,);</string > </property > </widget > <widget class="QLabel" name=" label_titulo "> <property name="geometry"> <rect > <x></x> <y></y> <width ></ width > <height ></ height > </rect > APĹNDICE B. Código-Fonte da Interface Gráﬁca do Supervisório </property > <property name="text"> <string >&lt;html&gt;&lt;head /&gt;&lt;body&gt;&lt;p&gt;&lt; →span style =& quot; font -size :pt; font -weight :;& quot →;&gt; S u p e r v i s r i o para sinais do DSP&lt;/ span&gt;&lt;/ →p&gt;&lt;/ body&gt;&lt;/ html&gt;</string > </property > <property name="alignment"> <set >Qt:: AlignCenter </set > </property > </widget > <widget class="QFrame" name="frame"> <property name="geometry"> <rect > <x ></x> <y ></y> <width ></ width > <height ></ height > </rect > </property > <property name="frameShape"> <enum >QFrame :: StyledPanel </enum > </property > <property name=" frameShadow "> <enum >QFrame :: Raised </enum > </property > </widget > </widget > <widget class="QMenuBar" name="menubar"> <property name="geometry"> <rect > <x></x> <y></y> <width ></ width > <height ></ height > </rect > </property > <widget class="QMenu" name=" menuMenu_Inical "> <property name="title"> <string >Menu Inical </ string > </property > APĹNDICE B. Código-Fonte da Interface Gráﬁca do Supervisório <addaction name=" actionReiniciar "/> <addaction name="separator"/> <addaction name=" actionFechar_"/> </widget > <addaction name=" menuMenu_Inical "/> </widget > <widget class=" QStatusBar" name="statusbar"/> <action name=" actionReiniciar "> <property name="text"> <string >Reiniciar </ string > </property > </action > <action name=" actionFechar "> <property name="text"> <string >Fechar </ string > </property > </action > <action name=" actionFechar_"> <property name="text"> <string >Fechar </ string > </property > </action > </widget > <resources/> <connections /> </ui > APĹNDICE C – CÓDIGO-FONTE DA APLICAÇÃO Listing C.– Código Python da aplicação gráca com PyQtimport sys from PyQtimport QtWidgets from PyQt.QtWidgets import * from PyQt.QtCore import QThread , pyqtSignal , QMutex , QMutex , →QTimer from PyQtimport uic from matplotlib .backends. backend_qtagg import FigureCanvasQTAgg from matplotlib .figure import Figure import serial.tools. list_ports import serial from collections import deque import pyqtgraph as pg import numpy as np class MyGUI( QMainWindow ): def __init__(self): super(MyGUI , self).__init__ () uic.loadUi("gui.ui", self) # Centraliza a GUI no meio da tela ao executar screen = QApplication . primaryScreen () screen_geometry = screen. availableGeometry () # Obtem a →geometria da tela disponivel # Calcula a posicao centralizada screen_width = screen_geometry .width () screen_height = screen_geometry .height () # Obtem as dimensoes da janela window_width = self.width () window_height = self.height () # Calcula as coordenadas para centralizar a janela x = ( screen_width - window_width ) // y = ( screen_height - window_height ) // # Move a janela para a posicao central self.move(x, y) APĹNDICE C. Código-Fonte da aplicação self. actionReiniciar .triggered.connect(self.reiniciar) self. actionFechar_.triggered.connect(self.fechar) #Variaveis para controle de eventos self. escolha_plot = '' self. escolha_lissajous = '' self. ultimo_botao_press = '' self. porcentagem_corte = self. faixa_inicial = .self. faixa_final = .self. pre_trigger_= .self. pre_trigger_= .#Variaveis para controle da comunicacao serial self.ser = None #Outras variaveis self.mutex = QMutex () self. data_thread = None # Frequencia de amostragem dos dados self.freq = /self. sample_rate = / self.freq # Cria um objeto GraphicsLayoutWidget do PyQtGraph self. graphics_layout_widget = pg. GraphicsLayoutWidget () # Layout vertical para inserir o GraphicsLayoutWidget no →widget self. widget_layout = QVBoxLayout (self.widget_) self. widget_layout . addWidget(self. graphics_layout_widget ) # Conecta os botoes aos metodos self. pushButton_selInicial .clicked.connect(self. →configure_selInicial ) self. pushButton_plotTemp .clicked.connect(self. →configure_plotTemp ) self. pushButton_plotLissajous .clicked.connect(self. →configure_plotLissajous ) self. pushButton_iniciar .clicked.connect(self. →ajusta_aquisicao ) # Lista as portas seriais disponiveis APĹNDICE C. Código-Fonte da aplicação portas = serial.tools. list_ports.comports () for porta in portas: self. comboBox_portas .addItem(porta.device) #Conecta as opcoes de comboBox da plotagem no tempo self. comboBox_plotTemp .addItem(" ") self. comboBox_plotTemp .addItem("") self. comboBox_plotTemp .addItem("") # Conectando o sinal de mudanca de selecao ao metodo self. comboBox_plotTemp . currentIndexChanged .connect(self. →seleciona_sinais ) #self. horizontalSlider . setMinimum () self. horizontalSlider .setRange (,) self. horizontalSlider .setValue () self. horizontalSlider . setTickInterval () self. label_horizontalSlider .setText("") self. horizontalSlider . valueChanged .connect(self. →horizontalZoom ) self.show () """ Configuracao do Menu """ # Botao para reiniciar aplicacao def reiniciar(self): reinicia_app () # Botao para fehcar aplicacao def fechar(self): self.close () # Configuracoes da "Selecao Inicial" def configure_selInicial (self): if self.ser and self.ser.is_open: self.ser.close () self.ser = None self. pushButton_selInicial .setText("Conecta") self. label_alteraStatus .setText(" Desconectado ") APĹNDICE C. Código-Fonte da aplicação if self.ser: self.ser.quit () self.ser = None else: porta_selecionada = self. comboBox_portas .currentText →() baud_rate = try: self.ser = serial.Serial(porta_selecionada , →baud_rate) if self.ser.is_open: self. pushButton_selInicial .setText(" →Desconectar ") self. label_alteraStatus .setText("Conectado") else: self. label_alteraStatus .setText("Erro ao →Conectar") except Exception as e: self. serial_connection = None QtWidgets. QMessageBox .critical(self , "Error", f" →Fail: {str(e)}") # Ajusta o zoom horizontal e atualiza o label com o valor →correspondente . def horizontalZoom (self , value_slider ): self. porcentagem_corte = value_slider * self. label_horizontalSlider .setText(f"{self. →porcentagem_corte *}") # Configuracao do grafico para um sinal em funcao do tempo def configure_plot_(self): self.plot= self. graphics_layout_widget .addPlot(row=, →col =) self.plot.showGrid(x=True , y=True) self.curve= self.plot.plot(pen='r') # Configuracao dos graficos para dois sinais em funcao do →tempo def configure_plot_(self): APĹNDICE C. Código-Fonte da aplicação self.plot= self. graphics_layout_widget .addPlot(row=, →col =) self.plot.showGrid(x=True , y=True) self.curve= self.plot.plot(pen='r') self.plot= self. graphics_layout_widget .addPlot(row=, →col =) self.plot.showGrid(x=True , y=True) self.curve= self.plot.plot(pen='b') # Configuracao do grafico no formato Lissajous def configure_plot_(self): self.plot= self. graphics_layout_widget .addPlot(row=, →col =) self.curve= self.plot.plot(pen='r') print("Cheguei configure_plot_") # Obtem a opcao selecionada no comboBox de exibicao em funcao → do tempo def seleciona_sinais (self): self. escolha_plot = self. comboBox_plotTemp . currentText () print(f'Selecionado : {self. escolha_plot }') # Configura os deques de acordo com a quantidade de sinais a →serem exibidos em funcao do tempo def configure_plotTemp (self): self.eixo_x = deque () if (self. escolha_plot == ''): self. configure_plot_() self.eixo_y= deque () self.eixo_y= deque () elif (self. escolha_plot == ''): self. configure_plot_() self.eixo_y= deque () self.eixo_y= None self. ultimo_botao_press = '' # Configura os deques de acordo com a exibicao no formato de →Lissajous def configure_plotLissajous (self): self.eixo_x = deque () APĹNDICE C. Código-Fonte da aplicação if (self. escolha_lissajous == ''): self. configure_plot_() self.eixo_y= deque () self.eixo_y= deque () self. ultimo_botao_press = '' # Ajusta a configuracao do plot e inicia a thread de →aquisicao de dados def ajusta_aquisicao (self): self. ajusta_plot () if not self. data_thread : self. data_thread = DataAcquisitionThread (self.ser , →self.mutex , self.eixo_x , self.eixo_y, self. →eixo_y, self. sample_rate ) self. disparo_aquisicao () else: pass # Ajusta o tipo de plot com base na selecao feita def ajusta_plot (self): if self. ultimo_botao_press == '': if self. escolha_lissajous == '': self. ultima_escolha_plot = '' else: self. ultima_escolha_plot = self. escolha_plot print(f'Escolha foi :{ self. ultima_escolha_plot }') # Inicia a aquisicao de dados e configura a atualizacao do →plot a cada segundo def disparo_aquisicao (self): self. data_thread . nova_quant_sinais .emit(self. →ultima_escolha_plot ) self. data_thread .start () # Iniciar o timer de atualizacao self. update_timer = QTimer(self) self. update_timer .timeout.connect(self. update_plot ) self. update_timer .start () # Atualiza os graficos APĹNDICE C. Código-Fonte da aplicação def update_plot (self): self.mutex.lock () x_vals = list(self.eixo_x) y_vals= list(self.eixo_y) if self.eixo_x: self.eixo_x.clear () if self.eixo_y: self.eixo_y.clear () if (self. ultima_escolha_plot == '' or self. ultima_escolha_plot == ''): y_vals= list(self.eixo_y) self.eixo_y.clear () self.mutex.unlock () # Atualizacao do espaco horizontal da curva conforme →atualizacao no slider self. faixa_inicial = int (( self. porcentagem_corte / ) * → len(x_vals)) self. faixa_final = int(len(x_vals) - (self. →porcentagem_corte / ) * len(x_vals)) x_vals = x_vals[self. faixa_inicial :self.faixa_final ] if (self. ultima_escolha_plot == ''): y_vals= y_vals[self. faixa_inicial :self. faixa_final →] if (len(x_vals) == len(y_vals)) and len(x_vals) != →: self.curve.setData(x_vals , y_vals) else: print("[Plot ] Vetores de dados com tamnhos →diferentes!") APĹNDICE C. Código-Fonte da aplicação if (self. ultima_escolha_plot == ''): y_vals= y_vals[self. faixa_inicial :self. faixa_final →] if (len(x_vals) == len(y_vals)) and len(x_vals) != →: self.curve.setData(x_vals , y_vals) else: print("[Plot .] Vetores de dados com tamnhos →diferentes!") y_vals= y_vals[self. faixa_inicial :self. faixa_final →] if (len(x_vals) == len(y_vals)) and len(x_vals) != →: self.curve.setData(x_vals , y_vals) else: print("[Plot .] Vetores de dados com tamnhos →diferentes!") if (self. ultima_escolha_plot == ''): self.curve.setData(y_vals, y_vals) """ Thread para aquisicao e processamento de dados seriais , com →suporte a um ou dois sinais simultaneos . """ class DataAcquisitionThread (QThread): nova_quant_sinais = pyqtSignal(str) data_ready = pyqtSignal(list) print("Thread iniciada") # Inicializa a thread com parametros de comunicacao , buffers →e taxa de amostragem def __init__(self , comSer , mutex , eixo_x , eixo_y, eixo_y, →sample_rate ): super ().__init__ () #Variaveis compartilhadas via argumento self.comSer = comSer self.mutex = mutex APĹNDICE C. Código-Fonte da aplicação self.eixo_x = eixo_x self.eixo_y= eixo_yself.eixo_y= eixo_yself. sample_rate = sample_rate #Variaveis compartilhadas via sinal self. quant_sinais = "" self. nova_quant_sinais .connect(self. set_quant_sinais ) #Variaveis locais self.ativo = True self.buffer = "" # Buffers locais self.buffer_x = [] self.buffer_y= [] self.buffer_y= [] self.next_x = .# Controle para alternancia completa self. ready_to_update_x = False self. current_buffer = self.buffer_yself. pending_pair = None #Controle do buffer_x quando so se tem sinal self. controleX_sinal = False # Define a quantidade de sinais a ser adquirida e atualiza o →estado da thread def set_quant_sinais (self , quant_sinais ): self. quant_sinais = quant_sinais print(f'Quantidade de sinais mudou: { quant_sinais }') print(f"self.ativo = {self.ativo}") # Adquire e processa dados via comunicacao serial , →armazenando -os nos buffers. def run(self): ''' Aguarda um periodo para estabilizar a comunicacao . ''' for _ in range (): a = self.comSer.readline () print(f"[TA] Duas primeiras leituras: {a}") while self.ativo: APĹNDICE C. Código-Fonte da aplicação if self. quant_sinais == '' or self. quant_sinais == ' →': # Leitura de dois valores , cada um em uma linha char = self.comSer.read ().decode () # Leia um →caractere self.buffer += char if char == '\n': # Processa um dado completo ao →encontrar '\n' try: value = float(self.buffer.strip ()) # →Converte para float except ValueError: print(f"[ERRO] Dado invalido recebido: { →self.buffer.strip ()}") self.buffer = "" # Descartar par atual self. pending_pair = None self. current_buffer = self.buffer_ycontinue if self. pending_pair is None: # Primeiro dado do par self. pending_pair = value self. current_buffer = self.buffer_yelse: # Segundo dado do par self.buffer_y.append(self. pending_pair ) self.buffer_y.append(value) # Atualiza eixo_x somente apos o par ser →valido self.buffer_x.append(self.next_x) self.next_x = round(self.next_x + self. →sample_rate , ) self. pending_pair = None self. current_buffer = self.buffer_yAPĹNDICE C. Código-Fonte da aplicação # Reseta o buffer de leitura self.buffer = "" # Transferencia periodica para os deques if len(self.buffer_x) >= : self. _transfer_to_deques () else: # Leitura de um unico valor char = self.comSer.read ().decode () # Leia um →caractere self.buffer += char if char == '\n': # Processa o dado completo ao →encontrar '\n' try: value = float(self.buffer.strip ()) # →Converte para float self. controleX_sinal = True except ValueError: print(f"[ERRO] Dado invalido recebido: { →self.buffer.strip ()}") self.buffer = "" continue if self. controleX_sinal == True: self.buffer_y.append(value) self.buffer_x.append(self.next_x) self.next_x = round(self.next_x + self. →sample_rate , ) self. controleX_sinal = False # Reseta o buffer de leitura self.buffer = "" # Transferencia periodica para os deques if len(self.buffer_x) >= : self. _transfer_to_deques () APĹNDICE C. Código-Fonte da aplicação #Transfere dados dos buffers locais para os deques →compartilhados . def _transfer_to_deques (self): self.mutex.lock () try: if self. quant_sinais == '' or self. quant_sinais == ' →': self.eixo_x.extend(self.buffer_x) self.eixo_y.extend(self.buffer_y) self.eixo_y.extend(self.buffer_y) else: self.eixo_x.extend(self.buffer_x) self.eixo_y.extend(self.buffer_y) finally: self.mutex.unlock () # Limpa os buffers locais apos a transferencia self.buffer_x.clear () self.buffer_y.clear () self.buffer_y.clear () # Reinicia a aplicacao fechando e recriando a janela principal. def reinicia_app (): global window window.close () # Fecha a janela atual window = MyGUI () # Cria uma nova instancia da janela →principal if __name__ == '__main__ ': app = QApplication (sys.argv) window = MyGUI () sys.exit(app.exec_ ())
+Desenvolvimento de um sistema supervisório
+para monitoramento contínuo de sinais
+Natal – RN
+Desenvolvimento de um sistema supervisório para
+monitoramento contínuo de sinais
+Trabalho de Conclusão de Curso de Engenha-
+ria de Computação da Universidade Federal
+do Rio Grande do Norte, apresentado como
+requisito parcial para a obtenção do grau de
+Bacharel em Engenharia de Computação
+Orientador: Andrés Ortiz Salazar
+Universidade Federal do Rio Grande do Norte – UFRN
+Departamento de Engenharia de Computação e Automação – DCA
+Curso de Engenharia de Computação
+Natal – RN
+Janeiro de 2025
+Desenvolvimento de um sistema supervisório para
+monitoramento contínuo de sinais
+Trabalho de Conclusão de Curso de Engenha-
+ria de Computação da Universidade Federal
+do Rio Grande do Norte, apresentado como
+requisito parcial para a obtenção do grau de
+Bacharel em Engenharia de Computação
+Orientador: Andrés Ortiz Salazar
+Trabalho aprovado. Natal – RN, 17 de Janeiro de 2025:
+Prof. Dr. Andrés Ortiz Salazar - Orientador
+UFRN
+Dr. Diego Antônio de Moura FonsŸca
+UFRN
+Me. Rodrigo de Andrade Teixeira
+UFRN
+Natal – RN
+Janeiro de 2025
+Agradeço a Deus, pela dádiva da vida e por ter me dado forças em todos os
+momentos em que pensei em desistir.
+Aos meus pais Eliene Generosa dos Santos Amaral e Admilson Fernandes do Amaral,
+pelo amor incondicional e apoio incessante. Suas presenças foram fundamentais para minha
+formação pessoal e acadŸmica.
+Aos meus familiares, que sempre me incentivaram e nunca mediram esforços em
+me ajudar. Em especial, aos meus tios Luzinente Generosa e Miguel José, por terem me
+acolhido em sua casa e por todo o suporte que me deram durante a graduação.
+À minha companheira Ana Paula de Oliveira, pela assistŸncia inabalável e paciŸncia
+constante.
+Aos amigos que z durante a graduação. Sem os momentos de descontração e as
+várias horas de estudos em grupo que compartilhamos jamais teria conseguido chegar tão
+longe.
+Ao meu orientador, Prof. Dr. Andrés Ortiz Salazar pelos ensinamentos e pela
+conança depositada em mim desde o início da iniciação cientica até este ponto.
+Ao pessoal que faz parte do Laboratório de Avaliação de Medição em Petróleo
+(LAMP), pela colaboração, troca de conhecimentos e companheirismo.
+A visualização de sinais em tempo real é um fator crucial quando se deseja entender o
+comportamento de sistemas, uma vez que, a análise de dados instantâneos permite que
+o operador detecte padrões e tome decisões de maneira mais rápida e oportuna. Nesse
+contexto, este trabalho apresenta o desenvolvimento de um sistema supervisório para sinais
+digitais. A m de atingir esse objetivo, fez-se uso do Processador Digitais de Sinais (DSP)
+modelo TMS320F28335 para enviar dados via Interface de Comunicação Serial (SCI) para
+um computador a parte. Em seguida os dados são interpretados e exibidos utilizando-se a
+biblioteca PyQT5.
+Palavras-chaves: Sinais; DSP; Supervisório; SCI; PyQt5.
+The visualization of real-time signals is a crucial factor in understanding system behavior,
+as the analysis of instantaneous data enables operators to detect patterns and make
+decisions more quickly and eectively. In this context, this work presents the development
+of a supervisory system for digital signals. To achieve this goal, a Digital Signal Processor
+(DSP) model TMS320F28335 was utilized to send data via a Serial Communication
+Interface (SCI) to an external computer. The data is then processed and displayed using
+the PyQt5 library.
+Keywords: Signals; DSP; Supervisory; SCI; PyQt5.
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . . . . . . . . . . . .
+horizontal aplicado. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+. . . . . . . . . . . . . .
+BPS
+Bits por segundo
+CCS
+Code Composer Studio
+CPU
+Central Processing Unit
+DSC
+Digital Signal Controller
+DSP
+Digital Signal Processor
+FTDI
+Future Technology Devices Internationa
+IRS
+Interrupt Service Routine
+I2C
+Inter-Integrated Circuit
+LAMP
+Laboratório de Avaliação de Medição em Petróleo
+NRZ
+Non-Return-to-Zero
+PIE
+Peripheral Interrupt Expansion
+RPM
+Rotações por Minuto
+SCI
+Serial Communication Interface
+SPI
+Serial Peripheral Interface
+TTL
+Transistor–Transistor Logic
+USB
+Universal Serial Bus
+UART
+Universal Asynchronous Receiver/Transmitter
+Prexo quilo (103)
+Prexo Mega (106)
+Prexo nano (10−9)
+Prexo micro (10−6)
+INTRODUÇÃO
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.1
+Contextualização . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2
+Objetivos
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2.1
+Objetivos especíﬁcos . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.3
+Estrutura do Trabalho . . . . . . . . . . . . . . . . . . . . . . . . . . .
+FUNDAMENTAÇÃO TEÓRICA . . . . . . . . . . . . . . . . . . . .
+2.1
+Comunicação de dados
+. . . . . . . . . . . . . . . . . . . . . . . . . .
+2.1.1
+Componentes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.1.2
+Fluxo de dados . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.1.3
+Transmissão digital de dados . . . . . . . . . . . . . . . . . . . . . . . . .
+2.1.4
+Taxas de Transmissão . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2
+Interface UART
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2.1
+Processo de Comunicação
+. . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3
+Sistema Supervisório . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+FERRAMENTAS E TECNOLOGIAS UTILIZADAS
+. . . . . . . . .
+3.1
+Processador Digital de Sinais . . . . . . . . . . . . . . . . . . . . . . .
+3.1.1
+Sistema de Interrupção . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.1.2
+Interface de Comunicação Serial - SCI . . . . . . . . . . . . . . . . . . . .
+3.1.3
+Code Composer Studio - CCS
+. . . . . . . . . . . . . . . . . . . . . . . .
+3.2
+Módulo de conversão USB para TTL . . . . . . . . . . . . . . . . . .
+3.3
+ASCII . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.4
+PyQt5 - Comprehensive Python Bindings for Qt v5 . . . . . . . . . .
+METODOLOGIA
+. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.1
+Montagem . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.2
+Programação do DSP28335 . . . . . . . . . . . . . . . . . . . . . . . .
+4.2.1
+Conﬁguração da Interface de Comunicação Serial . . . . . . . . . . . . . .
+4.2.2
+Função para conversão de tipo de dados . . . . . . . . . . . . . . . . . . .
+4.2.3
+Funções para envio de dados . . . . . . . . . . . . . . . . . . . . . . . . .
+4.2.4
+Análises do tempo de envio . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.3
+Desenvolvimento do supervisório . . . . . . . . . . . . . . . . . . . . .
+4.3.1
+Interface do Supervisório . . . . . . . . . . . . . . . . . . . . . . . . . . .
+5.1
+Testes simulados . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+5.2
+Testes com motor em Operação . . . . . . . . . . . . . . . . . . . . .
+CONCLUSÃO
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+REFERĹNCIAS
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+APĹNDICES
+APĹNDICE A – CÓDIGO-FONTE DO DSP . . . . . . . . . . . . .
+APĹNDICE B – CÓDIGO-FONTE DA INTERFACE GRÁFICA DO
+SUPERVISÓRIO . . . . . . . . . . . . . . . . . . .
+APĹNDICE C – CÓDIGO-FONTE DA APLICAÇÃO . . . . . . . .
+O processamento digital de sinais é um ramo da ciŸncia da computação que trata da
+matemática, dos algoritmos e das técnicas utilizadas para manipular sinais que geralmente
+foram convertidos para o formato digital. (YU et al., 2011).
+Os dispositivos projetados para lidar especicamente com a manipulação de sinais
+são chamados de Processadores Digitais de Sinal (do inglŸs, Digital Signal Processors -
+DSP’s) e podem ser aplicados em diversas áreas como: comunicação, medicina, geofísica e
+engenharia.
+Durante a execução de um sistema que utiliza o DSP, o processamento de sinais
+ocorre de forma sequencial e frequentemente em alta velocidade, o que diculta a análise
+em tempo real do impacto desses sinais no desempenho e no comportamento geral do
+sistema.
+Nesse contexto, sistemas supervisórios apresentam-se como ferramentas relevantes
+ao viabilizar o monitoramento contínuo e eciente dos sinais, sendo uma abordagem que
+supera não só as limitações das análises oﬄine, mas também contribui para uma maior
+precisão e conabilidade na tomada de decisões.
+Dessa forma, este trabalho propõe o desenvolvimento de um sistema supervisório
+capaz de interpretar sinais digitais provenientes do DSP e exibi-los em grácos, utilizando
+a comunicação serial do DSP para a transmissão dos dados durante a execução dos
+programas.
+1.1
+Contextualização
+Este trabalho foi desenvolvido em parceria com o Laboratório de Avaliação de
+Medição em Petróleo (LAMP) da Universidade Federal do Rio Grande do Norte - UFRN.
+O LAMP possui pesquisas vinculadas a área de petróleo, energias renováveis e máquinas
+elétricas, onde na última área citada faz-se uso de DSP’s. Desse modo, o estudo de caso
+ao qual será aplicado o projeto será feito neste laboratório.
+1.2
+Objetivos
+supervisão e exibi-los em grácos previamente congurados pelo usuário.
+1.2.1
+Objetivos especíﬁcos
+Os objetivos especícos são:
+• Congurar a SCI do processador digital de sinais;
+• Integrar a um código já existente a funcionalidade de envio de dados utilizando SCI;
+• Denir uma forma de converter informações seriais TTL (Transistor–Transistor
+Logic) em sinais seriais USB (Universal Serial Bus);
+• Desenvolver um código em Python capaz de ler a porta USB do computador e
+transmitir as informações processadas à interface de supervisão;
+• Desenvolver um supervisório que permita ao usuário denir a quantidade de curvas
+a serem exibidas (uma ou duas) e o formato do gráco (no tempo ou Lissajous).
+• Garantir que o sistema supervisório seja capaz de apresentar corretamente sinais
+com frequŸncia mínima de 60 Hz.
+1.3
+Estrutura do Trabalho
+Este trabalho apresenta uma introdução sobre o processador digital de sinais,
+mostrando a importância de um sistema supervisório nos contextos em que esse dispositivo
+é utilizado. Em sequŸncia, o Capítulo 2 apresenta a teoria que embase o desenvolvimento
+da pesquisa, ao passo que o Capítulo 3 aborda as ferramentas e tecnologias que foram
+utilizadas para implementação do projeto. O Capítulo 4, por sua vez, explica a metodologia
+aplicada para estruturar os códigos do DSP e do supervisório. O Capítulo 5 contém os
+resultados obtidos durante a implementação do projeto. Por m, o Capítulo 6 traz as
+principais conclusões deste trabalho.
+Este capítulo é dedicado a apresentar os principais conceitos nos quais se baseia o
+projeto, sendo dividido em trŸs seções distintas. Inicialmente, será apresentada a seção
+sobre comunicação de dados, que discutirá alguns princípios fundamentais para a troca de
+informações entre sistemas. Em seguida, a seção sobre UART explorará as características e o
+funcionamento dessa interface de comunicação. Por m, a seção sobre sistemas supervisórios
+abordará o que são esses sistemas e como eles se aplicam a este trabalho.
+2.1
+Comunicação de dados
+A comunicação de dados refere-se a troca de informações entre dispositivos através
+de algum meio de transmissão. Para que ela ocorra, é necessário que os dispositivos façam
+parte de um sistema de comunicação, que consiste em uma combinação de Hardware e
+Software. Forouzan (2013) arma que a eciŸncia desses sistemas depende de quatro
+características essenciais:
+• Entrega: o sistema deve entregar os dados ao destino correto, fazendo com que eles
+sejam recebidos apenas pelo dispositivo ou usuário pretendido;
+• Precisão: é necessário que o sistema entregue os dados de forma precisa, tornando-se
+inutilizáveis dados que forem alterados durante a transmissão e não corrigidos;
+• Pontualidade: os dados devem ser entregues pelo sistema de maneira pontual.
+Entregas tardias comprometem sua utilidade;
+• Jitter: diz respeito à variação no tempo de chegada dos pacotes, caracterizada pelo
+atraso desigual na entrega de dados de áudios e vídeo;
+2.1.1
+Componentes
+A estrutura básica de um sistema de comunicação de dados é composta por 5
+componentes e pode ser vista na Figura 1.
+A mensagem, disposta como elemento central na Figura 1, diz respeito a informação
+que se deseja transmitir e pode possuir diversos formatos, como: textos, números, imagens,
+áudio e vídeo. O dispositivo responsável por enviá-la é chamado de remetente ou transmissor,
+ao passo que o dispositivo encarregado de recebŸ-la é nomeado destinatário ou receptor.
+Interligando transmissor ao receptor, tem-se o meio ou linha de transmissão, sendo
+este o caminho físico por onde a mensagem se desloca. Alguns exemplos desse componente
+são o cabo coaxial e o o par trançado.
+Por m, para que a mensagem enviada seja compreendida corretamente pelo
+destinatário, é necessário que haja um protocolo na comunicação. Este elemento estabelece
+um conjunto de regras que os dispositivos devem seguir para se comunicarem de maneira
+correta.
+2.1.2
+Fluxo de dados
+O uxo de dados refere-se ao movimento de informações entre elementos que
+compõem a comunicação e pode ocorrer em trŸs modos: simplex, half-duplex e full-duplex.
+A Figura 2 mostra como são realizadas as conexões em cada um deles.
+No modo simplex a comunicação é feita em um único sentido e somente um dos
+dois dispositivos pode transmitir dados, enquanto o outro apenas recebe. Já no modo
+half-duplex, cada dispositivo pode transmitir e receber dados, desde que essas tarefas
+não ocorram ao mesmo tempo, logo, quando um está enviando o outro está recebendo
+e vice-versa. No modo full-duplex, os dois dispositivos podem enviar e receber dados
+simultaneamente (FOROUZAN, 2013).
+2.1.3
+Transmissão digital de dados
+A transmissão digital de dados é o envio de informações em formato de dados
+digitais, que são representados por sequŸncias de bits 0’s e 1’s. Ela pode ser realizada em
+dois modos: paralelo ou serial.
+Para Forouzan (2013), a transmissão paralela é um método em que bits são enviados
+por n canais de comunicação a cada pulso de clock, enquanto na transmissão serial um
+bit segue o outro, sendo necessário apenas um canal. A Figura 3 ilusta como são feitas as
+ligações para uma transmissão paralela com 8 canais e para a transmissão serial.
+Ainda segundo Forouzan (2013), em termos de usabilidade, as principais diferenças
+entre os dois modos de transmissão de dados são a velocidade e o custo. A transmissão
+paralela possui a capacidade de aumentar a velocidade de transferŸncia em um fator de n
+em relação à transmissão serial. Porém, essa abordagem vem acompanhada de um alto
+custo de transmissão, uma vez que são necessários mais canais apenas para enviar o uxo
+de dados. Desse modo, a comunicação paralela geralmente é limitada a curtas distâncias,
+enquanto a comunicação serial é mais ecaz em longas distâncias.
+Além de apresentar redução nos curtos e simplicidade, a comunicação serial ocorre
+de duas maneiras que inuenciam diretamente sua eciŸncia e aplicabilidade, sendo elas:
+comunicação serial síncrona e assíncrona.
+Conforme Axelson (2007), em um protocolo síncrono, a interface possui uma linha
+de clock controlada por um dos dispositivos e todos os bits transmitidos são sincronizados
+com esse clock. Assim, a transmissão de cada um deles é tida como válida em um instante
+especíco após a transição de subida ou descida do sinal da linha. Algumas interfaces
+seriais síncronas são a I2C (Inter-Integrated Circuit), SPI (Serial Peripheral Interface) e
+Microwire.
+de dados, em vez disso, uma frequŸncia é acordada entre os dispositivos que participam da
+comunicação e cada um utiliza seu próprio clock como referŸncia de tempo. Dessa forma,
+a sincronia entre os dispositivos é feita a partir do envio de um bit especíco chamado bit
+de início. Dentre os exemplos de comunicação assíncrona existem a UART e RS-232.
+2.1.4
+Taxas de Transmissão
+As taxas de transmissão determinam a velocidade com que ocorre a transferŸncia
+de dados. Desse modo, a literatura aborda dois conceitos importantes envolvendo essas
+taxas: o bit rate e o baud rate.
+Segundo Axelson (2007), bit rate é o número de bits que são transmitidos ou
+recebidos por unidade de tempo, sendo geralmente expresso em bits por segundo, enquanto
+o baud rate, diz respeito ao número de transições de sinais por segundo.
+Neste trabalho, cada transição de dados representa a mudança de um bit, fazendo
+com que bit rate e baud rate sejam os mesmos. Portanto, o termo adotado pra se referir a
+taxa de transmissão será baud rate.
+2.2
+UART
+A UART (Universal Asynchronous Receiver/Transmitter) é uma interface de comu-
+nicação serial assíncrona que dene um protocolo para a troca de dados entre dispositivos
+de maneira sequencial, bit a bit.
+Os elementos que a compõem são um transmissor (TX), um receptor (RX) e um o
+de terra. A conexão física entre eles é feita com o transmissor de um dispositivo conectado
+ao receptor do outro (assim como mostrado no formato Full Duplex da subseção 2.1.2) e
+com um aterramento comum.
+2.2.1
+Processo de Comunicação
+Tendo em vista a característica assíncrona da UART, as informações transmitidas
+seguem um padrão de formatação que as dividem em blocos geralmente chamados de
+frames. Cada frame é formado por: um bit de início, bits de dados (que podem ser chamados
+de palavra), um bit opcional de paridade e um ou mais bits de parada.
+A partir da quantidade de bits conguráveis, existem diversos tipos de formatos
+para os frames. Em um dos mais comuns, o 8-N-1, o frame possui oito bits de dados,
+nenhum bit de paridade e um bit de parada. Tal formato tem seus níveis lógicos em uma
+processo de comunicação UART.
+Quando não está ocorrendo comunicação, a linha de transmissão encontra-se em
+estado de meio ocioso com o transmissor em nível lógico alto (1). Para indicar o início de
+uma transmissão, o transmissor envia um sinal de referŸncia conhecido como bit de início,
+que possui nível lógico baixo (0) e é responsável por alertar ao receptor sobre a chegada
+de um novo frame.
+A partir da chegada do bit de início, o receptor tenta amostrar os bits seguintes
+considerando o período do bit, que diz respeito ao tempo que se leva para transmitir um
+único bit e matematicamente pode ser representado como o inverso do baud rate.
+Em seguida, são enviados 8 bits de dados em sequŸncia começando pelo bit menos
+signicativo. Os bits de dados contém a informação útil que se deseja transmitir e sua
+quantidade pode variar de 5 a 8, a depender do dispositivo ao qual a UART está vinculada.
+Após os bits de dados, o transmissor envia o bit de parada para nalizar a trans-
+missão. Este bit possui valor lógico alto e pode ser de uma, uma e meia ou duas vezes o
+tempo do período do bit.
+Além dos bits explicitados, é importante comentar sobre o bit de paridade, que
+não foi utilizado no exemplo em questão. Tal bit, se congurado, atua como uma forma
+simples de vericação de erros, sendo calculado pelo transmissor com base na palavra e
+adicionado ao frame depois desta e antes do bit de parada.
+Desse modo, existem quatro tipos de paridade: par (even), ímpar (odd), de marca
+e de espaço, representadas nos formatos de frames respectivamente pelas letras "E", "O",
+"M" e "S". Em contextos onde a paridade é denida como par ou ímpar, o número total de
+bits "1" no frame tem que ser par para o primeiro caso e ímpar para o segundo. Assim, o
+bit paridade é congurado como 0 ou 1 para fazer com que o valor total de bits atinja
+a paridade desejada. Nos casos em que a paridade é denida como de marca, o bit de
+paridade é sempre 1 e quando é denida como de espaço, o bit de paridade é sempre 0.
+receptor precisam concordar a respeitos do baud rate e do formato do frame. Caso contrário,
+a sincronização entre os dispositivos pode ser comprometida e a interpretações dos dados
+feita de maneira errônea.
+2.3
+Sistema Supervisório
+Um sistema computacional considerado como supervisório opera em torno de dados,
+possuindo como características: a capacidade de estabelecer comunicação entre computa-
+dores e equipamentos de aquisição, a manipulação e análise dos dados e a exibição dos
+resultados destes processamentos ao usuário, em um formato previamente denido (TI-
+BOLA, 2000).
+Os sistemas supervisórios fornecem uma interface visual amigável para visualização
+de variáveis do sistema em tempo real, permitindo que o operador compreenda e atue
+sobre o processo de maneira facilitada.
+No presente trabalho, o supervisório desenvolvido apresenta as seguintes caracterís-
+ticas: suporte aos protocolos de comunicação utilizados pelo DSP; mecanismos que buscam
+assegurar a sincronia, de modo que os dados exibidos representem o estado atual do
+processo; e possibilidade de ajustes dinâmicos na visualização dos parâmetros monitorados.
+Este capítulo contém as descrições do componentes eletrônicos e do software
+utilizados para desenvolvimento e uso do supervisório. Inicialmente é apresentada uma
+visão geral do Processador Digital de Sinais e de seus periféricos empregados. Em seguida,
+é abordado o módulo de conversão UART para USB. Por m, é discutido o PyQt5,
+destacando suas funcionalidades e programação.
+3.1
+Processador Digital de Sinais
+Neste trabalho, o termo Processador Digital de Sinais, refere-se a um conjunto
+composto por um Controlador Digital de Sinais (do inglŸs, Digital Signal Controller -
+DSC) e sua placa de desenvolvimento.
+O modelo de DSC utilizado é o TMS320F28335. Ele faz parte da família C2000T M
+de microcontroladores em tempo real desenvolvida pela Texas Instruments, sendo projetado
+para atuar em sistemas que precisem de controle rápido e preciso.
+O módulo stand-alone associado ao TMS320F28335 é o eZdspT MF28335 fabricado
+pela Spectrum Digital. Esta placa permite o acesso facilitado a pinos, o que simplica
+a conexão de periféricos e sensores; e oferece recursos como conectores de alimentação e
+interfaces de comunicação.
+Nesse viés, o DSP28335 (forma como, por simplicidade, será chamado no texto o
+conjunto descrito) pode ser visto na Figura 5 e apresenta como características principais
+conforme Instruments (2007):
+• Chip de alta performance com unidade de ponto utuante de 32 bits;
+• FrequŸncia de operação de 150MHz (ciclo de clock 6,67ns);
+• Consumo de energia de 1,9V/1,8V para o processador e 3,3V para dispositivos de
+entrada e saída;
+• Interface JTAG USB embutido;
+• Memórias RAM de 68k bytes, Flash de 512k bytes e SRAM de 256k bytes;
+Para a realização do projeto, foi necessário implementar o envio controlado de
+sinais para outro dispositivo, assegurando que não houvesse interferŸncia no processamento
+desses sinais. Os periféricos do DSP28335 utilizados para atender a essas requisitos foram:
+o Sistema de Interrupção e o Módulo SCI. Além disso, fez-se uso do Code Composer Studio
+(CCS) versão 3.3 para realizar a programação e depuração do código fonte desenvolvido.
+As subseções a seguir contém uma descrição detalhada a respeito da conguração e
+do funcionamento desses periféricos e do CCS.
+3.1.1
+Sistema de Interrupção
+A interrupção é um mecanismo em que o processador tem a execução do seu
+loop principal interrompida para lidar com um evento especíco sem a necessidade de se
+vericar constantemente a ocorrŸncia desse evento. Quando uma interrupção é inicializada,
+o controle da execução do programa atual é transferido para uma rotina de tratamento de
+interrupção (também conhecida como ISR - Interrupt Service Routine), que se encarrega
+de identicar qual rotina foi ativada e executar as instruções associadas a ela.
+Nesse viés, o núcleo de DSP 28335 suporta trabalhar com interrupções, podendo
+atender a uma interrupção não mascarável (NMI) e a 16 solicitações de interrupções
+mascaráveis (INT1-INT14, RTOSINT e DLOGINT), onde a interrupção não mascarável é
+um tipo de interrupção que não pode ser temporariamente desativada ou ignorada pelo
+sistema, ao passo que a mascarável pode, a depender de sua prioridade em relação as
+outras interrupções.
+suciente para tratar todas as solicitações de interrupção em seu nível. Logo, as interrupções
+geradas por periféricos e outros pinos externos são gerenciadas por um bloco de expansão
+de interrupção de periféricos (Peripheral Interrupt Expansion - PIE).
+O PIE realiza a multiplexação das várias fontes de interrupções em um conjunto
+menor de entrada de interrupções, dessa forma, ele organiza as 96 fontes presentes no DSP
+em 12 grupos, que são nomeados de grupo PIE 1 até o grupo PIE 12, e cada um desses
+grupos possui 8 possíveis fontes de interrupção. Para as interrupções não multiplexadas, o
+PIE passa a solicitação diretamente para a CPU.
+A partir do diagrama da Figura 6, se faz possível esmiuçar o sequenciamento lógico
+de funcionamento do PIE.
+Tal sequenciamento é dividido em trŸs níveis:
+• Nível do Periférico: quando uma interrupção ocorre devido um evento em um
+periférico, um bit ag (IF) relacionado a esse evento é congurado em um registrador
+próprio para esse periférico. Se o bit enable (IE) correspondente está congurado, o
+periférico faz um pedido de interrupção ao controlador PIE, caso contrário, o bit IF
+ca ativo até ser reiniciado via software. Se por algum motivo o bit enable foi ativado
+um tempo depois e o bit IF ainda estiver congurado, o pedido de interrupção é
+enviado ao PIE;
+solicitação de interrupção chega ao controlador PIE, o bit PIEIFRx,y correspondente
+é ativado. Se o bit PIEIERx,y estiver ativo para a mesma interrupção, o PIE
+verica se o bit PIEACKx correspondente também está ativo. Se o PIEACKx estiver
+desativado para esse grupo, o PIE envia o pedido de interrupção para a CPU, caso
+contrário ele aguarda até ser desativado para enviar o pedido para INTx;
+• Nível de CPU: quando uma solicitação de interrupção é enviada à CPU, o bit de ag
+de interrupção da CPU (IFR) correspondente à INTx é ativado. Então a interrupção
+correspondente só é atendida quando o registrador de habilitação de interrupção da
+CPU (IER) ou o registrador de habilitação de interrupção de depuração (DGBIER)
+estão corretamente habilitados, e o bit de máscara global de interrupção (INTM)
+está ativo.
+Após chegar na CPU a solicitação de interrupção deve ser atendida, mas para isso
+se faz necessário saber qual ISR deve ser chamada. Dessa forma, cada uma das fontes de
+interrupção citada é identicada por um vetor individual que ca armazenado em um
+bloco de RAM (Dynamic Random Acess Memory), então há uma tabela de vetores PIE
+para mapear as ISR correspondentes às suas respectivas fontes.
+Assim, quando uma interrupção é gerada o DSP faz uma consulta a tabela para
+determinar qual ISR deve ser executada.
+3.1.2
+Interface de Comunicação Serial - SCI
+O DSP28335 apresenta trŸs módulos de Interface de Comunicação Serial - SCI (o
+SCI-A, SCI-B e SCI-C), sendo eles portas seriais assíncronas baseadas em UART, que
+podem ser programados para atuar com uma taxa de transmissão de até 64 mil valores.
+A transmissão e recepção de dados efetuada por meio do SCI é feita a partir de
+pinos externos chamados respectivamente SCITXD e SCIRXD. Ambos possuem uma la
+FIFO (First In, First Out) de 16 níveis de profundidade cada e tŸm seus próprios pinos bits
+de habilitação e interrupção, além de poderem operar no modo half-duplex ou full-duplex.
+A Figura 7 mostra o diagrama de blocos do módulo SCI, onde é possível observar blocos
+referentes às características descritas e demais funcionalidades, como a seleção de paridade.
+Este periférico suporta comunicações digitais entre a CPU e periféricos assíncronos
+que usam o formato NRZ (non-return-to-zero). No NRZ, cada bit é representado por um
+nível de tensão constante, com o nível do sinal em alto quando o bit é "1" e em nível baixo
+O formato de comunicação do SCI pode ser unidirecional ou bidirecional e os frames
+consistem em um bit de início, de um a oito bits de dados, um bit de paridade opcional
+(par ou ímpar) e um ou dois bits de parada.
+A leitura dos bits depende diretamente do sinal de clock denido para o SCI,
+chamado SCICLK. O padrão é que existam 8 períodos de SCICLK por bit de dados, ou
+ção 2.2.1, o receptor inicia a operação ao receber um bit de início válido, que segundo as
+especicações do módulo SCI, é identicado por quatro períodos seguidos de SCICLK com
+o bit em ’0’. Caso alguma leitura não seja 0, o processador reinicia e começa a procurar por
+outro bit de início. A Figura 8 exemplica como é feita essa amostragem dos bits é feita.
+Para os bits que vem após o de início, o processador determina seus valores ao fazer
+a amostragem do sinal nos períodos intermediários de SCICLK, que são: quatro, cinco e
+seis. O valor nal atribuído ao bit é baseado na maioria das trŸs amostras.
+As várias vericações feitas nos bits durante a comunicação assíncrona buscam
+garantir a integridade da comunicação, minimizando erros, uma vez que a amostragem do
+bit em diferentes momentos utilizando o SCICLK, possibilita a identicação correta do
+valor do bit, mesmo que haja ruído ou utuações rápidas no sinal.
+Ademais, o módulo SCI oferece dois modos de operação visando exibilidade para
+adaptar a comunicação a diversas congurações. Eles são: os modos multiprocessador
+de linha ociosa (idle-line) e de bit de endereço (address-bit), que como o nome sugere,
+permitem a comunicação entre processadores no mesmo link serial.
+Nos modos multiprocessador, são criados blocos de frames que organizam os dados
+de forma estruturada, o que facilita a identicação e processamento das informações.
+O modo de linha ociosa é caracterizado por um período de ociosidade em que não há
+transmissão de dados. Dessa forma, os blocos são separados por um tempo ocioso mais
+longo do que os intervalos de ociosidade entre frames dentro de cada bloco, assim como
+mostrado na Figura 9, onde um tempo ocioso de 10 ou mais períodos do bit em nível alto
+indica o início de um novo bloco.
+primeiro frame do bloco e como 0 nos demais. A Figura 10 mostra como é o formato da
+comunicação nesse modo.
+3.1.3
+Code Composer Studio - CCS
+O Code Composer Studio (CCS) é um ambiente de ambiente de desenvolvimento
+integrado (IDE) associado ao DSP 28335 e aos demais microcontroladores e processadores
+ambiente do Code Composer Studio.
+Vale ressaltar que a interface de comunicação JTAG USB é responsável por promover
+a interação entre o DSP28335 e o CCS.
+3.2
+Módulo de conversão USB para TTL
+O módulo FTDI FT232RL (ver Figura 12) desempenha no projeto o papel de
+converter os dados de UART para USB, atuando como um elo de conexão entre os
+elementos da comunicação que utilizam diferentes interfaces.
+Este dispositivo proporciona a conversão de sinal serial TTL para USB (MiniUSB,
+especicamente), através do uso do chip FT232R. Tal chip é fabricado pela empresa Future
+Technology Devices International - FTDI e apresenta como características principais,
+conforme International (2020):
+• Protocolo USB genrenciado no chip;
+• Taxas de transferŸncia de dados de 300 baud a 3 Mbaud em níveis TTL;
+• Buer de recebimento de 128 bytes e buer de transmissão de 256 bytes.
+composto por transistores bipolares junção, diodos e resistores. Ela se relaciona com
+sistemas de comunicação ao implementar, segundo Tocci, Widmer e Moss (2011), níveis
+de tensão especícos para representar os estados lógicos, sendo o nível baixo indicado por
+valores de 0V a 0,8V e o alto indicado por valores de 2,0V a 5,0V.
+3.3
+ASCII
+O Código Padrão Americano para o Intercâmbio de Informação (do inglŸs, American
+Standard Code for Information Interchange - ASCII) é um código binário para caracteres
+alfanuméricos que usa sete bits para codicar 128 caracteres (MANO; CILETTI, 2013).
+Os sete bits do código são identicados como b1 a b7, onde b7 representa o bit mais
+signicativo. No entanto, a maioria dos computadores trabalha com oito bits como unidade
+básica, formando o byte. Portanto, os caracteres ASCII normalmente são armazenados em
+bytes, com o bit extra sendo utilizado para outros propósitos como extensão de conjunto
+de caracteres.
+O ASCII geralmente é visto em forma de tabela, dessa forma, na Tabela 1 é
+apresentado um recorte especíco da tabela ASCII, contendo apenas números, os caracteres
+especiais menos (‘-’) e ponto (‘.’); e os caracteres de controle, caractere nulo (NUL) e
+por conveniŸncia como b8.
+Binário
+Caractere
+Código ASCII
+b8 b7 b6 b5 b4 b3 b2 b1
+NULL
+0 0 0 0 0 0 0 0
+0 0 0 0 1 0 1 0
+0 0 1 0 1 1 0 1
+0 0 1 0 1 1 1 0
+0 0 1 1 0 0 0 0
+0 0 1 1 0 0 0 1
+0 0 1 1 0 0 1 0
+0 0 1 1 0 0 1 1
+0 0 1 1 0 1 0 0
+0 0 1 1 0 1 0 1
+0 0 1 1 0 1 1 0
+0 0 1 1 0 1 1 1
+0 0 1 1 1 0 0 0
+0 0 1 1 1 0 0 1
+Por meio da Tabela 1, é possível observar que se for necessário fazer o envio do
+caractere 5, por exemplo, o programa irá interpretá-lo como 00110101 para realizar a
+transmissão.
+3.4
+PyQt5 - Comprehensive Python Bindings for Qt v5
+A interface gráca do supervisório foi desenvolvida utilizando o PyQt5, uma
+ferramenta baseada em Qt. O Qt é um conjunto de bibliotecas C++ multiplataforma que
+fornece Interfaces de Programação de Aplicação de alto nível capazes de interagir com
+diversos aspectos de sistemas modernos para desktop e dispositivos móveis (COMPUTING,
+2024).
+O Comprehensive Python Bindings for Qt v5, por sua vez, é um binding que permite
+utilizar a linguagem de programação Python como alternativa ao C++ na criação de
+aplicações com o Qt v5 (versão 5) (COMPUTING, 2025).
+Optou-se por utilizar o Qt devido sua riqueza de recursos e desempenho otimizado.
+Além disso, a escolha da programação em Python se deu pela maior exibilidade e
+simplicidade que essa linguagem apresenta em detrimento ao C++.
+O presente capítulo tem objetivo de descrever o setup do projeto, a rotina de envio
+dos dados efetuada pela DSP e o desenvolvimento do sistema supervisório utilizando o
+PyQt5.
+4.1
+Montagem
+O início da implementação do projeto se dá pela montagem de seu setup. Dessa
+forma, a Figura 13 retrata como foram feitas as conexões dos dispositivos envolvidos.
+Para efetuar a transferŸncia de dados, utilizou-se a porta SCITXDA do módulo
+SCI-A, correspondente ao pino 3 da placa DSP. Este pino foi conectado à entrada RX
+do módulo FT232RL. Além disso, foi estabelecido um aterramento comum, conectando o
+pino 20 da placa ao terminal GND do módulo. A transmissão de dados do FT232RL para
+o computador de supervisão foi realizada por meio de um cabo MiniUSB para USB-A.
+4.2
+Programação do DSP28335
+O algorítimo desenvolvido integrou uma funcionalidade de envio de dados a um
+código-fonte base, escrito em linguagem C, utilizado no LAMP para realizar o controle
+de máquinas elétricas. Devido a políticas de privacidade do laboratório, o algoritmo
+completo não pôde ser disponibilizado. No entanto, as partes relacionadas à conguração
+da comunicação e um exemplo de envio de dados foram incluídas no ApŸndice A.
+Desse modo, o uxograma que descreve o funcionamento da rotina está apresentado
+O código-fonte base tem como estrutura principal uma interrupção vinculada aos
+módulos PWM (Pulse Width Modulation) e ADC (Analog-to-Digital Converter). O módulo
+PWM opera a uma frequŸncia de 10kHz e o disparo para início da conversão analógica-
+digital é realizado junto ao início de cada ciclo PWM. Quando as conversões são concluídas,
+o ADC dispara uma interrupção e é chamada a função onde está a rotina de controle
+do sistema, que processa dados convertidos e atualiza variáveis necessárias conforme o
+algoritmo de controle implementado.
+Assim, a rotina de envio de dados utiliza um contador que registra o número de
+vezes em que a interrupção ocorre e é monitorado continuamente na main. Ao atingir 4
+interrupções, o contador é reiniciado e os dados são enviados.
+Como a parte de comunicação está inserida na main, sempre que a interrupção é
+será nalizado, porque a SCI opera independentemente do núcleo da CPU.
+Com base nesses aspectos, o tempo disponível para execução da rotina de envio
+corresponde a 100µs, sendo este o intervalo entre as interrupções, subtraído do tempo de
+execução da ISR. Durante os testes, constatou-se que a interrupção demora em média de
+60µs, resultando em 40µs disponíveis para execução das demais tarefas. Como o tempo
+máximo para execução da rotina de envio é de aproximadamente 193,61µs (conforme será
+mostrado na subseção 4.2.4), ao dividi-lo por 40µS, obtém-se o valor de aproximadamente
+4,84. Esse resultado indica que são necessárias quatro interrupções para realizar todo
+processo de comunicação.
+Outra questão envolvendo a quantidade de interrupções apresentada é a amostragem
+associada à reconstrução do sinal que chega ao receptor. Considerando que geração dos
+dados de interesse ocorre a cada 10kHz e que um dado é transmitido a cada quatro
+interrupções, tem-se uma nova amostragem de 2500Hz. Como informado na subseção 1.2.1,
+um dos requisitos do projeto é que o sistema supervisório seja capaz de apresentar
+corretamente sinais com frequŸncia mínima de 60 Hz.
+Portanto, é preciso determinar se o dado que chega ao receptor ainda representa
+corretamente o sinal original. Segundo Haykin (2013), um sinal é completamente recuperado
+quando sua frequŸncia de amostragem é de pelo menos, o dobro da frequŸncia máxima
+presente no sinal original, sendo esta chamada de taxa de Nyquist. Assim, como 2500 Hz é
+um valor superior a 120 Hz, esse é atendido.
+Neste ponto se faz importante mencionar que devido limitações relacionadas ao
+driver encontrado para o Conversor FTDI FT232RL, o máximo baud rate aplicado a
+comunicação foi 921600 bits por segundo (bps). Implicando no tempo de envio mencionando
+e, consequentemente, na quantidade de interrupções.
+4.2.1
+Conﬁguração da Interface de Comunicação Serial
+A conguração deste periférico, bem como a implementação das funções responsáveis
+pelo envio de dados, foi realizada por meio da manipulação direta dos registradores do dispo-
+sitivo e teve como base um código exemplo chamado Example_2833xSci_Echoback.c
+presente na documentação do DSP.
+Dessa maneira, dentre os modos de comunicação disponíveis para interface, o
+adotado para este projeto foi o modo multiprocessador de linha ociosa, tendo em vista que
+8-N-1, uma vez que ele permite a transmissão de 8 bits de dados por frame, sendo suciente
+para representar, conforme a tabela ASCII, todos os caracteres necessários a representação
+dos dados. Considerando que o tempo de envio da mensagem é um fator crucial, optou-
+se por não empregar o bit de paridade e mais de um bit de parada, de modo a evitar
+sobrecarga na comunicação.
+Outra etapa da conguração da comunicação é a denição do baud rate. No entanto,
+antes de se abordar diretamente esse valor, é preciso mencionar que ele depende de uma
+constante chamada LSPCLK ou Clock de baixa frequŸncia. Essa constante, é um sinal de
+clock utilizado pelo DSP28335 para operar periféricos de baixa velocidade, como o SCI,
+SPI e I2C, e é calculada por padrão como um quarto da frequŸncia de funcionamento
+da CPU. Desse modo, sabendo que a frequŸncia de CPU utilizada no projeto é 150MHz,
+temos LSPCLK igual a 37,5MHz.
+O baud rate é ajustado por meio de dois registradores de oito bits: SCIHBAUD
+(onde ca o byte mais signicativo) e SCILBAUD (onde ca o byte menos signicativo),
+que são concatenados para formar um baud de até 16 bits, denominado BRR. Assim, o
+BRR é calculado de acordo com a Equação 4.1:
+BRR =
+LSPCLK
+baud rate SCI · 8 −1 = 37500000
+921600 · 8 −1 =⇒BRR ≈4, 08
+(4.1)
+Logo, o valor de BRR utilizado para alcançar um baud rate de 921600 foi 4,
+considerando que os registradores operam exclusivamente com valores inteiros. Ademais,
+foi necessário apenas o uso do registrador SCILBAUD, dado que o resultado obtido está
+contido em 8 bits, não exigindo registros adicionais.
+Por m, fez-se a conguração das las FIFO do módulo SCI. Conforme Axelson
+(2007), FIFO é um espaço de armazenamento cujo conteúdo é lido na mesma ordem em
+que foi armazenado. Desse modo, foi habilitado o uso da la de transmissão e desativada a
+geração de interrupções baseadas em seu nível de preenchimento.
+4.2.2
+Função para conversão de tipo de dados
+As variáveis presentes em códigos aplicados a processadores digitais de sinais
+geralmente utilizam tipos de dados numéricos, como int, long, oat e double. No entanto,
+esses tipos de dados não podem ser enviados diretamente pela SCI, pois são representados
+internamente por estruturas binárias especícas, cujo tamanho e codicação variam de
+acordo com o tipo.
+com precisão suciente para a maioria dos casos práticos, além de exigir menos memória e
+processamento em comparação com o double.
+Assim, foi desenvolvida uma função chamada numeroParaString() que converte
+valores no formato oat para uma sequŸncia de caracteres, armazenada em um vetor de
+char (ponteiro para char). Essa conversão transforma os dados em uma sequŸncia de
+códigos numéricos compatíveis com a tabela ASCII, permitindo que sejam transmitidos de
+maneira padronizada.
+Para armazenar a sequŸncia de caracteres que representa o número convertido, o
+vetor de char utilizado possui tamanho oito. Esse tamanho foi escolhido para acomodar até
+sete dígitos da representação numérica, garantindo um equilíbrio entre o espaço ocupado e
+a capacidade de representar os números mais comuns com precisão adequada. O caractere
+adicional é reservado para o terminador nulo (\0), utilizado em C para indicar o nal da
+string.
+Dito isso, a função numeroParaString() começa vericando se o número é negativo,
+adicionando o sinal de menos à primeira posição do vetor de char em caso armativo. Em
+seguida, processa a parte inteira e a parte decimal do número separadamente. Para a parte
+inteira, os dígitos são extraídos e convertidos para caracteres, sendo armazenados um a
+um no vetor de char. Caso haja uma parte decimal, ela é processada até quatro dígitos
+após o ponto decimal, convertendo cada dígito para o formato de caractere. Por m, a
+função adiciona um caractere nulo (\0) ao nal da string para indicar o término.
+4.2.3
+Funções para envio de dados
+O envio de dados no módulo SCI é realizado pela integração entre as funções
+scia_xmit() e scia_msg(), utilizando o registrador SCITXBUF como ponto central. O
+SCITXBUF armazena temporariamente os dados a serem transmitidos, transferindo-os
+para a FIFO de transmissão, que organiza o envio sequencial pelo barramento serial.
+A função scia_xmit() realiza a transmissão de um único caractere, garantindo
+que a FIFO de transmissão esteja disponível antes de carregar o dado no SCITXBUF. Já
+a função scia_msg() permite o envio de uma mensagem completa, percorrendo caractere
+por caractere do vetor de caracteres recebido como parâmetro e chamando scia_xmit()
+para transmitir cada dado de forma individual e ordenada.
+4.2.4
+Análises do tempo de envio
+O tempo gasto pela rotina de envio para realizar a transmissão dos dados é calculado
+Equação 4.2:
+Tframe = num_bits
+baud_rate =
+921600 = 0▷00001085069s =⇒Tframe ≈10, 85µs
+(4.2)
+A rotina foi projetada para enviar números com até 7 dígitos e para delimitar o
+término de cada número, foi utilizado o caractere especial de quebra de linha (\n). Essa
+abordagem resulta em um total de 8 frames transmitidos por número, considerando os 7
+dígitos e o caractere delimitador. O uso do caractere \n é essencial para garantir que o
+receptor interprete corretamente a mensagem, identicando de forma clara onde termina
+cada número.
+A transmissão inclui o envio de dois números consecutivos, o que requer a transmis-
+são de 16 frames no total. Além do tempo necessário para transmitir esses frames, deve-se
+incluir o tempo de execução da função de conversão de tipos de dados numeroParaS-
+tring(), a qual consome 10µs. Esse tempo extra foi de relevante para o cálculo do tempo
+total de execução da rotina, pois é preciso considerar tanto os aspectos de transmissão
+quanto os de processamento no desempenho geral do sistema. Portanto, o tempo total do
+envio de dados Tenvio é: (10, 85µ ∗16) + 20 ≈193, 61µs.
+Além dos cálculos realizados para determinar os tempos envolvidos na transmissão
+de dados, foram capturadas imagens da tela de um osciloscópio, onde é possível observar
+e validar os tempos descritos matematicamente. Dessa forma, a Figura 15 apresenta os
+sinais seriais enviados durante a transmissão do caractere 5. Tais sinais foram obtidos
+conectando-se a ponteiro do osciloscópio ao pino referente a porta SCITXDA.
+A partir da Figura 15, observa-se que o tempo medido experimentalmente para a
+transmissão do frame analisado se aproxima do tempo teórico. Além disso, conrma-se a
+teoria previamente discutida na subseção 2.2.1 acerca da organização e disposição dos bits
+no processo de comunicação UART, onde tŸm-se da esquerda para direta: o bit de início
+em estado lógico baixo, os bits de dados 10101100, conforme previsto pela Tabela ASCII e
+o bit de parada, que está implícito, pois tem o mesmo estado da linha de transmissão.
+A Figura 16 contém os sinais monitorados durante a execução do algoritmo imple-
+mentado e descrito nesta seção. Nela, são exibidos sinais distintos correspondentes trŸs
+processos: a execução da rotina de interrupção, em rosa; a transmissão de dois dados via
+SCI, em verde; e a execução completa da rotina de envio de dados, em azul.
+Para realizar a visualização desses sinais, além da conexão da ponteira descrita para
+compõem o frame.
+Mais adiante, o intervalo presente entre os sinais do frame representa a troca de
+contexto para execução da ISR. Esse processo se repete até que todos os dados tenham
+sido enviados, fazendo com que o pulso azul volte para 0. Após isso, tem-se a quarta
+interrupção e uma nova execução da rotina de envio.
+4.3
+Desenvolvimento do supervisório
+O desenvolvimento do supervisório foi dividido em duas etapas principais: a cons-
+trução da interface gráca do usuário (do inglŸs, Graphical User Interface - GUI) e a
+programação de sua lógica de funcionamento.
+Na primeira etapa, a GUI foi projetada utilizando o Qt Designer, uma ferramenta
+visual e interativa que simplica a criação de interfaces grácas por permitir o desen-
+volvimento sem a necessidade de escrever manualmente o código de layout. Através do
+Qt Designer, foi possível estruturar a aplicação, organizando widgets, além de denir a
+disposição desses componentes na janela principal. "No Qt, widget é o nome dado a um
+componente da interface do usuário com o qual o usuário pode interagir" (FITZPATRICK,
+2020, p. 32). A Figura 17 mostra a tela inicia do Qt Designer.
+biblioteca de extensões para diversas linguagens e frameworks.
+Nessa fase, os elementos visuais foram conectados às funcionalidades do sistema,
+denindo como a aplicação responde às interações do usuário. Essas conexões são feitas
+por meio da lógica de sinais e slots.
+Sinais são noticações emitidas por widgets para indicar a ocorrŸncia de eventos,
+como o clique de um botão. Eles podem ser desencadeados por ações do usuário ou gerados
+automaticamente pelo sistema. Além de indicar o evento, os sinais são capazes de transmitir
+dados para contextualizar sua ocorrŸncia. Já os slots são os receptores dos sinais. Em
+python qualquer função ou método pode atuar como um slot, desde que um sinal esteja
+associado a ele. Nos casos em que o sinal envia dados, o slot os recebe automaticamente
+(FITZPATRICK, 2020).
+4.3.1
+Interface do Supervisório
+A interface do supervisório foi construída visando atender os seguintes requisitos
+do usuário:
+• Seleção da porta serial para comunicação.
+• Conguração da quantidade e do tipo de curvas a serem exibidas.
+Desse modo, a gura Figura 18 apresenta a tela inicial do interface, destacando os
+elementos que permitem realizar essas congurações de forma prática e intuitiva.
+Para o correto funcionamento do supervisório, é necessário seguir um passo a passo
+de conguração previamente denido. O processo inicia-se na aba "Congurações", na
+seção "Seleção Inicial". Ao executar o supervisório com um ou mais dispositivos conectados
+à porta serial, o usuário pode, por meio de uma caixa de combinação, selecionar a porta
+pela qual será estabelecida a comunicação. Após realizar a escolha, é necessário pressionar
+o botão "Conrme" para concluir esta etapa da conguração.
+Em seguida, o usuário deve decidir se os sinais serão exibidas em função do tempo
+ou no formato Lissajous. Em ambos os casos, o quadro preto é destinado à exibição das
+curvas.
+A conguração da exibição dos sinais em função do tempo é feita na seção "Plotagem
+no tempo". Nesse caso, o usuário pode optar por visualizar um ou dois sinais e, ao pressionar
+o botão "Conrme", um ou dois eixos de coordenadas são automaticamente inseridos no
+(a) Quantidade de sinais igual a 1
+(b) Quantidade de sinais igual a 2
+A exibição dos sinais no formato Lissajous, é feita ao se pressionar o botão "Con-
+rme" na seção "Lissajous". Nesse caso, um eixo cartesiano será inserido no quadro preto
+similar ao que foi mostrado na Subgure 19 (a).
+o evento de leitura da porta serial e a consequente exibição dos sinais na interface.
+Com o sistema em funcionamento, no caso em que foi escolhido ver sinais em função
+do tempo, o usuário pode ainda ajustar o zoom horizontal das curvas utilizando o slider
+localizado ao lado do botão "Conrme" nesta mesma seção. Essa funcionalidade permite
+ampliar ou reduzir a escala temporal das curvas exibidas, proporcionando uma análise
+mais detalhada ou uma visão geral dos dados.
+Ademias, a criação da interface gerou um arquivo no formato .ui, que contém
+a descrição da estrutura visual da aplicação e está no ApŸndice B. Esse arquivo .ui é
+posteriormente chamado e utilizado na programação da aplicação, permitindo a integração
+da interface gráca com o código funcional de maneira eciente.
+4.3.2
+Estrutura da lógica da aplicação
+A aplicação (ver ApŸndice C) foi implementada com base em duas classes principais,
+organizadas de forma a separar a interface gráca da aquisição de dados:
+• class MyGUI(QMainWindow): é responsável pela interface gráca e pela intera-
+ção com o usuário, implementando sinais e slots que gerenciam os eventos.
+• class DataAcquisitionThread(QThread): gerŸncia a leitura dos dados e os
+disponibiliza de forma síncrona para a exibição em tempo real.
+A divisão foi adotada porque a leitura da porta serial ocorre de forma contínua
+e assíncrona. Caso fosse realizada no mesmo contexto da interface gráca, a execução
+simultânea das tarefas poderia gerar atrasos ou travamentos. Para mitigar esses problemas,
+optou-se por isolar a aquisição de dados, adotando uma abordagem que possibilite a
+execução independente de múltiplas tarefas.
+Assim, a abordagem escolhida foi o uso de threads, que são unidades básicas de
+execução da CPU. No contexto do PyQt5, a classe QThread é utilizada para implementar
+threads de maneira eciente em aplicações grácas, evitando que tarefas intensivas ou blo-
+queantes, como a leitura contínua de dados da porta serial, interrompam ou comprometam
+a uidez da interface gráca.
+Para permitir que os dados lidos pela porta serial sejam transferidos de uma thread
+para outra foram utilizados buers compartilhados e a execução da conexão entre as
+duas threads é iniciada quando o botão "Iniciar" da interface gráca é pressionado. Nesse
+momento, a lógica presente na classe MyGUI congura a aquisição de dados, ajusta os
+proporcionando uma visualização alinhada ao comportamento do dado.
+Tendo sido instanciada, a thread de aquisição é iniciada. A leitura dos dados
+recebidos pela porta serial é gerenciada de maneira a lidar com diferentes congurações
+de sinais, podendo ser um único dado ou pares de dados. Desse modo, os dados são
+lidos caractere por caractere por meio do método read(1) e armazenados em um buer
+temporário. Quando o caractere \n é detectado, o conteúdo do buer é tratado como
+um dado completo, que é então convertido para um número em ponto utuante. Caso a
+conversão seja bem-sucedida, o dado é processado; caso contrário, o buer é descartado, e o
+sistema aguarda novos dados, assegurando que apenas informações válidas sejam utilizadas
+No caso em que apenas um dado é lido por ciclo de aquisição, o valor convertido
+é armazenado em um buer local denominado buer_y1. Paralelamente, o marcador de
+tempo correspondente é calculado e armazenado no vetor buer_x. Esse vetor é preenchido
+de maneira a manter correspondŸncia temporal com os dados da coordenada y. A base
+temporal é gerada a partir do período de amostragem T = 0, 0004, correspondente ao
+intervalo de tempo entre as amostras do sinal recebido. Inicialmente, o valor de x é denido
+como zero e, a cada dado recebido, é incrementado pelo valor de T, garantindo que os
+valores de x reitam o intervalo de tempo entre as amostras.
+Quando dois sinais são lidos simultaneamente, o programa adota uma estratégia de
+pareamento. O primeiro valor lido é temporariamente armazenado na variável pending_pair.
+O segundo valor, ao ser recebido, é associado ao primeiro, formando um par. Ambos os
+valores são então armazenados nos buers, buer_y1 e buer_y2, enquanto os marcadores
+temporais correspondentes são adicionados ao vetor buer_x. Caso a sequŸncia de leitura
+dos dados não seja respeitada, o pareamento não é realizado, e o dado é descartado,
+reforçando a consistŸncia da aquisição.
+Independentemente do cenário, os buers locais são congurados para armazenar
+até 200 amostras. Quando esse limite é alcançado, os dados são transferidos para estruturas
+de armazenamento compartilhadas (eixo_x, eixo_y1, eixo_y2). Durante essa transferŸncia,
+utiliza-se um mecanismo de exclusão mútua (mutex) para evitar condições de corrida,
+assegurando que a interface gráca possa acessar os dados de forma segura. Após a
+transferŸncia, os buers locais são esvaziados e preparados para o processamento das
+próximas amostras.
+Na atualização dos grácos, o temporizador dispara uma rotina que acessa os buers
+o tipo de exibição for no tempo, as informações são inseridos no gráco como (x,y), caso
+seja Lissajous os dois dados referentes ao eixo y são exibidos no formato (y,y).
+A atualização do espaço horizontal da curva é realizada em tempo real conforme o
+ajuste do slider, permitindo controlar os limites do eixo xx e ajustar o intervalo exibido no
+gráco. Esse controle atua como um zoom horizontal para os grácos plotados em função
+do tempo. Como os dados são enviados a cada 0,0004 segundos e os grácos atualizados
+a cada 1 segundo, o buer compartilhado contém, em média, 2500 valores. O ajuste do
+slider dene a fração de valores do buer a ser utilizada na plotagem. Por exemplo, ao
+congurar o slider para o valor 10, 5% dos valores iniciais e nais do vetor são descartados,
+resultando na exibição de 2250 valores no gráco. Isso facilita a visualização detalhada de
+regiões especícas do sinal analisado.
+Foram realizados dois conjuntos de testes para validar a integração entre a rotina
+de envio de dados do DSP28335 e a exibição desses dados no sistema supervisório. No
+primeiro conjunto de testes, os sinais exibidos nos grácos foram gerados internamente
+pelo DSP, com o objetivo de avaliar a funcionalidade básica do sistema de supervisão.
+No segundo conjunto de testes, o supervisório foi utilizado para monitorar sinais gerados
+durante o acionamento de um motor presente nas instalações do LAMP, permitindo a
+análise do desempenho em condições de aplicação real.
+5.1
+Testes simulados
+Para os testes a seguir foi implementada na rotina de interrupção a geração de duas
+senoides com 100 de amplitude. Já no computador de supervisão, foi seguido o passo a
+passo de conguração descrito na subseção 4.3.1.
+Inicialmente, foi feito o envio de apenas uma das senoides. A Figura 20 e a Figura 21
+ilustram o funcionamento do supervisório com curvas de 2 Hz e 60 Hz, respectivamente,
+sendo representadas gracamente em função do tempo.
+Ao observar a Figura 21, é possível notar que o sinal exposto apresenta difícil
+visualização, devido sua frequŸncia ser relativamente alta para o intervalo de tempo
+amostrado na tela. Assim, a Subgure 22 ilustra dois casos de uso do zoom horizontal.
+(a) Zoom horizontal de 50%
+(b) Zoom horizontal de 90%
+Em seguida, alterou-se o código do DSP para realizar o envio de duas senoides.
+Desse modo, a Figura 23 fornece uma visualização do supervisório com dois sinais de 60
+horizontal aplicado.
+(a) Zoom horizontal de 50%
+(b) Zoom horizontal de 90%
+Ainda com o DSP enviando dados referentes a duas senoides, é possível utilizar a
+opção de exibição no formato Lissajous, ilustrado na Figura 25.
+5.2
+Testes com motor em Operação
+Neste conjunto de testes, as variáveis monitoradas foram correntes que percorrem
+os enrolamentos de um motor enquanto sua velocidade era de 1800 Rotações por Minuto
+(RPM). Inicialmente, o código do DSP28335 e o supervisório foram congurados para,
+respectivamente, enviar e exibir apenas um dado de corrente. Desse modo a Figura 26
+ilustra o funcionamento do supervisório para o caso descrito.
+Am de estabelecer um nível de comparação e observar se os dados exibidos
+pelo supervisório estavam corretos, foram feitas capturas de tela de um osciloscópio que
+monitorava a mesma corrente do supervisório. Desse modo, a Figura 27 retrata a leitura
+de corrente feita pelo osciloscópio.
+de aproximadamente 2 Amperes (A) e que sua frequŸncia é 60 Hz. Já no sinal presente na
+6 períodos do sinal dentro de um intervalo de 100 milissegundos, o que resulta em uma
+frequŸncia de 60 Hz.
+Em seguida, foram feitos testes com dois sinais de corrente. A Figura 28 e a Figura 29
+ilustram, respectivamente, o funcionamento do supervisório e a medição do osciloscópio,
+para as duas curvas.
+De maneira análoga, a análise realizada para um sinal de corrente, é possível perceber
+que os sinais exibidos no supervisório são semelhantes aos registrados no osciloscópio. Logo,
+é possível armar que a exibição feita pelo supervisório retrata corretamente os sinais
+interesse.
+A implementação do sistema supervisório para monitoramento de sinais provenientes
+do DSP foi concluída com Ÿxito, uma vez que foi possível utilizar o projeto proposto em um
+caso prático onde se observou a exibição de curvas que permitem avaliar o comportamento
+de variáveis escolhida e em diferentes formatos.
+Contudo, algumas limitações foram identicadas e apontam para possíveis melhorias.
+A velocidade de transferŸncia de dados pela comunicação SCI utilizada mostrou-se limitada,
+resultando na perda de informações, pois novos dados eram gerados enquanto informações
+anteriores ainda estavam sendo transmitidas. Uma solução para esse problema seria
+empregar drivers que suportem taxas de comunicação mais altas ou adotar protocolos
+mais rápidos, como SPI ou I2C.
+Além disso, embora a taxa de atualização de um segundo tenha sido adequada para
+os objetivos iniciais, uma maior uidez na exibição dos dados seria desejável, o que poderia
+ser alcançado com otimizações no software ou no método de visualização utilizado.
+Assim, os resultados obtidos demonstram o potencial do sistema, mas eviden-
+ciam oportunidades para aprimoramentos futuros, visando maior eciŸncia e precisão no
+monitoramento.
+AXELSON, J. Serial Port Complete: COM Ports, USB Virtual COM Ports, and Ports
+for Embedded Systems. 2. ed. Madison, WI 53704: Lakeview Research, 2007. ISBN
+978-1931448-07-9.
+COMPUTING, R. PyQt5 5.15.11. 2024. Disponível em: https://pypi.org/project/PyQt5/.
+Acesso em: 15 out. 2024.
+COMPUTING, R. What is PyQt? 2025. Disponível em:
+https://www.riverbankcomputing.com/software/pyqt/. Acesso em: 04 jan. 2025.
+FITZPATRICK, M. Create GUI Applications with Python & Qt5 (PyQt5 Edition): The
+hands-on guide to making apps with Python. [S.l.]: Martin Fitzpatrick, 2020.
+FOROUZAN, B. A. Data Communications and Networking. 5. ed. New York: The
+McGraw-Hill Companies, Inc, 2013.
+HAYKIN, S. Digital Communication Systems. Wiley, 2013. ISBN
+9780471647355. Disponível em: <https://books.google.com.br-
+/books?id=YGZXAAAACAAJ>https://books.google.com.br/books?id=YGZXAAAACAAJ.
+INSTRUMENTS, T. TMS320F2833x, TMS320F2823x Real-Time Microcontrollers. 2007.
+Disponível em: https://www.ti.com/lit/ds/symlink/tms320f28335.pdf. Acesso em: 02 dez.
+2024.
+INSTRUMENTS, T. TMS320x2833x, 2823x Serial Communications Interface (SCI)
+Reference Guide. 2008. Disponível em: http://mil.u.edu/4744/docs/TI_DSP/TI-
+docs/sprufz5a.pdf. Acesso em: 12 dez. 2024.
+INSTRUMENTS, T. TMS320x2833x, TMS320x2823x Technical Reference Manual. 2020.
+Disponível em: https://www.ti.com/lit/ug/sprui07/sprui07.pdf. Acesso em: 05 nov. 2024.
+INTERNATIONAL, F. T. D. FT232R USB UART IC Datasheet. 2020. Disponível em:
+https://ftdichip.com/wp-content/uploads/2020/08/DS_FT232R.pdf. Acesso em: 21 dez.
+2024.
+MANO, M.; CILETTI, M. Digital Design: With an Introduc-
+tion to the Verilog HDL. Pearson, 2013. (Always learning). ISBN
+9780273764526. Disponível em: <https://books.google.com.br-
+/books?id=bm9smAEACAAJ>https://books.google.com.br/books?id=bm9smAEACAAJ.
+TIBOLA, L. R. Geração de Sistemas Supervisórios a partir de Modelos Orientados a
+Objetos. Dissertação (Mestrado) — Universidade Federal do Rio Grande do Sul, Porto
+Alegre, 2000.
+ApŸndices
+Listing A.1 – Código-fonte do algoritmo desenvolvido em C no CCS
+// Funcoes
+SCI
+void
+scia_echoback_init (void);
+void
+scia_fifo_init (void);
+void
+scia_xmit (int a);
+void
+scia_msg(char *msg);
+void
+numeroParaString (float
+numero , char* str);
+interrupt
+void
+adc_isr(void);
+unsigned
+int
+adcInterruptCount1 = 0;
+// Variaveis
+SCI
+char *msg_aux = "\n\0";
+char
+buffer1_ad [8];
+char
+buffer2_ad [8];
+float
+ang1 = 0, senoide1_ad = 0.0,
+senoide2_ad = 0.0, ad_freq =
+→0.0,
+ad_freq_aux = 2.0;
+void
+main(void)
+// Step 1.
+Initialize
+System
+Control:
+// PLL , WatchDog , enable
+Peripheral
+Clocks
+InitSysCtrl ();
+// Step 2. Initalize
+GPIO:
+// Init
+GPIO
+pins for ePWM1A , ePWM1B , ePWM2A , ePWM2B , ePWM3A e
+→ePWM3B e Ecap1
+InitEPwmGpio ();
+InitECap1Gpio ();
+InitEQep2Gpio ();
+// Step 3. Clear
+all
+interrupts
+and
+initialize
+PIE
+vector
+table:
+// Initialize
+the PIE
+control
+registers to their
+default
+state.
+InitPieCtrl ();
+// Disable
+CPU
+interrupts
+and clear
+all CPU
+interrupt
+flags:
+IER = 0x0000;
+IFR = 0x0000;
+// Initialize
+the PIE
+vector
+table
+with
+pointers to the
+shell
+→Interrupt
+// Service
+Routines (ISR).
+InitPieVectTable ();
+// Interrupts
+are re -mapped to ISR
+functions
+found
+within
+this
+→file.
+EALLOW;
+PieVectTable .ADCINT = &adc_isr;
+EDIS;
+// Step 4.
+Initialize A/D Peripheral :
+InitAdc ();
+scia_fifo_init ();
+Initialize
+the SCI FIFO
+scia_echoback_init ();
+// Initalize
+SCI for
+echoback
+Stop PWM
+counter
+timer ( TBCLKSYNC - Sincroniza os clocks e
+→Parando
+todos os moduloas
+PWM)
+EALLOW;
+SysCtrlRegs .PCLKCR0.bit.TBCLKSYNC = 0; // - reseta
+TBCLKSYNC
+EDIS;
+InitEPwm1 ();
+Start
+PWM
+counter
+timer. All PWM
+Channels
+are
+syncronized
+EALLOW;
+SysCtrlRegs .PCLKCR0.bit.TBCLKSYNC = 1;
+EDIS;
+// Step 5. User
+specific code , enable
+interrupts:
+IER |=
+M_INT1; // interrupcao
+do Timer0 & ADC
+// Enable
+ADCINT in PIE
+PieCtrlRegs .PIEIER1.bit.INTx6 = 1;
+// Utilizar a interrupcao
+→do ADC
+// Enable
+global
+Interrupts
+and
+higher
+priority real -time
+debug
+→events:
+EINT;
+// Enable
+Global
+interrupt
+INTM
+ERTM;
+// Enable
+Global
+realtime
+interrupt
+DBGM
+// Step 6. IDLE
+loop.
+ConfigGPIO ();
+// Configura os pinos IO
+// Funcao
+que
+configura o ADC para
+realizar a conversao
+via
+→interrupcao
+do PWM
+ConfigCAD ();
+for (;;){
+if( adcInterruptCount1
+== 4){
+adcInterruptCount1 =0;
+numeroParaString (senoide1_ad , buffer1_ad);
+numeroParaString (senoide2_ad , buffer2_ad);
+scia_msg( buffer1_ad);
+scia_msg(msg_aux);
+scia_msg( buffer2_ad);
+scia_msg(msg_aux);
+} // fim do main
+interrupt
+void
+adc_isr(void){
+adcInterruptCount1 ++;
+ad_freq = ad_freq_aux ;
+ang1 = ang1 + 6.2837e -004 * ad_freq;
+if (ang1 <
+-6.28) ang1 = 6.283 + ang1;
+senoide1_ad = 100 * sin(ang1);
+senoide2_ad = 100 * sin(ang1 + 2.0944);
+void
+ConfigGPIO (void)
+// Configura
+GPIO
+EALLOW;
+GpioCtrlRegs .GPAPUD.bit.GPIO28 = 0;
+// Enable pull -up for
+→GPIO28 (SCIRXDA)
+GpioCtrlRegs .GPAPUD.bit.GPIO29 = 0;
+// Enable pull -up for
+→GPIO29 (SCITXDA)
+// Configura os pinos
+GPIO28 e GPIO29
+como SCI -A
+GpioCtrlRegs .GPAMUX2.bit.GPIO29 = 1;
+// SCITXDA
+GpioCtrlRegs .GPAMUX2.bit.GPIO28 = 1;
+// SCIRXDA
+EDIS;
+void
+scia_echoback_init ()
+SciaRegs.SCICCR.all =0 x0007;
+// 1 stop bit ,
+No loopback
+// No parity ,8 char bits ,
+// async mode , idle -line
+→protocol
+SciaRegs.SCICTL1.all =0 x0003;
+SciaRegs.SCICTL2.all =0 x0003;
+SciaRegs.SCICTL2.bit.TXINTENA
+=1;
+SciaRegs.SCICTL2.bit.RXBKINTENA
+=1;
+#if ( CPU_FRQ_150MHZ )
+SciaRegs.SCIHBAUD = 0x0000;
+SciaRegs.SCILBAUD = 0x0004; // 921600
+baud
+@LSPCLK = 37.5
+→MHz
+#endif
+// Transmit a character
+from the SCI
+void
+scia_xmit (int a)
+while (SciaRegs.SCIFFTX.bit.TXFFST != 0) {}
+SciaRegs.SCITXBUF=a;
+void
+scia_msg(char * msg)
+int i = 0;
+while(msg[i] != '\0')
+scia_xmit(msg[i]);
+i++;
+// Initalize
+the SCI FIFO
+void
+scia_fifo_init ()
+SciaRegs.SCIFFTX.all =0 xE040;
+SciaRegs.SCIFFRX.all =0 x204f;
+SciaRegs.SCIFFCT.all =0x0;
+void
+numeroParaString (float
+numero , char *str) {
+int
+posicao_buffer = 0;
+if(numero < 0){
+numero *=
+-1;
+str[ posicao_buffer ] = '-';
+posicao_buffer ++;
+int
+parteInteira = (int)numero;
+float
+parteDecimal = numero - parteInteira ;
+// Converte a parte
+inteira
+para
+string
+if ( parteInteira
+== 0) {
+str[ posicao_buffer ++] = '0';
+} else {
+int temp = parteInteira ;
+int
+numDigitos = 0;
+// Conta o numero de digitos na parte
+inteira
+while (temp > 0) {
+temp /= 10;
+numDigitos ++;
+// Escreve os digitos da parte
+inteira no buffer
+temp = parteInteira ;
+int i;
+for (i = numDigitos
+- 1; i >= 0 &&
+posicao_buffer
+< 7; i
+→--) {
+str[ posicao_buffer + i] = (temp % 10) + '0';
+temp /= 10;
+posicao_buffer
+numDigitos;
+if ( parteDecimal
+!= 0){
+// Adiciona o ponto
+decimal , se ainda
+houver
+espaco
+if ( posicao_buffer
+< 6) {
+str[ posicao_buffer ++] = '.';
+int i = 0;
+for (i = 0; i < 4 &&
+posicao_buffer
+< 7; i++) {
+parteDecimal
+*= 10;
+int digit = (int) parteDecimal ;
+if (digit == 0 &&
+parteDecimal
+== 0.0) {
+// Para
+→evitar
+zeros
+desnecessarios
+str[ posicao_buffer ++] = '0';
+break;
+str[ posicao_buffer ++] = digit + '0';
+parteDecimal
+-= digit;
+// Adiciona o caractere
+nulo
+para
+terminar a string
+str[ posicao_buffer ] = '\0';
+Listing B.1 – Código-fonte da interface desenvolvida com QtDesigner
+<?xml
+version="1.0" encoding="UTF -8"?>
+<ui version="4.0">
+<class >MainWindow </class >
+<widget
+class=" QMainWindow " name="MainWindow">
+<property
+name="geometry">
+<rect >
+<x>0</x>
+<y>0</y>
+<width >1360 </ width >
+<height >935 </ height >
+</rect >
+</property >
+<property
+name=" windowTitle ">
+<string >MainWindow </ string >
+</property >
+<widget
+class="QWidget" name=" centralwidget ">
+<widget
+class="QGroupBox" name="groupBox">
+<property
+name="geometry">
+<rect >
+<x>40 </x>
+<y>80 </y>
+<width >1281 </ width >
+<height >151 </ height >
+</rect >
+</property >
+<property
+name="title">
+<string > C o n f i g u r a
+e s </ string >
+</property >
+<widget
+class="QWidget" name=" gridLayoutWidget_2 ">
+<property
+name="geometry">
+<rect >
+<x >400 </x>
+<height >94 </ height >
+</rect >
+</property >
+<layout
+class=" QGridLayout " name=" gridLayout_plotTemp ">
+<item row="0" column="0">
+<widget
+class="QLabel" name=" label_PlotTempo ">
+<property
+name="text">
+<string >&lt;html&gt;&lt;head /&gt;&lt;body&gt;&lt;p align
+→=& quot;center&quot ;&gt;&lt;span
+style =& quot; font -
+→size :12 pt; font -weight :696;& quot ;&gt;Plotagem no
+→tempo&lt;/ span&gt;&lt;/p&gt;&lt;/ body&gt;&lt;/ html&
+→gt;</string >
+</property >
+</widget >
+</item >
+<item row="2" column="0">
+<layout
+class=" QHBoxLayout " name=" horizontalLayout_5 ">
+<item >
+<spacer
+name=" horizontalSpacer_2 ">
+<property
+name=" orientation ">
+<enum >Qt:: Horizontal </enum >
+</property >
+<property
+name="sizeHint" stdset="0">
+<size >
+<width >128 </ width >
+<height >20 </ height >
+</size >
+</property >
+</spacer >
+</item >
+<item >
+<widget
+class=" QPushButton " name=" pushButton_plotTemp ">
+<property
+name="text">
+<string >Confirme </ string >
+</property >
+</widget >
+</item >
+</layout >
+</item >
+<item row="1" column="0">
+<item >
+<widget
+class="QLabel" name="label_4">
+<property
+name="text">
+<string > N m e r o
+de sinais </ string >
+</property >
+</widget >
+</item >
+<item >
+<widget
+class="QComboBox" name=" comboBox_plotTemp "/>
+</item >
+</layout >
+</item >
+</layout >
+</widget >
+<widget
+class="QWidget" name=" gridLayoutWidget ">
+<property
+name="geometry">
+<rect >
+<x>50 </x>
+<y>30 </y>
+<width >281 </ width >
+<height >96 </ height >
+</rect >
+</property >
+<layout
+class=" QGridLayout " name="gridLayout">
+<item row="1" column="0">
+<layout
+class=" QHBoxLayout " name=" horizontalLayout_4 ">
+<item >
+<widget
+class="QLabel" name=" label_portaComSer ">
+<property
+name="text">
+<string >Porta </ string >
+</property >
+</widget >
+</item >
+<item >
+<widget
+class="QComboBox" name=" comboBox_portas "/>
+</item >
+<item >
+<layout
+class=" QHBoxLayout " name=" horizontalLayout_6 ">
+<item >
+<widget
+class="QLabel" name=" label_baudrate ">
+<string >Baudrate :</string >
+</property >
+</widget >
+</item >
+<item >
+<widget
+class="QLabel" name="label">
+<property
+name="text">
+<string >921600 </ string >
+</property >
+</widget >
+</item >
+</layout >
+</item >
+</layout >
+</item >
+<item row="0" column="0">
+<widget
+class="QLabel" name=" label_selecInicial ">
+<property
+name="text">
+<string >&lt;html&gt;&lt;head /&gt;&lt;body&gt;&lt;p align
+→=& quot;center&quot ;&gt;&lt;span
+style =& quot; font -
+→size :12 pt; font -weight :696;& quot ;&gt; S e l e
+→Inicial&lt;/ span&gt;&lt;/p&gt;&lt;/ body&gt;&lt;/
+→html&gt;</string >
+</property >
+</widget >
+</item >
+<item row="2" column="0">
+<layout
+class=" QHBoxLayout " name=" horizontalLayout_8 ">
+<item >
+<layout
+class=" QHBoxLayout " name=" horizontalLayout ">
+<item >
+<widget
+class="QLabel" name=" label_status ">
+<property
+name="text">
+<string >Status :</string >
+</property >
+</widget >
+</item >
+<item >
+<widget
+class="QLabel" name=" label_alteraStatus ">
+<property
+name="text">
+</property >
+</widget >
+</item >
+</layout >
+</item >
+<item >
+<spacer
+name=" horizontalSpacer ">
+<property
+name=" orientation ">
+<enum >Qt:: Horizontal </enum >
+</property >
+<property
+name="sizeHint" stdset="0">
+<size >
+<width >40 </ width >
+<height >20 </ height >
+</size >
+</property >
+</spacer >
+</item >
+<item >
+<widget
+class=" QPushButton " name=" pushButton_selInicial "
+→>
+<property
+name="text">
+<string >Confirme </ string >
+</property >
+</widget >
+</item >
+</layout >
+</item >
+</layout >
+</widget >
+<widget
+class=" QPushButton " name=" pushButton_iniciar ">
+<property
+name="geometry">
+<rect >
+<x >1160 </x>
+<y>60 </y>
+<width >91 </ width >
+<height >61 </ height >
+</rect >
+</property >
+<property
+name="text">
+</property >
+</widget >
+<widget
+class="QWidget" name=" layoutWidget ">
+<property
+name="geometry">
+<rect >
+<x >670 </x>
+<y>70 </y>
+<width >147 </ width >
+<height >53 </ height >
+</rect >
+</property >
+<layout
+class=" QGridLayout " name=" gridLayout_3 ">
+<item row="0" column="0">
+<layout
+class=" QHBoxLayout " name=" horizontalLayout_3 ">
+<item >
+<widget
+class="QLabel" name="label_2">
+<property
+name="text">
+<string >Zoom
+horizontal
+(%):</string >
+</property >
+</widget >
+</item >
+<item >
+<widget
+class="QLabel" name=" label_horizontalSlider ">
+<property
+name="text">
+<string >&lt;html&gt;&lt;head /&gt;&lt;body&gt;&lt;p&gt
+→;-&lt;/p&gt;&lt;/ body&gt;&lt;/ html&gt;</string >
+</property >
+</widget >
+</item >
+</layout >
+</item >
+<item row="1" column="0">
+<widget
+class="QSlider" name=" horizontalSlider ">
+<property
+name=" orientation ">
+<enum >Qt:: Horizontal </enum >
+</property >
+</widget >
+</item >
+</layout >
+</widget >
+<property
+name="geometry">
+<rect >
+<x >860 </x>
+<y>30 </y>
+<width >251 </ width >
+<height >63 </ height >
+</rect >
+</property >
+<layout
+class=" QGridLayout " name=" gridLayout_2 ">
+<item row="1" column="0">
+<layout
+class=" QHBoxLayout " name=" horizontalLayout_11 ">
+<item >
+<spacer
+name=" horizontalSpacer_3 ">
+<property
+name=" orientation ">
+<enum >Qt:: Horizontal </enum >
+</property >
+<property
+name="sizeHint" stdset="0">
+<size >
+<width >40 </ width >
+<height >20 </ height >
+</size >
+</property >
+</spacer >
+</item >
+<item >
+<widget
+class=" QPushButton " name="
+→pushButton_plotLissajous ">
+<property
+name="text">
+<string >Confirme </ string >
+</property >
+</widget >
+</item >
+<item >
+<spacer
+name=" horizontalSpacer_4 ">
+<property
+name=" orientation ">
+<enum >Qt:: Horizontal </enum >
+</property >
+<property
+name="sizeHint" stdset="0">
+<size >
+<width >40 </ width >
+</size >
+</property >
+</spacer >
+</item >
+</layout >
+</item >
+<item row="0" column="0">
+<widget
+class="QLabel" name=" label_plotLissajous ">
+<property
+name="text">
+<string >&lt;html&gt;&lt;head /&gt;&lt;body&gt;&lt;p align
+→=& quot;center&quot ;&gt;&lt;span
+style =& quot; font -
+→size :12 pt; font -weight :600;& quot ;&gt;Lissajous&lt;/
+→span&gt;&lt;/p&gt;&lt;/ body&gt;&lt;/ html&gt;</
+→string >
+</property >
+</widget >
+</item >
+</layout >
+</widget >
+</widget >
+<widget
+class="QWidget" name="widget_1" native="true">
+<property
+name="geometry">
+<rect >
+<x>40 </x>
+<y >250 </y>
+<width >1281 </ width >
+<height >611 </ height >
+</rect >
+</property >
+<property
+name="styleSheet">
+<string
+notr="true">background -color:rgb (0,0,0);</string >
+</property >
+</widget >
+<widget
+class="QLabel" name=" label_titulo ">
+<property
+name="geometry">
+<rect >
+<x>30 </x>
+<y>20 </y>
+<width >1291 </ width >
+<height >51 </ height >
+</property >
+<property
+name="text">
+<string >&lt;html&gt;&lt;head /&gt;&lt;body&gt;&lt;p&gt;&lt;
+→span
+style =& quot; font -size :16 pt; font -weight :696;& quot
+→;&gt; S u p e r v i s r i o
+para
+sinais do DSP&lt;/ span&gt;&lt;/
+→p&gt;&lt;/ body&gt;&lt;/ html&gt;</string >
+</property >
+<property
+name="alignment">
+<set >Qt:: AlignCenter </set >
+</property >
+</widget >
+<widget
+class="QFrame" name="frame">
+<property
+name="geometry">
+<rect >
+<x >1390 </x>
+<y >330 </y>
+<width >211 </ width >
+<height >131 </ height >
+</rect >
+</property >
+<property
+name="frameShape">
+<enum >QFrame :: StyledPanel </enum >
+</property >
+<property
+name=" frameShadow ">
+<enum >QFrame :: Raised </enum >
+</property >
+</widget >
+</widget >
+<widget
+class="QMenuBar" name="menubar">
+<property
+name="geometry">
+<rect >
+<x>0</x>
+<y>0</y>
+<width >1360 </ width >
+<height >26 </ height >
+</rect >
+</property >
+<widget
+class="QMenu" name=" menuMenu_Inical ">
+<property
+name="title">
+<string >Menu Inical </ string >
+<addaction
+name=" actionReiniciar "/>
+<addaction
+name="separator"/>
+<addaction
+name=" actionFechar_2 "/>
+</widget >
+<addaction
+name=" menuMenu_Inical "/>
+</widget >
+<widget
+class=" QStatusBar" name="statusbar"/>
+<action
+name=" actionReiniciar ">
+<property
+name="text">
+<string >Reiniciar </ string >
+</property >
+</action >
+<action
+name=" actionFechar ">
+<property
+name="text">
+<string >Fechar </ string >
+</property >
+</action >
+<action
+name=" actionFechar_2 ">
+<property
+name="text">
+<string >Fechar </ string >
+</property >
+</action >
+</widget >
+<resources/>
+<connections />
+</ui >
+Listing C.1 – Código Python da aplicação gráca com PyQt5
+import
+sys
+from
+PyQt5
+import
+QtWidgets
+from
+PyQt5.QtWidgets
+import *
+from
+PyQt5.QtCore
+import
+QThread , pyqtSignal , QMutex ,
+QMutex ,
+→QTimer
+from
+PyQt5
+import
+uic
+from
+matplotlib .backends. backend_qt5agg
+import
+FigureCanvasQTAgg
+from
+matplotlib .figure
+import
+Figure
+import
+serial.tools. list_ports
+import
+serial
+from
+collections
+import
+deque
+import
+pyqtgraph as pg
+import
+numpy as np
+class
+MyGUI( QMainWindow ):
+def
+__init__(self):
+super(MyGUI , self).__init__ ()
+uic.loadUi("gui.ui", self)
+# Centraliza a GUI no meio da tela ao executar
+screen = QApplication . primaryScreen ()
+screen_geometry = screen. availableGeometry ()
+# Obtem a
+→geometria da tela
+disponivel
+# Calcula a posicao
+centralizada
+screen_width = screen_geometry .width ()
+screen_height = screen_geometry .height ()
+# Obtem as dimensoes
+da janela
+window_width = self.width ()
+window_height = self.height ()
+# Calcula as
+coordenadas
+para
+centralizar a janela
+x = ( screen_width
+- window_width ) // 2
+y = ( screen_height
+- window_height ) // 2
+self. actionReiniciar .triggered.connect(self.reiniciar)
+self. actionFechar_2 .triggered.connect(self.fechar)
+#Variaveis
+para
+controle de eventos
+self. escolha_plot = '1'
+self. escolha_lissajous = '1'
+self. ultimo_botao_press = '0'
+self. porcentagem_corte = 0
+self. faixa_inicial = 0.0
+self. faixa_final = 0.0
+self. pre_trigger_1 = 0.0
+self. pre_trigger_22 = 0.0
+#Variaveis
+para
+controle da
+comunicacao
+serial
+self.ser = None
+#Outras
+variaveis
+self.mutex = QMutex ()
+self. data_thread = None
+# Frequencia
+de amostragem
+dos
+dados
+self.freq = 10000/4
+self. sample_rate = 1/ self.freq
+# Cria um objeto
+GraphicsLayoutWidget
+do PyQtGraph
+self. graphics_layout_widget = pg. GraphicsLayoutWidget ()
+# Layout
+vertical
+para
+inserir o GraphicsLayoutWidget
+→widget
+self. widget_layout = QVBoxLayout (self.widget_1)
+self. widget_layout . addWidget(self. graphics_layout_widget )
+# Conecta os botoes
+aos
+metodos
+self. pushButton_selInicial .clicked.connect(self.
+→configure_selInicial )
+self. pushButton_plotTemp .clicked.connect(self.
+→configure_plotTemp )
+self. pushButton_plotLissajous .clicked.connect(self.
+→configure_plotLissajous )
+self. pushButton_iniciar .clicked.connect(self.
+→ajusta_aquisicao )
+portas = serial.tools. list_ports.comports ()
+for
+porta in portas:
+self. comboBox_portas .addItem(porta.device)
+#Conecta as opcoes de comboBox da plotagem no tempo
+self. comboBox_plotTemp .addItem(" ")
+self. comboBox_plotTemp .addItem("1")
+self. comboBox_plotTemp .addItem("2")
+# Conectando o sinal de mudanca de selecao ao metodo
+self. comboBox_plotTemp . currentIndexChanged .connect(self.
+→seleciona_sinais )
+#self. horizontalSlider . setMinimum (0)
+self. horizontalSlider .setRange (0 ,9)
+self. horizontalSlider .setValue (0)
+self. horizontalSlider . setTickInterval (1)
+self. label_horizontalSlider .setText("0")
+self. horizontalSlider . valueChanged .connect(self.
+→horizontalZoom )
+self.show ()
+"""
+Configuracao
+do Menu
+"""
+# Botao
+para
+reiniciar
+aplicacao
+def
+reiniciar(self):
+reinicia_app ()
+# Botao
+para
+fehcar
+aplicacao
+def
+fechar(self):
+self.close ()
+# Configuracoes
+da "Selecao
+Inicial"
+def
+configure_selInicial (self):
+if self.ser and self.ser.is_open:
+self.ser.close ()
+self.ser = None
+self. pushButton_selInicial .setText("Conecta")
+if self.ser:
+self.ser.quit ()
+self.ser = None
+else:
+porta_selecionada = self. comboBox_portas .currentText
+→()
+baud_rate = 921600
+try:
+self.ser = serial.Serial(porta_selecionada ,
+→baud_rate)
+if self.ser.is_open:
+self. pushButton_selInicial .setText("
+→Desconectar ")
+self. label_alteraStatus .setText("Conectado")
+else:
+self. label_alteraStatus .setText("Erro ao
+→Conectar")
+except
+Exception as e:
+self. serial_connection = None
+QtWidgets. QMessageBox .critical(self , "Error", f"
+→Fail: {str(e)}")
+# Ajusta o zoom
+horizontal e atualiza o label
+com o valor
+→correspondente .
+def
+horizontalZoom (self , value_slider ):
+self. porcentagem_corte = value_slider * 5
+self. label_horizontalSlider .setText(f"{self.
+→porcentagem_corte *2}")
+# Configuracao
+do grafico
+para um sinal em funcao do tempo
+def
+configure_plot_1 (self):
+self.plot1 = self. graphics_layout_widget .addPlot(row=0,
+→col =0)
+self.plot1.showGrid(x=True , y=True)
+self.curve1 = self.plot1.plot(pen='r')
+# Configuracao
+dos
+graficos
+para
+dois
+sinais em funcao do
+→tempo
+def
+configure_plot_2 (self):
+self.plot1 = self. graphics_layout_widget .addPlot(row=0,
+→col =0)
+self.plot1.showGrid(x=True , y=True)
+self.curve1 = self.plot1.plot(pen='r')
+self.plot2 = self. graphics_layout_widget .addPlot(row=1,
+→col =0)
+self.plot2.showGrid(x=True , y=True)
+self.curve2 = self.plot2.plot(pen='b')
+# Configuracao
+do grafico no formato
+Lissajous
+def
+configure_plot_5 (self):
+self.plot1 = self. graphics_layout_widget .addPlot(row=0,
+→col =0)
+self.curve1 = self.plot1.plot(pen='r')
+print("Cheguei
+configure_plot_5 ")
+# Obtem a opcao
+selecionada
+no comboBox de exibicao em funcao
+do tempo
+def
+seleciona_sinais (self):
+self. escolha_plot = self. comboBox_plotTemp . currentText ()
+print(f'Selecionado : {self. escolha_plot }')
+# Configura os deques de acordo
+com a quantidade
+de sinais a
+→serem
+exibidos em funcao do tempo
+def
+configure_plotTemp (self):
+self.eixo_x = deque ()
+if (self. escolha_plot
+== '2'):
+self. configure_plot_2 ()
+self.eixo_y1 = deque ()
+self.eixo_y2 = deque ()
+elif (self. escolha_plot
+== '1'):
+self. configure_plot_1 ()
+self.eixo_y1 = deque ()
+self.eixo_y2 = None
+self. ultimo_botao_press = '0'
+# Configura os deques de acordo
+com a exibicao no formato de
+→Lissajous
+def
+configure_plotLissajous (self):
+if (self. escolha_lissajous
+== '1'):
+self. configure_plot_5 ()
+self.eixo_y1 = deque ()
+self.eixo_y2 = deque ()
+self. ultimo_botao_press = '1'
+# Ajusta a configuracao
+do plot e inicia a thread de
+→aquisicao de dados
+def
+ajusta_aquisicao (self):
+self. ajusta_plot ()
+if not self. data_thread :
+self. data_thread = DataAcquisitionThread (self.ser ,
+→self.mutex , self.eixo_x , self.eixo_y1 , self.
+→eixo_y2 , self. sample_rate )
+self. disparo_aquisicao ()
+else:
+pass
+# Ajusta o tipo de plot com base na selecao
+feita
+def
+ajusta_plot (self):
+if self. ultimo_botao_press
+== '1':
+if self. escolha_lissajous
+== '1':
+self. ultima_escolha_plot = '5'
+else:
+self. ultima_escolha_plot = self. escolha_plot
+print(f'Escolha
+foi :{ self. ultima_escolha_plot }')
+# Inicia a aquisicao
+de dados e configura a atualizacao
+→plot a cada 1 segundo
+def
+disparo_aquisicao (self):
+self. data_thread . nova_quant_sinais .emit(self.
+→ultima_escolha_plot )
+self. data_thread .start ()
+# Iniciar o timer de
+atualizacao
+self. update_timer = QTimer(self)
+self. update_timer .timeout.connect(self. update_plot )
+self. update_timer .start (1000)
+def
+update_plot (self):
+self.mutex.lock ()
+x_vals = list(self.eixo_x)
+y_vals1 = list(self.eixo_y1)
+if self.eixo_x:
+self.eixo_x.clear ()
+if self.eixo_y1:
+self.eixo_y1.clear ()
+if (self. ultima_escolha_plot
+== '2'
+or self. ultima_escolha_plot
+== '5'):
+y_vals2 = list(self.eixo_y2)
+self.eixo_y2.clear ()
+self.mutex.unlock ()
+# Atualizacao
+do espaco
+horizontal
+da curva
+conforme
+→atualizacao
+no slider
+self. faixa_inicial = int (( self. porcentagem_corte / 100) *
+len(x_vals))
+self. faixa_final = int(len(x_vals) - (self.
+→porcentagem_corte / 100) * len(x_vals))
+x_vals = x_vals[self. faixa_inicial :self.faixa_final ]
+if (self. ultima_escolha_plot
+== '1'):
+y_vals1 = y_vals1[self. faixa_inicial :self. faixa_final
+→]
+if (len(x_vals) == len(y_vals1)) and len(x_vals) !=
+→0:
+self.curve1.setData(x_vals , y_vals1)
+else:
+print("[Plot 1] Vetores de dados
+com
+tamnhos
+if (self. ultima_escolha_plot
+== '2'):
+y_vals1 = y_vals1[self. faixa_inicial :self. faixa_final
+→]
+if (len(x_vals) == len(y_vals1)) and len(x_vals) !=
+→0:
+self.curve1.setData(x_vals , y_vals1)
+else:
+print("[Plot
+2.1]
+Vetores de dados
+com
+tamnhos
+→diferentes!")
+y_vals2 = y_vals2[self. faixa_inicial :self. faixa_final
+→]
+if (len(x_vals) == len(y_vals2)) and len(x_vals) !=
+→0:
+self.curve2.setData(x_vals , y_vals2)
+else:
+print("[Plot
+2.2]
+Vetores de dados
+com
+tamnhos
+→diferentes!")
+if (self. ultima_escolha_plot
+== '5'):
+self.curve1.setData(y_vals1 , y_vals2)
+"""
+Thread
+para
+aquisicao e processamento
+de dados
+seriais , com
+→suporte a um ou dois
+sinais
+simultaneos .
+"""
+class
+DataAcquisitionThread (QThread):
+nova_quant_sinais = pyqtSignal(str)
+data_ready = pyqtSignal(list)
+print("Thread
+iniciada")
+# Inicializa a thread
+com
+parametros
+de comunicacao , buffers
+→e taxa de amostragem
+def
+__init__(self , comSer , mutex , eixo_x , eixo_y1 , eixo_y2 ,
+→sample_rate ):
+super ().__init__ ()
+#Variaveis
+compartilhadas
+via
+argumento
+self.comSer = comSer
+self.eixo_x = eixo_x
+self.eixo_y1 = eixo_y1
+self.eixo_y2 = eixo_y2
+self. sample_rate = sample_rate
+#Variaveis
+compartilhadas
+via
+sinal
+self. quant_sinais = "1"
+self. nova_quant_sinais .connect(self. set_quant_sinais )
+#Variaveis
+locais
+self.ativo = True
+self.buffer = ""
+# Buffers
+locais
+self.buffer_x = []
+self.buffer_y1 = []
+self.buffer_y2 = []
+self.next_x = 0.0
+# Controle
+para
+alternancia
+completa
+self. ready_to_update_x = False
+self. current_buffer = self.buffer_y1
+self. pending_pair = None
+#Controle do buffer_x
+quando so se tem 1 sinal
+self. controleX_1sinal = False
+# Define a quantidade
+de sinais a ser
+adquirida e atualiza o
+→estado da thread
+def
+set_quant_sinais (self , quant_sinais ):
+self. quant_sinais = quant_sinais
+print(f'Quantidade
+de sinais
+mudou: { quant_sinais }')
+print(f"self.ativo = {self.ativo}")
+# Adquire e processa
+dados
+via
+comunicacao
+serial ,
+→armazenando -os nos
+buffers.
+def run(self):
+'''
+Aguarda um periodo
+para
+estabilizar a comunicacao .
+'''
+for _ in range (2):
+a = self.comSer.readline ()
+print(f"[TA] Duas
+primeiras
+leituras: {a}")
+if self. quant_sinais
+== '2' or self. quant_sinais
+== '
+→5':
+# Leitura de dois valores , cada um em uma
+linha
+char = self.comSer.read (1).decode ()
+# Leia um
+→caractere
+self.buffer += char
+if char == '\n':
+# Processa um dado
+completo ao
+→encontrar
+'\n'
+try:
+value = float(self.buffer.strip ())
+→Converte
+para
+float
+except
+ValueError:
+print(f"[ERRO] Dado
+invalido
+recebido: {
+→self.buffer.strip ()}")
+self.buffer = ""
+# Descartar
+par
+atual
+self. pending_pair = None
+self. current_buffer = self.buffer_y1
+continue
+if self. pending_pair
+is None:
+# Primeiro
+dado do par
+self. pending_pair = value
+self. current_buffer = self.buffer_y2
+else:
+# Segundo
+dado do par
+self.buffer_y1.append(self. pending_pair )
+self.buffer_y2.append(value)
+# Atualiza
+eixo_x
+somente
+apos o par ser
+→valido
+self.buffer_x.append(self.next_x)
+self.next_x = round(self.next_x + self.
+→sample_rate , 9)
+self. pending_pair = None
+# Reseta o buffer de leitura
+self.buffer = ""
+# Transferencia
+periodica
+para os deques
+if len(self.buffer_x) >= 200:
+self. _transfer_to_deques ()
+else:
+# Leitura de um unico
+valor
+char = self.comSer.read (1).decode ()
+# Leia um
+→caractere
+self.buffer += char
+if char == '\n':
+# Processa o dado
+completo ao
+→encontrar
+'\n'
+try:
+value = float(self.buffer.strip ())
+→Converte
+para
+float
+self. controleX_1sinal = True
+except
+ValueError:
+print(f"[ERRO] Dado
+invalido
+recebido: {
+→self.buffer.strip ()}")
+self.buffer = ""
+continue
+if self. controleX_1sinal
+== True:
+self.buffer_y1.append(value)
+self.buffer_x.append(self.next_x)
+self.next_x = round(self.next_x + self.
+→sample_rate , 9)
+self. controleX_1sinal = False
+# Reseta o buffer de leitura
+self.buffer = ""
+# Transferencia
+periodica
+para os deques
+if len(self.buffer_x) >= 200:
+self. _transfer_to_deques ()
+#Transfere
+dados
+dos
+buffers
+locais
+para os deques
+→compartilhados .
+def
+_transfer_to_deques (self):
+self.mutex.lock ()
+try:
+if self. quant_sinais
+== '2' or self. quant_sinais
+== '
+→5':
+self.eixo_x.extend(self.buffer_x)
+self.eixo_y1.extend(self.buffer_y1)
+self.eixo_y2.extend(self.buffer_y2)
+else:
+self.eixo_x.extend(self.buffer_x)
+self.eixo_y1.extend(self.buffer_y1)
+finally:
+self.mutex.unlock ()
+# Limpa os buffers
+locais
+apos a transferencia
+self.buffer_x.clear ()
+self.buffer_y1 .clear ()
+self.buffer_y2 .clear ()
+# Reinicia a aplicacao
+fechando e recriando a janela
+principal.
+def
+reinicia_app ():
+global
+window
+window.close ()
+# Fecha a janela
+atual
+window = MyGUI () # Cria uma nova
+instancia da janela
+→principal
+if __name__ == '__main__ ':
+app = QApplication (sys.argv)
+window = MyGUI ()
+sys.exit(app.exec_ ())

@@ -1,1 +1,658 @@
-UNIVERSIDADE DO RIO GRANDE DO NORTE FEDERAL UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE CENTRO DE TECNOLOGIA GRADUAÇÃO EM ENGENHARIA DE COMPUTAÇÃO Ciência de Dados Aplicada à Saúde Ocupacional: Monitoramento e Análise de Afastamentos de Servidores Públicos Atendidos pela Unidade SIASS da UFRN Alisson Sousa Moreira Orientador: Prof. Dr. Luiz Affonso Henderson Guedes De Oliveira Natal, RN, de janeiro de UNIVERSIDADE DO RIO GRANDE DO NORTE FEDERAL UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE CENTRO DE TECNOLOGIA GRADUAÇÃO EM ENGENHARIA DE COMPUTAÇÃO Ciência de Dados Aplicada à Saúde Ocupacional: Monitoramento e Análise de Afastamentos de Servidores Públicos Atendidos pela Unidade SIASS da UFRN Alisson Sousa Moreira Orientador: Prof. Dr. Luiz Affonso Henderson Guedes De Oliveira Co-orientador: Trabalho de Conclusão de Curso de Gra- duação na modalidade Monograﬁa, subme- tido como parte dos requisitos necessários para conclusão do curso de Engenharia de Computação pela Universidade Federal do Rio Grande do Norte (UFRN/CT). Natal, RN, de janeiro de Moreira, Alisson Sousa. Ciência de dados aplicada à saúde ocupacional: monitoramento e análise de afastamentos de servidores Públicos atendidos pela Unidade SIASS da UFRN / Alisson Sousa Moreira. - . f.: il. Monografia (Graduação) - Universidade Federal do Rio Grande do Norte, Departamento de Engenharia de Computação e Automação, Engenharia de Computação, Natal, . Orientação: Dr. Luiz Affonso Henderson Guedes De Oliveira. . Streamlit - Monografia. . SIASS - Monografia. . Atendimentos - Monografia. . Sistema - Monografia. . Algoritmo - Monografia. I. Oliveira, Luiz Affonso Henderson Guedes De. II. Título. RN/UF/BCZM CDU Universidade Federal do Rio Grande do Norte - UFRN Sistema de Bibliotecas - SISBI Catalogação de Publicação na Fonte. UFRN - Biblioteca Central Zila Mamede Elaborado por Raimundo Muniz de Oliveira - CRB-/Ciência de Dados Aplicada à Saúde Ocupacional: Monitoramento e Análise de Afastamentos de Servidores Públicos Atendidos pela Unidade SIASS da UFRN Alisson Sousa Moreira Monograﬁa aprovada em de janeiro de , pela banca examinadora composta pelos seguintes membros: Prof. Dr. Luiz Affonso Henderson Guedes De Oliveira (orientador) . . . . . . . . . . DCA/UFRN Eng. Felipe Lima . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . DCA/UFFN Eng. Lemysom Lemos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . DCA/UFRN Agradecimentos Ao meu orientador, professor Luiz Affonso Henderson Guedes De Oliveira, sou grato pela orientação e pela compreenção. Aos meus amigos Leonado, Érika, Guilherme, Rafael e em especial a Vanuza, por terem acreditado em mim, pelo apoio e conversas nos momentos que precisei. Aos meus colegas de graduação Wellington, Jadson, Gustavo, Ricardo e João Lucas, que apesar de não termos continuado juntos no segundo ciclo foram de grande ajuda no inicio da gradução. À minha mãe, Antônia, pelo apoio, paciência e por sempre ter acreditado em mim. À minha mulher e grande amor da minha vida, Rafaela Campos, que me incentivou a continua apesar de todos os problema que passei. Sem ela eu não teria conseguido. Resumo Este trabalho apresenta o desenvolvimento de um sistema interativo utilizando Python e Streamlit, destinado ao uso interno do SIASS na Universidade Federal do Rio Grande do Norte (UFRN). O sistema gera gráﬁcos em tempo real baseados nos atendimentos realizados pela Divisão de Atenção à Saúde do Servidor (DAS), possibilitando análises quantitativas de tipos de perícia realizadas, comparações entre períodos e proporções entre os atendimentos. A solução busca aprimorar a gestão de dados relacionados à homologa- ção de atestados médicos, oferecendo suporte à tomada de decisões administrativas. Ao integrar tecnologia e gestão, este projeto contribui para a eﬁciência e transparência dos processos internos. Palavras-chave: Streamlit, SIASS, atendimentos, sistema, algoritmo. Abstract This study presents the development of an interactive system using Python and Stre- amlit, designed for internal use by the SIASS at the Federal University of Rio Grande do Norte (UFRN). The system generates real-time charts based on the services provided by the Division of Health Care for Servers (DAS), enabling quantitative analyses of the types of evaluations conducted, comparisons between periods, and proportions among service types. The solution aims to improve the management of data related to the homologation of medical certiﬁcates, providing support for administrative decision-making. By inte- grating technology and data management, this project contributes to the efﬁciency and transparency of internal processes. Keywords: Streamlit, SIASS, services, system, algorithm. Sumário Sumário i Lista de Figuras iii Lista de Tabelas v Introdução Fundamentação Teórica .Pandas . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Pygsheets . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Datetime . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Plotly . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Matplotlib . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Streamlit . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .st_pages . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Classes em python . . . . . . . . . . . . . . . . . . . . . . . . . . .Apps Script . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Google Cloud . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Integração das Tecnologias . . . . . . . . . . . . . . . . . . . . . Metodologia/Implementação .Interface . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Aquisição dos dados . . . . . . . . . . . . . . . . . . . . . . . . . .Funções . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Classes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Tratamento de dados . . . . . . . . . . . . . . . . . . . . . . . . . .Mapeamento de combinações . . . . . . . . . . . . . . . . . . . . . Experimentos e Resultados Conclusão i Lista de Figuras .Trecho do algoritmo para a selectbox do Streamlit. . . . . . . . . . . . . .Trecho do algoritmo para a criação da navegação entre as páginas. . . . . .Algoritmo do Apps Script responsável pela coleta de dados da agenda e armazenamento em uma planilha do Google. . . . . . . . . . . . . . . . . .Exemplo de algoritmo para receber dados de planilhas em tempo real. . . .Tratamento de dados inicial do DataFrame com as planilhas. . . . . . . . .Função de ﬁltro de datas. . . . . . . . . . . . . . . . . . . . . . . . . . . .Primeira parte da função para receber e preservar as entradas de datas. . . .Segunda parte da função para receber e preservar as entradas de datas. . . .Função para preencher as datas que não houveram atendimento. . . . . . .Função para subtrair um mês da data recebida. . . . . . . . . . . . . . . . .Construtor da classe Gráco. . . . . . . . . . . . . . . . . . . . . . . . . .Métódo da classe Gráco para o gráﬁco de linha. . . . . . . . . . . . . . .Métódo da classe Gráco para o gráﬁco de coluna. . . . . . . . . . . . . .Métódo da classe Gráco para o gráﬁco de barra. . . . . . . . . . . . . . .Métódo da classe Gráco para tabelas. . . . . . . . . . . . . . . . . . . . .Métódo da classe Gráco para quando não existe visualização para deter- minada combinação. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Métódo da classe Gráco para o gráﬁco de pizza de proporção geral. . . . .Métódo da classe Gráco para o gráﬁco de coluna para porporção geral. . .Métódo da classe Gráco para o gráﬁco de barra para porporção geral. . . .Métódo da classe Gráco para o gráﬁco de pizza comparando períodos de um mesmo tipo de atendimento. . . . . . . . . . . . . . . . . . . . . . .Construtor da classe MultGráco. . . . . . . . . . . . . . . . . . . . . . .Métódo da classe MultGráco para o gráﬁco de linha de proporção geral. .Métódo da classe MultGráco para o gráﬁco de linha. . . . . . . . . . . . .Métódo da classe MultGráco para o gráﬁco de coluna. . . . . . . . . . . .Métódo da classe MultGráco para o gráﬁco de barra. . . . . . . . . . . . .Exemplo de tratamento de dados. . . . . . . . . . . . . . . . . . . . . . . .Mapeamento da combinações para os gráﬁcos de junta médica. . . . . . . .Mapeamento da combinações para os gráﬁcos de perícia singular. . . . . .Mapeamento da combinações para os gráﬁcos de porporção geral. . . . . .Mapeamento da combinações para os gráﬁcos de perícia documental. . . .Mapeamento da combinações para os gráﬁcos de perícia odontológica. . . .Trecho do algoritmo para determinar qual gráﬁco será exibido de acordo com a combinação. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . iii .Tela inicial do sistema. . . . . . . . . . . . . . . . . . . . . . . . . . . . .Barra lateral com sitema de navegação para multiplas páginas e um input de datas. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Gráﬁco de linha para a proporção geral dos atendimentos sem compara- ção com o periodo anterior. . . . . . . . . . . . . . . . . . . . . . . . . . .Gráﬁco de linha para atendimento de perícia singular sem comparação com o periodo anterior. . . . . . . . . . . . . . . . . . . . . . . . . . . . .Gráﬁco de coluna para atendimento de perícia documental comparando com "x"dias anteriores. . . . . . . . . . . . . . . . . . . . . . . . . . . . .Gráﬁco de coluna para atendimento de junta médica comparando com o mês anterior. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Gráﬁco de barra para atendimento de perícia odontológica sem compara- ção com periodo anterior. . . . . . . . . . . . . . . . . . . . . . . . . . . .Gráﬁco de pizza para atendimento de perícia singular comparando com "x"dias anteriores. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Gráﬁco de linha para atendimento de perícia documental comparando com o mês anterior. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Tabela para atendimentos de perícia singular. . . . . . . . . . . . . . . . .Mensagem exibida para combinações que não geram gráﬁcos. . . . . . . Lista de Tabelas v Capítulo Introdução A gestão eﬁciente de processos administrativos relacionados à saúde dos servidores públicos é essencial para garantir o bem-estar dos trabalhadores e a continuidade dos ser- viços prestados à sociedade. Nesse contexto, o Subsistema Integrado de Atenção à Saúde do Servidor (SIASS) desempenha um papel fundamental, ao gerenciar as demandas de homologação de atestados médicos e regulamentação de afastamentos no âmbito da Ad- ministração Pública Federal. O Manual de Perícia Oﬁcial em Saúde do Servidor Público Federal destaca a importância das avaliações periciais para assegurar a conformidade dos afastamentos com as normativas legais e o correto cômputo das licenças, considerando critérios técnicos e legais []. Na Universidade Federal do Rio Grande do Norte (UFRN), a Divisão de Atenção à Saúde do Servidor (DAS), onde está integrado o SIASS, centraliza as atividades relaci- onadas à homologação de atestados. Essa unidade oferece suporte aos servidores que necessitam de afastamentos por motivos de saúde, desempenhando um papel crucial no funcionamento administrativo [][]. Contudo, o volume de atendimentos, a diversidade dos casos e a necessidade de análises técnicas detalhadas tornam esse processo desaﬁa- dor. Além disso, a falta de ferramentas especíﬁcas para análise e visualização de dados em tempo real pode diﬁcultar a identiﬁcação de padrões, a comparação de períodos e a geração de informações estratégicas para a gestão. Os atendimentos realizados pelo SIASS seguem uma estrutura deﬁnida pelo Manual de Perícia Oﬁcial em Saúde do Servidor Público Federal[], contemplando diferentes tipos de análises pericias, a depender do tempo de afastamento concedido no atestado médico e da natureza do afastamento. O ﬂuxo de homologação inicia-se com o envio do atestado pelo servidor através do aplicativo SOUGOV, seguido da análise preliminar rea- lizada por um servidor da unidade SIASS. Após essa análise, o documento é encaminhado para a triagem e, caso necessário, o servidor é agendado para atendimento presencial. Os tipos de avaliação podem ser classiﬁcados em quatro categorias: perícia singular, junta médica, perícia documental e perícia odontológica. A perícia singular é conduzida por um único médico e requer a presença do servidor, sendo utilizada para afastamentos de a dias, no entando caso o atestado não tenha CID ou falte alguma outra informação importante para a homologação, será sempre singular mesmo que tenha menos de dias de afastamento acumulados. A junta médica ocorre quando envolve dois médicos, sendo obrigatória para afastamentos superiores a dias. Já a perícia documental pode ser apli- CAPÍTULO . INTRODUÇÃO cada a afastamentos de a dias, sendo realizada sem a presença do servidor, desde que o atestado não contenha CID F (transtornos mentais) ou acidente em serviço, casos em que a avaliação sempre será presencial. Por ﬁm, a perícia odontológica segue os mes- mos critérios da perícia singular, mas é realizada por um dentista. Além dessas categorias, existe a possibilidade de dispensa de perícia, que pode ocorrer quando o afastamento é de a dias e os documentos apresentados atendem aos critérios estabelecidos. Essa sistemática permite a correta classiﬁcação dos afastamentos, garantindo que cada caso seja tratado conforme a legislação vigente e proporcionando maior eﬁciência na gestão da saúde dos servidores. Nesse cenário, o uso de tecnologias modernas, como Python[] e Streamlit[], emerge como uma solução eﬁciente para transformar dados brutos em informações acionáveis. Python, com seu amplo ecossistema de bibliotecas para análise de dados, combinado com Streamlit, uma ferramenta para criação de aplicativos interativos, possibilita o desenvol- vimento de sistemas robustos para visualização e análise de dados em tempo real. Essas tecnologias permitem a criação de interfaces intuitivas que não apenas apresentam gráﬁ- cos dinâmicos, mas também fornecem comparações entre períodos e métricas especíﬁcas que atendem às necessidades do SIASS. Este trabalho tem como objetivo o desenvolvimento de um sistema interativo para uso interno dos servidores do SIASS na UFRN. O sistema possibilita a geração de gráﬁcos em tempo real com base nos atendimentos realizados no DAS, permitindo análises quan- titativas dos tipos de perícias realizadas, comparações entre períodos e visualização das proporções de atendimentos. A contribuição deste projeto está em facilitar o acompanha- mento das operações realizadas pelo SIASS, fornecendo informações que podem melho- rar a alocação de recursos, identiﬁcar padrões e otimizar os processos de homologação de atestados. A relevância deste projeto reside em sua contribuição para a eﬁciência e transparên- cia dos processos internos do SIASS. Ao fornecer uma plataforma intuitiva e baseada em dados, o sistema visa melhorar a gestão dos atendimentos, otimizar a alocação de recur- sos humanos e técnicos, e reduzir o tempo de análise dos casos. Essa integração entre tecnologia e gestão reforça o papel do SIASS como um instrumento de apoio à saúde do servidor público. Para estruturar o desenvolvimento deste trabalho, o capítulo apresenta conceitos es- senciais para a compreensão do projeto, como a aplicação de ferramentas tecnológicas para análise de dados, falando sobre as bibliotecas utilizadas, como Streamlit, st_pages, Pandas, Matplotlib, Plotly, Datetime e Pygsheets, além de conceitos sobre Google Cloud, Apps Script do Google e o Google Sheets. No capítulo , são descritos os processos adotados na construção do sistema, desde a integração com o Google Sheets para aqui- sição dos dados até o desenvolvimento da interface interativa utilizando Streamlit, além da explicação sobre as funções implementadas para ﬁltragem, tratamento e visualização das informações. O capítulo apresenta a validação do sistema, demonstrando seu fun- cionamento e a eﬁciência na geração de gráﬁcos em tempo real. Por ﬁm, o capítulo apresenta uma síntese dos principais resultados obtidos com a implementação do sistema, destacando sua contribuição para a eﬁciência e transparência na gestão dos atendimentos do SIASS da UFRN. Além de avaliar os impactos positivos da solução na otimização dos processos administrativos e na visualização dinâmica dos dados, esse capítulo também propõe possíveis aprimoramentos, como a implementação de novas métricas de análise estatística, a integração com outros sistemas administrativos da universidade e a inclusão de funcionalidades avançadas, como relatórios automáticos e alertas para padrões atípicos nos atendimentos. CAPÍTULO . INTRODUÇÃO Capítulo Fundamentação Teórica O desenvolvimento do sistema utilizou diversas bibliotecas e tecnologias que desem- penham papéis especíﬁcos na construção de um ambiente interativo, eﬁciente e dinâmico para os servidores do SIASS da UFRN. Cada uma dessas ferramentas foi escolhida com base em sua capacidade de atender às demandas técnicas do projeto, garantindo a integra- ção e o processamento de dados em tempo real. A seguir, são descritas as bibliotecas e tecnologias utilizadas. .Pandas O Pandas é uma biblioteca Python amplamente utilizada para manipulação e análise de dados. Ela permite a criação e manipulação de estruturas de dados como DataFrames e Series, que facilitam a organização, armazenamento e processamento de grandes volumes de informações de forma eﬁciente. Suas funcionalidades incluem ﬁltragem, agrupamento, preenchimento de valores ausentes e operações matemáticas, tornando-a uma ferramenta indispensável para cientistas de dados e desenvolvedores. .Pygsheets O Pygsheets é uma biblioteca Python que oferece integração com Google Sheets, permitindo acessar, modiﬁcar e atualizar planilhas em tempo real, ou seja, é uma interface simpliﬁcada para a API do Google Sheets. Ele permite manipular dados em planilhas diretamente a partir de scripts Python, in- cluindo leitura, escrita, criação de novas planilhas e edição de células. Sua integração com o Google Sheets é particularmente útil para automação de tarefas e sistemas que requerem dados dinâmicos e colaborativos. .Datetime O módulo Datetime do Python é uma biblioteca padrão projetada para manipulação de datas e horários. Ele fornece uma ampla gama de funcionalidades, como captura da data e hora atual, cálculos com intervalos de tempo, e conversões de strings para objetos date- time. Essas operações são essenciais para aplicações que dependem de ﬁltros temporais ou cálculos baseados em tempo. CAPÍTULO . FUNDAMENTAÇÃO TEÓRICA .Plotly O Plotly é uma biblioteca para criação de gráﬁcos interativos e altamente customizá- veis. Ela suporta gráﬁcos de linhas, barras, dispersão, pizza, mapas e até visualizações em D. O Plotly é conhecido por sua interatividade, permitindo que os usuários explorem dados diretamente nos gráﬁcos, com funcionalidades como zoom, tooltips e legendas dinâmicas. .Matplotlib O Matplotlib é uma das bibliotecas mais populares para geração de gráﬁcos em Python. Embora menos interativa que o Plotly, é eﬁciente para gráﬁcos estáticos e rápidos. Ela suporta uma ampla gama de visualizações, como gráﬁcos de linha, barras, dis- persão, histogramas e pizza, além de oferecer personalizações detalhadas para elementos gráﬁcos, como cores, estilos de linha e legendas. .Streamlit O Streamlit é uma biblioteca Python projetada para simpliﬁcar o desenvolvimento de aplicações web interativas voltadas para ciência de dados, visualização de informa- ções e prototipagem rápida. A principal característica do Streamlit é a sua facilidade de uso: com apenas algumas linhas de código, é possível criar interfaces completas com gráﬁcos, tabelas, ﬁltros e outros componentes interativos. Ele elimina a necessidade de conﬁgurações complexas de front-end, permitindo que os desenvolvedores se concentrem exclusivamente na lógica e no processamento de dados. .st_pages O módulo st_pages é uma extensão do Streamlit que facilita a personalização de pá- ginas em aplicações interativas e juntos podem deixar a navegação entre páginas mais organizada e visualmente melhor. Ele permite estruturar e organizar aplicações em módulos separados, com títulos per- sonalizados, ícones e menus de navegação. Essa abordagem modular torna o código mais organizado e escalável, especialmente em projetos complexos. O st_pages é ideal para aplicações que requerem múltiplas seções, como dashboards e sistemas administrativos. Ele elimina a complexidade de conﬁgurar manualmente a navegação entre arquivos, tornando o ﬂuxo do projeto mais eﬁciente e intuitivo. .Classes em python Classes em Python são estruturas que permitem agrupar dados e comportamentos re- lacionados em um único objeto. Elas são a base da programação orientada a objetos (POO) e permitem criar modelos que representam entidades do mundo real. Uma classe é deﬁnida usando a palavra-chave class e pode conter atributos e métodos que deﬁnem seu comportamento. .Apps Script O Apps Script do Google é uma plataforma baseada em JavaScript que permite auto- matizar e estender as funcionalidades de serviços do Google, como Google Sheets, Docs, Drive e Gmail. Ele é uma ferramenta poderosa para criar soluções personalizadas que integram os serviços da suíte Google Workspace. Por exemplo, com o Apps Script, é possível criar funções personalizadas em plani- lhas, automatizar a manipulação de dados, enviar e-mails em massa ou agendar tarefas recorrentes. Um exemplo de uso prático seria automatizar a extração de dados de uma planilha, como foi feito no projeto. .Google Cloud O Google Cloud é uma plataforma abrangente que fornece uma ampla gama de servi- ços para computação em nuvem, armazenamento, análise de dados, inteligência artiﬁcial e muito mais. Essa plataforma também pode ser utilizada para conﬁgurar a autenticação de acesso ao Google Sheets, por meio da criação de uma conta de serviço e geração de uma chave de acesso JSON. A conta de serviço criada no Google Cloud permite que aplicações externas, como scripts Python, acessem recursos protegidos, como planilhas compartilhadas, de forma segura. Este processo é fundamental para automação e integração com a API do Google Sheets. A chave de acesso JSON contém informações de autenticação, como identiﬁca- dores da conta de serviço e chaves privadas, garantindo a comunicação segura com os serviços do Google. Para entender como criar a conta de serviço e conﬁgurar o acesso, o tutorial disponível no Medium (Gspread: Trabalhando com o Google Sheets)[] foi utilizado como referên- cia prática. O guia detalha como habilitar a API, criar uma conta de serviço e associar a chave de acesso JSON, facilitando o uso do Pygsheets para manipulação de dados em planilhas. .Integração das Tecnologias A integração das bibliotecas e tecnologias descritas foi realizada de maneira modular, garantindo a separação das responsabilidades de cada componente e facilitando a manu- tenção do código. O Streamlit atuou como a camada de interface, enquanto o Pandas e o Pygsheets forneceram o suporte para a manipulação e integração dos dados. Já o Plotly e o Matplotlib foram responsáveis pela visualização gráﬁca, apresentando os resultados de maneira clara e intuitiva para os usuários do sistema. CAPÍTULO . FUNDAMENTAÇÃO TEÓRICA Capítulo Metodologia/Implementação O presente capítulo descreve os métodos e procedimentos adotados no desenvolvi- mento do sistema para o setor de saúde da Universidade Federal do Rio Grande do Norte (UFRN). Este sistema foi projetado para automatizar a análise e visualização de dados relacionados aos atendimentos realizados na Divisão de Atenção à Saúde do Servidor (DAS), vinculada ao Subsistema Integrado de Atenção à Saúde do Servidor (SIASS). A ideia para esse sistema surgiu no dia-a-dia do trabalho no DAS, com a necessidade da utilização dos dados de atendimento dos servidores para além de uma visualização em forma de tabelas, que nem sempre é a melhor forma de analisar dados, ainda mais quando se trata de muitas informações como data de agendamento, data de inicio do atestado, tipo de perícia, todo tipo de informação pessoal a respeito de cada uma das pessoas atendias e até mesmo o próprio atestado enviado, dentre outras coisas. O desenvolvimento foi inteiramente na linguagem Python. A biblioteca Streamlit em conjunto de sua extensão st_pages atuaram como o front-end. No back-end, responsáveis pela extração, manipulação e analise de dados, foram utilizadas as bibliotecas Pandas, Pygsheets e Datetime. As principais funcionalidades do sistema incluem: • Geração de gráﬁcos em tempo real: o sistema gera gráﬁcos interativos (linhas, co- lunas, barras, pizza e tabelas) utilizando as bibliotecas Plotly e Matplotlib; • Análise de proporções: exibe a distribuição percentual dos tipos de perícias reali- zadas; • Comparação entre períodos: faz comparações entre as quantidades de atendimentos realizados, sendo feitas dia-a-dia e podem começar no mesmo dia inicial selecio- nado mas no mês anterior ou em "x"dias anteriores, com esse "x"sendo equivalente a quantidade de dias partindo da data inicial até a data ﬁnal selecionadas na barra lateral; • Download de dados: oferece a opção de baixar os dados processados em formato de gráﬁco ou CSV, caso seja uma tabela; • Automatização do ﬂuxo de dados: os dados do Google Sheets são lidos e processa- dos automaticamente em tempo real; • Navegação entre múltiplas páginas. CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO .Interface A interface do sistema foi desenvolvida utilizando a biblioteca Streamlit, que atua como o front-end da aplicação, que foi usado principalmente para exibir gráﬁcos intera- tivos e tabelas com botões de download. Suas funções, como st.plotly_chart, st.write e st.download_button, proporcionaram uma interação direta entre o usuário e os dados vi- sualizados. Além disso, o uso de st.columns ajudou a organizar os elementos de seleção gerados por st.selectbox de forma estruturada, sendo responsáveis pelos elementos de se- leção que geram as exibições dos gráﬁcos de acordo com a combinação, como pode ser visto na ﬁgura .. Figura .: Trecho do algoritmo para a selectbox do Streamlit. Outro elemento estrutural importante para a geração dos gráﬁcos são st.sidebar e date_input. st.sidebar exibe uma barra lateral onde é possível adicionar "widgets"que podem ser passados ao método através da notação de objeto. date_input é passado para a barra lateral da seguinte desta forma st.sidebardate_input(), criando inputs de data que serão utilizados para, junto dos elementos de st.selectbox, gerar os gráﬁcos no período e combinação selecionada. Será abordado mais sobre esse assunto no tópico sobre as funções. Na barra lateral é também onde foram integradas as multiplas páginas para navegação usando. A ﬁgura .mostra como Streamlit e o st_pages trabalharam juntos para facilita a navegação entre seções distintas, como "Agenda"e "Triagem". Cada página foi conﬁ- gurada com títulos e ícones personalizados para melhorar a experiência do usuário. Além disso, a função add_page_title foi usada para ajustar automaticamente o título da página ativa, st.navigation() para criar um menu interativo através de um dicionário recebido e run() para executar a página selecionada. Figura .: Trecho do algoritmo para a criação da navegação entre as páginas. .Aquisição dos dados Os dados utilizados no sistema são armazenados em duas planilhas do Google Sheets, ambas atualizadas em tempo real, sendo a da triagem incrementada com novos dados a cada novo servidor que passou ou deve passar pelo atendimento e a da agenda sendo gerada por um algoritmo criado no Apps Script do Google. Na planilha da triagem ﬁcam os servidores que estão aguardando agendamento e que já foram atendidos. Quando um servidor é convocado para seu atendimento ou tem sua perícia documental agendada, é adicionado um evendo na agenda do Google com todos os dados referentes aquele agendamento. Foram utilizadas essas duas fontes de dados pois na triagem tem apenas as datas de envio e de inicio do atestado. Já na agenda têm a data de atendimento, que é a própria data do evento. Desta forma é possível obter a quantidade de atestados recebido em determinado periodo e também a quantidade de atendimentos realizados. Dito isso, é importante deixar claro que não cabe aqui realizar um estudo sobre o intervalo entre a data de envio e a data de agendamento, uma vez que os atendimentos dependem de algumas variáveis, como demanda do setor no momento e disponibilidade dos peritos. ..Apps Script Para associar um algoritimo do Apps Script a uma planilha, basta acessar o arquivo que deseja manipular e ir no menu "Extensões > Apps Script". O algoritmo desenvolvido, visto na ﬁgura ., pode ser executado automáticamente, para isso é necessário a criação de um "gatilho". Essa funcionalidade pode ser ativada acesando o Apps Script, na mesma página onde está seu algorítimo, e indo no menu "acionadores"que ﬁca na barra lateral. Após esse procedimento, só é necessário clicar em CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO "Adicionar acionador", que ﬁca no canto inferior direito da tela e deﬁnir o que e qual o intervalo de acionamento desse gatilho de acordo com a necessidade de atualização da planilha. Figura .: Algoritmo do Apps Script responsável pela coleta de dados da agenda e ar- mazenamento em uma planilha do Google. ..Google Cloud Para que se tenha uma conexão em tempo real do algorito com as planilhas é preciso criar uma conta de serviço e uma chave de acesso no google cloud, para entender melhor o processo foi utilizado o tutorial disponível no Medium (Gspread: Trabalhando com o Google Sheets)[]. O processo pode ser dividido nas seguintes etapas: • Abrir o Google Cloud logado no seu gmail e acessar o menu "Console"; • Criar um projeto no Google Cloud e habilitar a API do Google Sheets; • Acessar a barra lateral e ir em "Contas de serviço"; • Criar uma nova conta de serviço, fornecendo um nome e uma descrição; • Selecionar a conta de serviço criada e ir para a aba "Chaves"e clicar em "Adicionar chave"; • Selecionar o formato JSON, conﬁrmar a criação e fazer o download da chave para o projeto. A conta de serviço é criada como um tipo de email e após o processo descrito acima só é necessário acessar a planilha e compartilhá-la com ela. ..Pygsheets e Pandas A interação com a planilha foi realizada por meio da biblioteca Pygsheets, que per- mite acessar, ler e escrever dados diretamente a partir de scripts Python. Essas planilhas funcionaram como o banco de dados do sistema, centralizando as informações necessá- rias para as análises e visualizações. A biblioteca Pandas foi usada para transformar os dados obtidos em um Dataframe. Figura .: Exemplo de algoritmo para receber dados de planilhas em tempo real. Ainda no mesmo arquivo que está o trecho da ﬁgura ., que mostra como os dados são acessados, tem algumas manipulações de dados, para garantir que os Dataframes não tenham cabeçalho duplicado, colunas duplicadas, linhas vazias e que as datas ﬁquem no formato correto para comparações futuras como é visto na ﬁgura .. CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO Figura .: Tratamento de dados inicial do DataFrame com as planilhas. .Funções ..ltroDeDatas A função ﬁltroDeDatas (ﬁgura .) tem como objetivo ﬁltrar um conjunto de dados com base em um intervalo de datas especíﬁco. Para isso, ela recebe um DataFrame con- tendo informações, além de duas datas que representam os limites do período desejado, start_date e end_date. Seu funcionamento consiste em criar uma cópia do DataFrame ori- ginal, garantindo que os dados não sejam alterados diretamente, e, em seguida, aplicar um ﬁltro que seleciona apenas as linhas que tiverem a data de inicio do atestado ou a data de atendimento, respectivamente para os dados da triagem e agenda, está dentro do intervalo fornecido. O processo de ﬁltragem ocorre através do uso da função .loc[], um método eﬁciente do Pandas para seleção de dados. A condição aplicada veriﬁca se cada linha da coluna com as datas contém uma data maior ou igual à start_date e menor ou igual à end_date. Apenas as linhas que atendem a essa condição são mantidas no novo DataFrame. Ao ﬁnal, o DataFrame ﬁltrado é retornado, contendo apenas os registros que se enquadram no período especiﬁcado. Figura .: Função de ﬁltro de datas. ..datainput A função dataInput_session (ﬁgura .) é responsável por gerenciar a entrada de datas na aplicação, garantindo que as seleções do usuário sejam armazenadas e mantidas ao longo da navegação. Para isso, ela utiliza o st.session_state (ﬁgura .), um recurso do Streamlit que permite preservar valores entre diferentes interações dentro da mesma ses- são. Inicialmente, a função veriﬁca se as datas de início e término já estão armazenadas no estado da sessão. Caso não estejam, ela deﬁne valores padrão, sendo a data de início conﬁgurada como º de novembro de e a data de término deﬁnida automaticamente como a data atual do sistema. Essa inicialização evita que as datas ﬁquem vazias quando o usuário acessa a aplicação pela primeira vez. Após deﬁnir ou recuperar as datas do estado da sessão, a função exibe dois inputs in- terativos na barra lateral da interface usando st.sidebar.date_input. Esses inputs permitem que o usuário selecione um período de análise, garantindo que apenas datas dentro de um intervalo válido possam ser escolhidas. O menor valor permitido é de março de , e o máximo sempre será o dia atual, evitando que o usuário selecione datas futuras. O formato utilizado para exibição das datas é "YYYY-MM-DD", garantindo consistência com outras partes do sistema que realizam ﬁltragens e comparações temporais. No ﬁnal da função, um trecho de código veriﬁca se o usuário alterou alguma das da- tas. Caso o valor selecionado para data_inicio ou data_ﬁm seja diferente do que está salvo no st.session_state (ﬁgura .), o novo valor é atualizado no estado da sessão. Esse mecanismo evita que as escolhas do usuário sejam perdidas ao navegar entre páginas da aplicação. Com isso, mesmo que o usuário saia da página e retorne posteriormente, as datas que ele selecionou permanecerão as mesmas. Esse comportamento melhora signiﬁ- cativamente a experiência do usuário, garantindo que ele não precise redeﬁnir os ﬁltros de tempo a cada nova interação. Após todas essas operações, a função retorna as datas seleci- onadas pelo usuário, permitindo que outras partes do sistema utilizem essas informações para ﬁltrar e processar os dados exibidos. CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO Figura .: Primeira parte da função para receber e preservar as entradas de datas. Figura .: Segunda parte da função para receber e preservar as entradas de datas. ..preencher_datas_faltantes A função preencher_datas_faltantes (ﬁgura .) tem como objetivo garantir que todas as datas dentro de um intervalo especiﬁcado estejam presentes no DataFrame, preen- chendo automaticamente os dias ausentes com um valor padrão de . O funcionamento da função inicia com a criação de uma série de datas contínuas, utilizando a função pd.date_range(), que gera uma sequência de datas entre data_inicio e data_ﬁm. Em seguida, um novo DataFrame (df_todas_as_datas) é criado contendo essa sequência de datas na coluna deﬁnida pelo parâmetro data_col. O próximo passo é ga- rantir que a coluna de datas do DataFrame original esteja no formato adequado (date- time[ns]), convertendo-a com pd.to_datetime(). Isso assegura a consistência na opera- ção de junção que será realizada a seguir. A etapa mais importante é a junção dos dois DataFrames, utilizando a função pd.merge(). Essa operação é feita com a opção how=’left’, garantindo que todas as datas do DataFrame recém-criado sejam mantidas, enquanto os valores do DataFrame original são combina- dos onde houver correspondência de datas. Se um dia não existia no conjunto original, ele será incluído, mas com um valor NaN na coluna de valores (valor_col). Para corrigir esses valores ausentes, a função ﬁllna() é utilizada, preenchendo os es- paços vazios com . Além disso, a conversão para int (astype(int)) assegura que a coluna de valores mantenha um formato adequado para análise numérica, evitando inconsistên- cias na manipulação futura dos dados. Por ﬁm, a coluna de datas é convertida novamente para o formato datetime.date, garantindo compatibilidade com outras funções que podem utilizar esse DataFrame. O retorno da função é um DataFrame completo e estruturado, onde todas as datas do intervalo especiﬁcado estão presentes, sem lacunas e com valores devidamente preenchi- dos. Na ﬁgura .é possível ver o algoritmo implememtado: Figura .: Função para preencher as datas que não houveram atendimento. CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO ..get_dataNoMesAnterior A função na ﬁgura .tem como subtrair um mês da data fornecida pelo usuário e retornar essa nova data. O funcionamento da função começa veriﬁcando se a dataSlecionada é do tipo string. Caso seja, a função a converte para um objeto do tipo datetime.date utilizando date- time.strptime(), garantindo que a data esteja no formato correto para ser manipulada. Em seguida, a função determina o mês e o ano anteriores à data selecionada. Isso é feito reduzindo um mês da data original (dataSlecionada.month - ). Caso o mês seja janeiro, o novo mês será dezembro do ano anterior, garantindo a transição correta entre anos. Após isso, a função tenta criar uma nova data utilizando replace(), onde apenas os valores do ano e do mês são alterados. No entanto, pode haver um problema caso a data original seja um dia que não exista no mês anterior, como de março, que não tem equivalente direto em fevereiro. Para lidar com isso, a função captura a exceção ValueError e resolve o problema ajustando a data para o último dia do mês anterior. Isso é feito deﬁnindo o dia como e subtraindo um dia (timedelta(days=-)), garantindo que datas como de março se tornem ou de fevereiro, dependendo do ano. A função retorna a nova data corretamente ajustada para o mês anterior, garantindo precisão mesmo em cenários de meses com diferentes quantidades de dias. Figura .: Função para subtrair um mês da data recebida. .Classes A geração de gráﬁcos é uma das principais funcionalidades do sistema, permitindo que os usuários interpretem os dados de forma visual e interativa. Essa tarefa foi dividida em dois módulos principais: gracos e multGracos. Suas implementações permitem a criação de diversas visualizações de dados, propor- cionando uma análise detalhada e intuitiva. Essa abordagem orientada a objetos facilita a reutilização e manutenção do código, além de melhorar a organização das funções que manipulam e representam visualmente os dados. Elas possuem diversos métodos especializados na criação de diferentes tipos de gráﬁ- cos, incluindo gráﬁcos de linha, colunas verticais, barras horizontais e gráﬁcos de pizza, que são úteis para analisar a distribuição de dados ao longo do tempo e comparar propor- ções. Além disso, ela conta com métodos auxiliares, como tabela_para_download, que permite aos usuários exportar os dados tratados em formato CSV, e mostrar_mensagem_nao_aplicavel, que exibe alertas para combinações de ﬁltros e gráﬁcos que não fazem sentido. ..Graco Inicialmente pensada para ser a única classe do projeto, Graco foi feita de forma que seus métodos pudessem ser passados para apenas um Dataframe por vez, como pode ser visto em seu construtor na ﬁgura .. O construtor da classe Graﬁco, deﬁnido pelo método especial __init__, tem a função de inicializar um objeto da classe a partir de um DataFrame do Pandas, que será utilizado para gerar gráﬁcos e tabelas. Esse método é chamado automaticamente sempre que um novo objeto da classe Graﬁco é instanciado. O funcionamento do construtor começa com a deﬁnição do parâmetro df, que deve ser um DataFrame do Pandas contendo os dados que serão manipulados. O uso da anotação de tipo df: pd.DataFrame não é obrigatório, mas ajuda a documentar o código e deixar claro que esse argumento deve ser um objeto do tipo DataFrame. Dentro do método, o parâmetro df é armazenado como um atributo da instância, acessível através de self.df. Isso signiﬁca que qualquer método dentro da classe pode acessar e utilizar esse conjunto de dados sem precisar receber o DataFrame diretamente como argumento. A principal vantagem dessa abordagem é que a classe Graﬁco pode operar de maneira orientada a objetos, onde cada instância da classe pode trabalhar com diferentes conjuntos de dados sem interferência entre si. Por exemplo, se forem criados dois objetos da classe Graﬁco com DataFrames distintos, cada um manterá seus próprios dados e poderá gerar gráﬁcos diferentes sem conﬂitos. Isso facilita a modularização do código, evitando a necessidade de passar os mesmos dados repetidamente para cada função. Além disso, ao armazenar o DataFrame dentro do objeto, o código se torna mais organizado e escalável, permitindo adicionar novos métodos sem precisar modiﬁcar a estrutura básica da classe. CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO Figura .: Construtor da classe Gráco. Nas ﬁguras ., ., ., ., ., ., ., .e .a seguir veremos os métodos implementados para a classe. Figura .: Métódo da classe Gráco para o gráﬁco de linha. Figura .: Métódo da classe Gráco para o gráﬁco de coluna. Figura .: Métódo da classe Gráco para o gráﬁco de barra. Foram implementaadas duas versões para a exibição das tabelas. A primeira é mais simples e vai exibir a todas as informações que estão no trecho ﬁltrado da base de dados, a segunda oculta as informações pessoais através de um ﬁltro aplicado com o uso de uma lista com palavras chave e do método drop(). CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO Figura .: Métódo da classe Gráco para tabelas. A imagem abaixo é um método implementado para exibir uma mensagem informando quando a combinação escolhida for inválida para gerar uma visualização de dados. Figura .: Métódo da classe Gráco para quando não existe visualização para determi- nada combinação. Gráﬁcos feitos para "proporção geral"vão comparar todos os tipos de atendimento dentro do periodo selecionado. Figura .: Métódo da classe Gráco para o gráﬁco de pizza de proporção geral. Figura .: Métódo da classe Gráco para o gráﬁco de coluna para porporção geral. CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO Figura .: Métódo da classe Gráco para o gráﬁco de barra para porporção geral. Nessa versão do gráﬁcos de pizza será comparado o mesmo tipo de atendimento mas em dois períodos diferentes, de acordo com o tipo de comparação selecionado. Figura .: Métódo da classe Gráco para o gráﬁco de pizza comparando períodos de um mesmo tipo de atendimento. ..multGracos Com a necessidade dos métodos de gráﬁcos serem passados para dois ou mais Da- taframes, multGracos foi projetado para receber uma lista. Com essa classe é possível exibir gráﬁcos comparando dois períodos diferentes de um mesmo tipo de atendimento e, além de mostrar seus respectivos valores, podemos mostrar cada valor com sua data ao invés de mostrar apenas as datas referentes ao periodo atual selecionado. Os métodos da classe incluem a geração de gráﬁcos de linha, colunas e barras horizontais. O construtor da classe recebe como parâmetro uma lista de DataFrames. Essa lista pode conter, por exemplo, um DataFrame representando um período atual e outro repre- sentando um período anterior. O uso de self.dataframes permite armazenar esses dados na instância do objeto, tornando-os acessíveis a todos os métodos da classe. Na ﬁgura .está o construtor da classe. A seguir, nas ﬁguras ., ., .e .estão os métodos implementados. CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO Figura .: Construtor da classe MultGráco. Figura .: Métódo da classe MultGráco para o gráﬁco de linha de proporção geral. Figura .: Métódo da classe MultGráco para o gráﬁco de linha. Figura .: Métódo da classe MultGráco para o gráﬁco de coluna. CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO Figura .: Métódo da classe MultGráco para o gráﬁco de barra. .Tratamento de dados O trecho de código mostrado na ﬁgura .tem a função de ﬁltrar, processar e es- truturar os dados garantindo que a visualização deles seja clara. O processo ocorre em algumas etapas principais, que incluem a ﬁltragem dos dados, a contagem de ocorrências por data, o preenchimento de lacunas temporais, e a formatação dos dados para a geração de gráﬁcos. Figura .: Exemplo de tratamento de dados. Inicialmente, a variável df_agendaJunta é criada a partir do DataFrame ﬁltrado, remo- vendo registros que contenham palavras-chave especíﬁcas na coluna "Título". Essa ﬁltra- gem é feita com a função .str.contains(), que veriﬁca se a string da coluna contém qualquer uma dessas palavras e, caso contenha, a linha correspondente é removida (˜ operador de negação). O parâmetro case=False torna a busca insensível a maiúsculas e minúsculas, e na=False evita erros ao lidar com valores nulos. Após essa ﬁltragem, os dados de df_agendaJunta são armazenados em df_agendaJunta_table, que é passado para um objeto da classe Graﬁco, permitindo que os dados sejam manipu- lados para visualização. Em seguida, o código contabiliza as ocorrências de atendimentos por data, utilizando .value_counts(), que conta o número de ocorrências de cada data presente na coluna "Data Início", e reorganiza esses valores em ordem cronológica com .sort_values(by=’Data Início’, ascending=True), garantindo que as datas sejam exibidas de forma crescente. Um ponto importante na preparação dos dados é o preenchimento de datas ausentes, realizado pela função FD.preencher_datas_faltantes(). Como alguns dias podem não ter registros de perícias, essa função garante que todas as datas dentro do período selecionado estejam presentes no DataFrame, preenchendo os dias ausentes com na contagem de atendimentos. Isso é essencial para manter a integridade visual dos gráﬁcos, evitando que a ausência de registros crie "buracos"na visualização. Após essa etapa de preenchimento, os dados processados são armazenados na variável df_juntabClassGraﬁco, preservando o conjunto estruturado antes de sua conversão para um objeto da classe Graﬁco. Finalmente, df_agendaJunta é transformado em um objeto gráﬁco (graﬁcos.Graﬁco(df_agendaJunta)), o que indica que os dados estão prontos para receberem os métodos e os gráﬁcos serem gerados. Para os outros tipos de atendimento seguimos com essa mesma metodologia de trata- mento de dados, mas com palavras-chave especíﬁcas para cada um. .Mapeamento de combinações Para organaizar as cobinações foi utilizado um dicionário de mapeamento de funções (ﬁguras ., ., ., .e .), que associa combinações especíﬁcas de opções selecionadas pelo usuário (ﬁgura .) a métodos responsáveis por gerar gráﬁcos ou ta- belas. Esse dicionário funciona como uma estrutura centralizada que evita a necessidade de múltiplas condições if-else, tornando o código mais organizado e eﬁciente. Ele recebe como chaves tuplas de valores, que representam combinações de parâmetros como tipo de perícia, tipo de análise, formato do gráﬁco e tipo de comparação temporal. Cada chave é associada a uma função lambda, que executa a geração do gráﬁco correspondente por meio dos métodos das classes Graﬁco e MultGraﬁco. O funcionamento se dá pela combinação de valores escolhidos pelo usuário na in- terface do sistema. Por exemplo, se um usuário seleciona "Junta"como tipo de perícia, "Atendimento"como análise, "Linha"como tipo de gráﬁco e "Nenhum"como método de comparação, o dicionário aciona a função df_agendaJunta.graﬁco_linha(), que gera o grá- ﬁco de linha correspondente para esse conjunto de ﬁltros. Caso o usuário escolha uma comparação com um período anterior, como "x dias anteriores", a função chamada será diferente, acionando um método da classe MultGraﬁco para exibir a comparação dos da- dos em diferentes períodos. CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO Figura .: Mapeamento da combinações para os gráﬁcos de junta médica. Figura .: Mapeamento da combinações para os gráﬁcos de perícia singular. Figura .: Mapeamento da combinações para os gráﬁcos de porporção geral. Figura .: Mapeamento da combinações para os gráﬁcos de perícia documental. Figura .: Mapeamento da combinações para os gráﬁcos de perícia odontológica. Esse mecanismo proporciona ﬂexibilidade e escalabilidade ao sistema, pois permite adicionar novos tipos de gráﬁcos ou análises sem modiﬁcar diretamente a lógica principal do programa. Como as funções são armazenadas dentro do dicionário, basta incluir novas combinações dentro da estrutura para expandir as funcionalidades sem comprometer a legibilidade e a eﬁciência do código. Além disso, a utilização de funções lambda garante que a execução de cada opção seja realizada apenas quando a combinação especíﬁca for selecionada pelo usuário, otimizando o desempenho da aplicação. O trecho de código abaixo, na ﬁgura ., tem a função de determinar qual gráﬁco ou tabela será gerado com base nas opções selecionadas pelo usuário na interface da aplica- ção. Ele faz isso veriﬁcando se a combinação das opções escolhidas está presente no di- cionário de mapeamento de funções (mapeamento_funcoes). Esse processo garante que, ao selecionar diferentes ﬁltros e formatos, o sistema direcione corretamente a execução para a função responsável por gerar a visualização correspondente. CAPÍTULO . METODOLOGIA/IMPLEMENTAÇÃO Figura .: Trecho do algoritmo para determinar qual gráﬁco será exibido de acordo com a combinação. O código começa deﬁnindo a variável chave, que armazena uma tupla contendo os valores selecionados pelo usuário nos widgets interativos do Streamlit, vistos na ﬁgura .. Em seguida, há uma veriﬁcação condicional para determinar se a chave gerada a partir das seleções do usuário existe dentro do dicionário de mapeamento. Caso a chave esteja presente (if chave in mapeamento_funcoes:), a função correspondente àquela combina- ção especíﬁca é executada utilizando mapeamento_funcoes[chave](). Isso signiﬁca que o código chama dinamicamente a função previamente deﬁnida dentro do dicionário, sem precisar de estruturas if-else extensas para cada combinação possível. Se a chave não existir no dicionário, o código executa o bloco else, exibindo uma mensagem de erro na interface do Streamlit com st.error("Opção de gráﬁco não disponí- vel para a combinação selecionada."). Esse tratamento evita que a aplicação tente gerar gráﬁcos inválidos, garantindo uma melhor experiência para o usuário e prevenindo erros inesperados. Capítulo Experimentos e Resultados A implementação do sistema proposto para a Divisão de Atenção à Saúde do Servidor (DAS) da Universidade Federal do Rio Grande do Norte (UFRN) foi concluída com su- cesso, atendendo aos requisitos estabelecidos no início do projeto. O sistema permitiu a automação do processo de visualização e análise de atendimentos médicos, consolidando informações em tempo real por meio da integração com o Google Sheets. A interface desenvolvida com Streamlit mostrou-se intuitiva e responsiva, possibilitando aos usuários a seleção de períodos de análise e a geração de gráﬁcos detalhados sem necessidade de conhecimentos avançados em manipulação de dados. Os resultados obtidos demonstram a eﬁciência do sistema na organização e apresen- tação de informações sobre os atendimentos. O uso de gráﬁcos interativos, gerados com as bibliotecas Plotly e Matplotlib, permitiu uma melhor compreensão da distribuição dos atendimentos ao longo do tempo. Além disso, a utilização do st.session_state garantiu a persistência das conﬁgurações do usuário, tornando a experiência de navegação mais ﬂuida. A ﬁltragem de dados, imple- mentada por meio das funções ﬁltroDeDatas e preencher_datas_faltantes, contribuiu para uma análise mais precisa, garantindo que nenhum dado fosse perdido durante a consulta. A opção de exportação de dados para CSV viabilizou o armazenamento e compartilha- mento de informações, facilitando a comunicação interna da unidade. O sistema demonstrou desempenho satisfatório, com tempos de resposta rápidos e in- terface intuitiva, cumprindo com êxito o objetivo de aprimorar a análise dos atendimentos médicos realizados na unidade SIASS. A seguir estarão algumas imagens do sistema funcionando e alguns exemplos de com- binações para gerar os gráﬁcos. Começando com a tela inicial (ﬁgura .) e a barra lateral com o sistema de navegação (ﬁgura .), desenvolvidos como mostrado nas .e ., respectivamente. CAPÍTULO . EXPERIMENTOS E RESULTADOS Figura .: Tela inicial do sistema. Figura .: Barra lateral com sitema de navegação para multiplas páginas e um input de datas. Na sequência estarão algumas ﬁguras mostrando alguns gráﬁcos e suas combinações como exemplo de funcionamento do sistema. As métodos que os implementam foram msotrados no capítulo , como pode ser visto nas ﬁguras .a .. Todos esses grá- ﬁcos implementados posuem o método hover, que possíbilita passar o cursor por cima da informação para ter mais detalhes, como data do periodo atual e anterior, valores ou porcentagens que aquele dado representa. O período utilizado foi de // a //e foi escolhido por ser antes dos recessos e ser uma semana onde ocorreram todos os tipos de atendimento. Na ﬁgura .está um gráﬁco de linha para a proporção geral dos tipos de atendimento. Implementado com o algoritmo mostrado na ﬁgura .. Figura .: Gráﬁco de linha para a proporção geral dos atendimentos sem comparação com o periodo anterior. Na ﬁgura .está um gráﬁco de linha para os atendimentos de perícia singular. Im- plementado com o algoritmo mostrado na ﬁgura .. Figura .: Gráﬁco de linha para atendimento de perícia singular sem comparação com o periodo anterior. CAPÍTULO . EXPERIMENTOS E RESULTADOS Na ﬁgura .está um gráﬁco de coluna para os atendimentos de perícia documental com uma comparação com "x"dias anteriores, onde esse "x"representa a quantidade de dias do período selecionado, como foi cidado no capítulo quando foi falado sobre as funcionalidades. Implementado com o algoritmo mostrado na ﬁgura .. Figura .: Gráﬁco de coluna para atendimento de perícia documental comparando com "x"dias anteriores. Na ﬁgura .está um gráﬁco de coluna para os atendimentos de junta médica com uma comparação em relação ao mês anterior. A data com o mesmo dia no mês anterior é obtida através da função mostrada na ﬁgura .. Implementado com o algoritmo mostrado na ﬁgura .. Figura .: Gráﬁco de coluna para atendimento de junta médica comparando com o mês anterior. Na ﬁgura .está um gráﬁco de barra para os atendimentos de perícia odontológica. Implementado com o algoritmo mostrado na ﬁgura .. Figura .: Gráﬁco de barra para atendimento de perícia odontológica sem comparação com periodo anterior. Na ﬁgura .está um gráﬁco de pizza para os atendimentos de perícia singular com- parando o periodo atual com "x"dias anteriores. Implementado com o algoritmo mostrado CAPÍTULO . EXPERIMENTOS E RESULTADOS na ﬁgura .. Figura .: Gráﬁco de pizza para atendimento de perícia singular comparando com "x"dias anteriores. Na ﬁgura .está um gráﬁco de linha para os atendimentos de perícia documental comparando o periodo atual com o mês anterior. Implementado com o algoritmo mos- trado na ﬁgura .. Figura .: Gráﬁco de linha para atendimento de perícia documental comparando com o mês anterior. Na ﬁgura .está uma tabela para os atendimentos de perícia singular mostrando data de atendimento e médicos que o realizaram. Implementado com o algoritmo mos- trado na ﬁgura .. Figura .: Tabela para atendimentos de perícia singular. Na ﬁgura .mostra a mensagem exibida para combinações que não geram gráﬁcos ou tabelas. Implementado com o algoritmo mostrado na ﬁgura .. Figura .: Mensagem exibida para combinações que não geram gráﬁcos. CAPÍTULO . EXPERIMENTOS E RESULTADOS Capítulo Conclusão O desenvolvimento deste sistema representou um avanço signiﬁcativo na gestão e vi- sualização de dados dos atendimentos realizados no SIASS da UFRN. A implementação bem-sucedida de uma solução que combina Python, Streamlit e Google Sheets demons- trou que é possível integrar ferramentas modernas para automatizar a análise de informa- ções e otimizar ﬂuxos de trabalho administrativos. Com a conclusão do projeto, veriﬁcou-se que o sistema atendeu aos requisitos estabe- lecidos, proporcionando um ambiente interativo para consulta e análise de atendimentos médicos. A interface desenvolvida facilitou a navegação e permitiu aos usuários sele- cionar períodos especíﬁcos para a geração de gráﬁcos detalhados. A funcionalidade de comparação entre períodos tornou-se um diferencial na avaliação da demanda por perí- cias, permitindo que gestores identiﬁquem padrões de atendimento e otimizem a alocação de recursos. A integração com o Google Sheets, utilizando a biblioteca Pygsheets, garantiu a atu- alização dinâmica dos dados, assegurando que as análises fossem sempre baseadas em informações atualizadas. A utilização de gráﬁcos interativos melhorou a experiência dos usuários, proporcionando uma visualização clara e intuitiva dos dados processados. Diante dos resultados alcançados, pode-se concluir que o sistema desenvolvido trouxe ganhos signiﬁcativos na eﬁciência e transparência da análise dos atendimentos médicos, tornando-se uma ferramenta útil para a unidade SIASS da UFRN. A modularidade do sistema também permite futuras expansões, possibilitando a incorporação de novas fun- cionalidades conforme a necessidade do setor. Como trabalhos futuros, sugere-se a implementação de novos métodos de análise es- tatística, além da possibilidade de integração com outros sistemas administrativos da uni- versidade. A inclusão de relatórios automáticos e alertas para padrões atípicos nos aten- dimentos pode ampliar ainda mais o impacto positivo da ferramenta na gestão da saúde dos servidores da UFRN. CAPÍTULO . CONCLUSÃO Referências Bibliográcas [] GOV.BR. Agência Nacional de Aviação Civil (Anac). Manual de Perícia Ocial em Saúde do Servidor Público Federal. . ed. Brasília: MP, . Disponível em: https://www.gov.br/anac/pt-br/centrais-de-conteudo/publicacoes/ arquivos/manual-de-pericia-oficial-em-saude-do-servidor-publico- federal-a-edicao-ano--versao-abr-.pdf/view. Acesso em: jan. . [] GOV.BR. Portal do Servidor. Subsistema Integrado de Atenção à Saúde do Servidor (SIASS). Disponível em: https://www.gov.br/servidor/pt-br/siass. Acesso em: jan. . [] GOV.BR. Portal do Servidor. O que é o SIASS. Disponível em: https: //www.gov.br/servidor/pt-br/siass/acesso_informacao/institucional/ apresentacao-o-que-e-o-siass. Acesso em: jan. . [] PYTHON SOFTWARE FOUNDATION. Python: Programming Language. Dispo- nível em: https://www.python.org/. Acesso em: jan. . [] STREAMLIT INC. Streamlit: The fastest way to build and share data apps. Dispo- nível em: https://streamlit.io/. Acesso em: jan. . [] STREAMLIT INC. Streamlit Documentation. Disponível em: https:// docs.streamlit.io. Acesso em: jan. . [] THE PANDAS DEVELOPMENT TEAM. Pandas Documentation. Disponível em: https://pandas.pydata.org/docs. Acesso em: jan. . [] BLACKARY. st_pages Documentation. Disponível em: https://github.com/ blackary/st_pages. Acesso em: jan. [] PYGSHEETS. Pygsheets Documentation. Disponível em: https: //pygsheets.readthedocs.io. Acesso em: jan. . [] THE PANDAS DEVELOPMENT TEAM. Pandas to_datetime Documenta- tion. Disponível em: https://pandas.pydata.org/docs/reference/api/ pandas.to_datetime.html. Acesso em: jan. . [] THE MATPLOTLIB DEVELOPMENT TEAM. Matplotlib Documentation. Dispo- nível em: https://matplotlib.org/stable/index.html. Acesso em: jan. . REFERÊNCIAS BIBLIOGRÁFICAS [] PLOTLY TECHNOLOGIES INC. Plotly Documentation. Disponível em: https: //plotly.com/python/. Acesso em: jan. . [] GOOGLE. Apps Script Documentation. Disponível em: https:// developers.google.com/apps-script. Acesso em: jan. . [] PYTHON. Python Tutorial. Python Software Foundation, . Disponível em: https://docs.python.org//tutorial/classes.html. Acesso em: jan. . [] PYLADIES BH. Gspread: Trabalhando com o Google Sheets. Medium, mar. . Disponível em: https://medium.com/pyladiesbh/gspread- trabalhando-com-o-google-sheets-feed. Acesso em: jan. .
+UNIVERSIDADE
+DO RIO GRANDE DO NORTE
+FEDERAL
+UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE
+CENTRO DE TECNOLOGIA
+GRADUAÇÃO EM ENGENHARIA DE COMPUTAÇÃO
+Ciência de Dados Aplicada à Saúde
+Ocupacional: Monitoramento e Análise de
+Afastamentos de Servidores Públicos Atendidos
+pela Unidade SIASS da UFRN
+Alisson Sousa Moreira
+Orientador: Prof. Dr. Luiz Affonso Henderson Guedes De Oliveira
+Natal, RN, 20 de janeiro de 2025
+UNIVERSIDADE
+DO RIO GRANDE DO NORTE
+FEDERAL
+UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE
+CENTRO DE TECNOLOGIA
+GRADUAÇÃO EM ENGENHARIA DE COMPUTAÇÃO
+Ciência de Dados Aplicada à Saúde
+Ocupacional: Monitoramento e Análise de
+Afastamentos de Servidores Públicos Atendidos
+pela Unidade SIASS da UFRN
+Alisson Sousa Moreira
+Orientador: Prof. Dr. Luiz Affonso Henderson Guedes De Oliveira
+Co-orientador:
+Trabalho de Conclusão de Curso de Gra-
+duação na modalidade Monograﬁa, subme-
+tido como parte dos requisitos necessários
+para conclusão do curso de Engenharia de
+Computação pela Universidade Federal do
+Rio Grande do Norte (UFRN/CT).
+Natal, RN, 20 de janeiro de 2025
+Moreira, Alisson Sousa.
+Ciência de dados aplicada à saúde ocupacional: monitoramento
+e análise de afastamentos de servidores Públicos atendidos pela
+Unidade SIASS da UFRN / Alisson Sousa Moreira. - 2025.
+44f.: il.
+Monografia (Graduação) - Universidade Federal do Rio Grande
+do Norte, Departamento de Engenharia de Computação e Automação,
+Engenharia de Computação, Natal, 2025.
+Orientação: Dr. Luiz Affonso Henderson Guedes De Oliveira.
+1. Streamlit - Monografia. 2. SIASS - Monografia. 3.
+Atendimentos - Monografia. 4. Sistema - Monografia. 5. Algoritmo
+- Monografia. I. Oliveira, Luiz Affonso Henderson Guedes De. II.
+Título.
+RN/UF/BCZM CDU 004
+Universidade Federal do Rio Grande do Norte - UFRN
+Sistema de Bibliotecas - SISBI
+Catalogação de Publicação na Fonte. UFRN - Biblioteca Central Zila Mamede
+Elaborado por Raimundo Muniz de Oliveira - CRB-15/429
+Ciência de Dados Aplicada à Saúde
+Ocupacional: Monitoramento e Análise de
+Afastamentos de Servidores Públicos Atendidos
+pela Unidade SIASS da UFRN
+Alisson Sousa Moreira
+Monograﬁa aprovada em 20 de janeiro de 2025, pela banca examinadora composta pelos
+seguintes membros:
+Prof. Dr. Luiz Affonso Henderson Guedes De Oliveira (orientador) . . . . . . . . . .
+DCA/UFRN
+Eng. Felipe Lima . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . DCA/UFFN
+Eng. Lemysom Lemos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . DCA/UFRN
+Agradecimentos
+Ao meu orientador, professor Luiz Affonso Henderson Guedes De Oliveira, sou grato
+pela orientação e pela compreenção.
+Aos meus amigos Leonado, Érika, Guilherme, Rafael e em especial a Vanuza, por terem
+acreditado em mim, pelo apoio e conversas nos momentos que precisei. Aos meus colegas
+de graduação Wellington, Jadson, Gustavo, Ricardo e João Lucas, que apesar de não
+termos continuado juntos no segundo ciclo foram de grande ajuda no inicio da gradução.
+À minha mãe, Antônia, pelo apoio, paciência e por sempre ter acreditado em mim.
+À minha mulher e grande amor da minha vida, Rafaela Campos, que me incentivou a
+continua apesar de todos os problema que passei. Sem ela eu não teria conseguido.
+Resumo
+Este trabalho apresenta o desenvolvimento de um sistema interativo utilizando Python
+e Streamlit, destinado ao uso interno do SIASS na Universidade Federal do Rio Grande
+do Norte (UFRN). O sistema gera gráﬁcos em tempo real baseados nos atendimentos
+realizados pela Divisão de Atenção à Saúde do Servidor (DAS), possibilitando análises
+quantitativas de tipos de perícia realizadas, comparações entre períodos e proporções entre
+os atendimentos. A solução busca aprimorar a gestão de dados relacionados à homologa-
+ção de atestados médicos, oferecendo suporte à tomada de decisões administrativas. Ao
+integrar tecnologia e gestão, este projeto contribui para a eﬁciência e transparência dos
+processos internos.
+Palavras-chave: Streamlit, SIASS, atendimentos, sistema, algoritmo.
+Abstract
+This study presents the development of an interactive system using Python and Stre-
+amlit, designed for internal use by the SIASS at the Federal University of Rio Grande do
+Norte (UFRN). The system generates real-time charts based on the services provided by
+the Division of Health Care for Servers (DAS), enabling quantitative analyses of the types
+of evaluations conducted, comparisons between periods, and proportions among service
+types. The solution aims to improve the management of data related to the homologation
+of medical certiﬁcates, providing support for administrative decision-making. By inte-
+grating technology and data management, this project contributes to the efﬁciency and
+transparency of internal processes.
+Keywords: Streamlit, SIASS, services, system, algorithm.
+Sumário
+Sumário
+Lista de Figuras
+iii
+Lista de Tabelas
+Introdução
+Fundamentação Teórica
+2.1
+Pandas . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2
+Pygsheets . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3
+Datetime . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.4
+Plotly
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.5
+Matplotlib . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.6
+Streamlit . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.7
+st_pages . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.8
+Classes em python
+. . . . . . . . . . . . . . . . . . . . . . . . . .
+2.9
+Apps Script . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.10
+Google Cloud
+. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.11
+Integração das Tecnologias
+. . . . . . . . . . . . . . . . . . . . .
+Metodologia/Implementação
+3.1
+Interface . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2
+Aquisição dos dados
+. . . . . . . . . . . . . . . . . . . . . . . . .
+3.3
+Funções . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.4
+Classes
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.5
+Tratamento de dados
+. . . . . . . . . . . . . . . . . . . . . . . . .
+3.6
+Mapeamento de combinações . . . . . . . . . . . . . . . . . . . . .
+Experimentos e Resultados
+Conclusão
+Lista de Figuras
+4.1
+Tela inicial do sistema. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.2
+Barra lateral com sitema de navegação para multiplas páginas e um input
+de datas. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.3
+Gráﬁco de linha para a proporção geral dos atendimentos sem compara-
+ção com o periodo anterior. . . . . . . . . . . . . . . . . . . . . . . . . .
+4.4
+Gráﬁco de linha para atendimento de perícia singular sem comparação
+com o periodo anterior. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.5
+Gráﬁco de coluna para atendimento de perícia documental comparando
+com "x"dias anteriores. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.6
+Gráﬁco de coluna para atendimento de junta médica comparando com o
+mês anterior. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.7
+Gráﬁco de barra para atendimento de perícia odontológica sem compara-
+ção com periodo anterior. . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.8
+Gráﬁco de pizza para atendimento de perícia singular comparando com
+"x"dias anteriores. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.9
+Gráﬁco de linha para atendimento de perícia documental comparando
+com o mês anterior. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.10 Tabela para atendimentos de perícia singular.
+. . . . . . . . . . . . . . .
+4.11 Mensagem exibida para combinações que não geram gráﬁcos.
+. . . . . .
+Lista de Tabelas
+Capítulo 1
+Introdução
+processos administrativos e na visualização dinâmica dos dados, esse capítulo também
+propõe possíveis aprimoramentos, como a implementação de novas métricas de análise
+estatística, a integração com outros sistemas administrativos da universidade e a inclusão
+de funcionalidades avançadas, como relatórios automáticos e alertas para padrões atípicos
+nos atendimentos.
+Capítulo 2
+Fundamentação Teórica
+O desenvolvimento do sistema utilizou diversas bibliotecas e tecnologias que desem-
+penham papéis especíﬁcos na construção de um ambiente interativo, eﬁciente e dinâmico
+para os servidores do SIASS da UFRN. Cada uma dessas ferramentas foi escolhida com
+base em sua capacidade de atender às demandas técnicas do projeto, garantindo a integra-
+ção e o processamento de dados em tempo real. A seguir, são descritas as bibliotecas e
+tecnologias utilizadas.
+2.1
+Pandas
+O Pandas é uma biblioteca Python amplamente utilizada para manipulação e análise
+de dados. Ela permite a criação e manipulação de estruturas de dados como DataFrames e
+Series, que facilitam a organização, armazenamento e processamento de grandes volumes
+de informações de forma eﬁciente. Suas funcionalidades incluem ﬁltragem, agrupamento,
+preenchimento de valores ausentes e operações matemáticas, tornando-a uma ferramenta
+indispensável para cientistas de dados e desenvolvedores.
+2.2
+Pygsheets
+O Pygsheets é uma biblioteca Python que oferece integração com Google Sheets,
+permitindo acessar, modiﬁcar e atualizar planilhas em tempo real, ou seja, é uma interface
+simpliﬁcada para a API do Google Sheets.
+Ele permite manipular dados em planilhas diretamente a partir de scripts Python, in-
+cluindo leitura, escrita, criação de novas planilhas e edição de células. Sua integração com
+o Google Sheets é particularmente útil para automação de tarefas e sistemas que requerem
+dados dinâmicos e colaborativos.
+2.3
+Datetime
+2.4
+Plotly
+O Plotly é uma biblioteca para criação de gráﬁcos interativos e altamente customizá-
+veis.
+Ela suporta gráﬁcos de linhas, barras, dispersão, pizza, mapas e até visualizações em
+3D. O Plotly é conhecido por sua interatividade, permitindo que os usuários explorem
+dados diretamente nos gráﬁcos, com funcionalidades como zoom, tooltips e legendas
+dinâmicas.
+2.5
+Matplotlib
+O Matplotlib é uma das bibliotecas mais populares para geração de gráﬁcos em Python.
+Embora menos interativa que o Plotly, é eﬁciente para gráﬁcos estáticos e rápidos.
+Ela suporta uma ampla gama de visualizações, como gráﬁcos de linha, barras, dis-
+persão, histogramas e pizza, além de oferecer personalizações detalhadas para elementos
+gráﬁcos, como cores, estilos de linha e legendas.
+2.6
+Streamlit
+O Streamlit é uma biblioteca Python projetada para simpliﬁcar o desenvolvimento
+de aplicações web interativas voltadas para ciência de dados, visualização de informa-
+ções e prototipagem rápida. A principal característica do Streamlit é a sua facilidade de
+uso: com apenas algumas linhas de código, é possível criar interfaces completas com
+gráﬁcos, tabelas, ﬁltros e outros componentes interativos. Ele elimina a necessidade de
+conﬁgurações complexas de front-end, permitindo que os desenvolvedores se concentrem
+exclusivamente na lógica e no processamento de dados.
+2.7
+st_pages
+O módulo st_pages é uma extensão do Streamlit que facilita a personalização de pá-
+ginas em aplicações interativas e juntos podem deixar a navegação entre páginas mais
+organizada e visualmente melhor.
+Ele permite estruturar e organizar aplicações em módulos separados, com títulos per-
+sonalizados, ícones e menus de navegação. Essa abordagem modular torna o código mais
+organizado e escalável, especialmente em projetos complexos.
+O st_pages é ideal para aplicações que requerem múltiplas seções, como dashboards
+e sistemas administrativos. Ele elimina a complexidade de conﬁgurar manualmente a
+navegação entre arquivos, tornando o ﬂuxo do projeto mais eﬁciente e intuitivo.
+2.8
+Classes em python
+deﬁnida usando a palavra-chave class e pode conter atributos e métodos que deﬁnem seu
+comportamento.
+2.9
+Apps Script
+O Apps Script do Google é uma plataforma baseada em JavaScript que permite auto-
+matizar e estender as funcionalidades de serviços do Google, como Google Sheets, Docs,
+Drive e Gmail. Ele é uma ferramenta poderosa para criar soluções personalizadas que
+integram os serviços da suíte Google Workspace.
+Por exemplo, com o Apps Script, é possível criar funções personalizadas em plani-
+lhas, automatizar a manipulação de dados, enviar e-mails em massa ou agendar tarefas
+recorrentes. Um exemplo de uso prático seria automatizar a extração de dados de uma
+planilha, como foi feito no projeto.
+2.10
+Google Cloud
+O Google Cloud é uma plataforma abrangente que fornece uma ampla gama de servi-
+ços para computação em nuvem, armazenamento, análise de dados, inteligência artiﬁcial
+e muito mais. Essa plataforma também pode ser utilizada para conﬁgurar a autenticação
+de acesso ao Google Sheets, por meio da criação de uma conta de serviço e geração de
+uma chave de acesso JSON.
+A conta de serviço criada no Google Cloud permite que aplicações externas, como
+scripts Python, acessem recursos protegidos, como planilhas compartilhadas, de forma
+segura. Este processo é fundamental para automação e integração com a API do Google
+Sheets. A chave de acesso JSON contém informações de autenticação, como identiﬁca-
+dores da conta de serviço e chaves privadas, garantindo a comunicação segura com os
+serviços do Google.
+Para entender como criar a conta de serviço e conﬁgurar o acesso, o tutorial disponível
+no Medium (Gspread: Trabalhando com o Google Sheets)[15] foi utilizado como referên-
+cia prática. O guia detalha como habilitar a API, criar uma conta de serviço e associar
+a chave de acesso JSON, facilitando o uso do Pygsheets para manipulação de dados em
+planilhas.
+2.11
+Integração das Tecnologias
+A integração das bibliotecas e tecnologias descritas foi realizada de maneira modular,
+garantindo a separação das responsabilidades de cada componente e facilitando a manu-
+tenção do código. O Streamlit atuou como a camada de interface, enquanto o Pandas e o
+Pygsheets forneceram o suporte para a manipulação e integração dos dados. Já o Plotly e
+o Matplotlib foram responsáveis pela visualização gráﬁca, apresentando os resultados de
+maneira clara e intuitiva para os usuários do sistema.
+Capítulo 3
+Metodologia/Implementação
+O presente capítulo descreve os métodos e procedimentos adotados no desenvolvi-
+mento do sistema para o setor de saúde da Universidade Federal do Rio Grande do Norte
+(UFRN). Este sistema foi projetado para automatizar a análise e visualização de dados
+relacionados aos atendimentos realizados na Divisão de Atenção à Saúde do Servidor
+(DAS), vinculada ao Subsistema Integrado de Atenção à Saúde do Servidor (SIASS).
+A ideia para esse sistema surgiu no dia-a-dia do trabalho no DAS, com a necessidade
+da utilização dos dados de atendimento dos servidores para além de uma visualização em
+forma de tabelas, que nem sempre é a melhor forma de analisar dados, ainda mais quando
+se trata de muitas informações como data de agendamento, data de inicio do atestado, tipo
+de perícia, todo tipo de informação pessoal a respeito de cada uma das pessoas atendias e
+até mesmo o próprio atestado enviado, dentre outras coisas.
+O desenvolvimento foi inteiramente na linguagem Python. A biblioteca Streamlit em
+conjunto de sua extensão st_pages atuaram como o front-end. No back-end, responsáveis
+pela extração, manipulação e analise de dados, foram utilizadas as bibliotecas Pandas,
+Pygsheets e Datetime.
+As principais funcionalidades do sistema incluem:
+3.1
+Interface
+A interface do sistema foi desenvolvida utilizando a biblioteca Streamlit, que atua
+como o front-end da aplicação, que foi usado principalmente para exibir gráﬁcos intera-
+tivos e tabelas com botões de download. Suas funções, como st.plotly_chart, st.write e
+st.download_button, proporcionaram uma interação direta entre o usuário e os dados vi-
+sualizados. Além disso, o uso de st.columns ajudou a organizar os elementos de seleção
+gerados por st.selectbox de forma estruturada, sendo responsáveis pelos elementos de se-
+leção que geram as exibições dos gráﬁcos de acordo com a combinação, como pode ser
+visto na ﬁgura 3.1.
+Outro elemento estrutural importante para a geração dos gráﬁcos são st.sidebar e
+date_input. st.sidebar exibe uma barra lateral onde é possível adicionar "widgets"que
+podem ser passados ao método através da notação de objeto. date_input é passado para
+a barra lateral da seguinte desta forma st.sidebardate_input(), criando inputs de data que
+serão utilizados para, junto dos elementos de st.selectbox, gerar os gráﬁcos no período
+e combinação selecionada. Será abordado mais sobre esse assunto no tópico sobre as
+funções.
+3.2
+Aquisição dos dados
+Os dados utilizados no sistema são armazenados em duas planilhas do Google Sheets,
+ambas atualizadas em tempo real, sendo a da triagem incrementada com novos dados
+a cada novo servidor que passou ou deve passar pelo atendimento e a da agenda sendo
+gerada por um algoritmo criado no Apps Script do Google.
+Na planilha da triagem ﬁcam os servidores que estão aguardando agendamento e que
+já foram atendidos. Quando um servidor é convocado para seu atendimento ou tem sua
+perícia documental agendada, é adicionado um evendo na agenda do Google com todos
+os dados referentes aquele agendamento.
+Foram utilizadas essas duas fontes de dados pois na triagem tem apenas as datas de
+envio e de inicio do atestado. Já na agenda têm a data de atendimento, que é a própria
+data do evento. Desta forma é possível obter a quantidade de atestados recebido em
+determinado periodo e também a quantidade de atendimentos realizados. Dito isso, é
+importante deixar claro que não cabe aqui realizar um estudo sobre o intervalo entre a data
+de envio e a data de agendamento, uma vez que os atendimentos dependem de algumas
+variáveis, como demanda do setor no momento e disponibilidade dos peritos.
+3.2.1
+Apps Script
+"Adicionar acionador", que ﬁca no canto inferior direito da tela e deﬁnir o que e qual o
+intervalo de acionamento desse gatilho de acordo com a necessidade de atualização da
+planilha.
+mazenamento em uma planilha do Google.
+3.2.2
+Google Cloud
+Para que se tenha uma conexão em tempo real do algorito com as planilhas é preciso
+criar uma conta de serviço e uma chave de acesso no google cloud, para entender melhor
+o processo foi utilizado o tutorial disponível no Medium (Gspread: Trabalhando com o
+Google Sheets)[15].
+O processo pode ser dividido nas seguintes etapas:
+• Criar um projeto no Google Cloud e habilitar a API do Google Sheets;
+• Acessar a barra lateral e ir em "Contas de serviço";
+• Criar uma nova conta de serviço, fornecendo um nome e uma descrição;
+• Selecionar a conta de serviço criada e ir para a aba "Chaves"e clicar em "Adicionar
+chave";
+• Selecionar o formato JSON, conﬁrmar a criação e fazer o download da chave para
+o projeto.
+A conta de serviço é criada como um tipo de email e após o processo descrito acima
+só é necessário acessar a planilha e compartilhá-la com ela.
+3.2.3
+Pygsheets e Pandas
+A interação com a planilha foi realizada por meio da biblioteca Pygsheets, que per-
+mite acessar, ler e escrever dados diretamente a partir de scripts Python. Essas planilhas
+funcionaram como o banco de dados do sistema, centralizando as informações necessá-
+rias para as análises e visualizações. A biblioteca Pandas foi usada para transformar os
+dados obtidos em um Dataframe.
+3.3
+Funções
+3.3.1
+ltroDeDatas
+A função ﬁltroDeDatas (ﬁgura 3.6) tem como objetivo ﬁltrar um conjunto de dados
+com base em um intervalo de datas especíﬁco. Para isso, ela recebe um DataFrame con-
+tendo informações, além de duas datas que representam os limites do período desejado,
+start_date e end_date. Seu funcionamento consiste em criar uma cópia do DataFrame ori-
+ginal, garantindo que os dados não sejam alterados diretamente, e, em seguida, aplicar um
+ﬁltro que seleciona apenas as linhas que tiverem a data de inicio do atestado ou a data de
+atendimento, respectivamente para os dados da triagem e agenda, está dentro do intervalo
+fornecido.
+3.3.2
+datainput
+3.3.3
+preencher_datas_faltantes
+data_ﬁm. Em seguida, um novo DataFrame (df_todas_as_datas) é criado contendo essa
+sequência de datas na coluna deﬁnida pelo parâmetro data_col. O próximo passo é ga-
+rantir que a coluna de datas do DataFrame original esteja no formato adequado (date-
+time64[ns]), convertendo-a com pd.to_datetime(). Isso assegura a consistência na opera-
+ção de junção que será realizada a seguir.
+A etapa mais importante é a junção dos dois DataFrames, utilizando a função pd.merge().
+Essa operação é feita com a opção how=’left’, garantindo que todas as datas do DataFrame
+recém-criado sejam mantidas, enquanto os valores do DataFrame original são combina-
+dos onde houver correspondência de datas. Se um dia não existia no conjunto original,
+ele será incluído, mas com um valor NaN na coluna de valores (valor_col).
+Para corrigir esses valores ausentes, a função ﬁllna(0) é utilizada, preenchendo os es-
+paços vazios com 0. Além disso, a conversão para int (astype(int)) assegura que a coluna
+de valores mantenha um formato adequado para análise numérica, evitando inconsistên-
+cias na manipulação futura dos dados. Por ﬁm, a coluna de datas é convertida novamente
+para o formato datetime.date, garantindo compatibilidade com outras funções que podem
+utilizar esse DataFrame.
+O retorno da função é um DataFrame completo e estruturado, onde todas as datas do
+intervalo especiﬁcado estão presentes, sem lacunas e com valores devidamente preenchi-
+dos.
+Na ﬁgura 3.9 é possível ver o algoritmo implememtado:
+3.3.4
+get_dataNoMesAnterior
+A função na ﬁgura 3.10 tem como subtrair um mês da data fornecida pelo usuário e
+retornar essa nova data.
+O funcionamento da função começa veriﬁcando se a dataSlecionada é do tipo string.
+Caso seja, a função a converte para um objeto do tipo datetime.date utilizando date-
+time.strptime(), garantindo que a data esteja no formato correto para ser manipulada.
+Em seguida, a função determina o mês e o ano anteriores à data selecionada. Isso
+é feito reduzindo um mês da data original (dataSlecionada.month - 1). Caso o mês seja
+janeiro, o novo mês será dezembro do ano anterior, garantindo a transição correta entre
+anos.
+Após isso, a função tenta criar uma nova data utilizando replace(), onde apenas os
+valores do ano e do mês são alterados. No entanto, pode haver um problema caso a
+data original seja um dia que não exista no mês anterior, como 31 de março, que não
+tem equivalente direto em fevereiro. Para lidar com isso, a função captura a exceção
+ValueError e resolve o problema ajustando a data para o último dia do mês anterior. Isso
+é feito deﬁnindo o dia como 1 e subtraindo um dia (timedelta(days=-1)), garantindo que
+datas como 31 de março se tornem 28 ou 29 de fevereiro, dependendo do ano.
+A função retorna a nova data corretamente ajustada para o mês anterior, garantindo
+precisão mesmo em cenários de meses com diferentes quantidades de dias.
+3.4
+Classes
+a reutilização e manutenção do código, além de melhorar a organização das funções que
+manipulam e representam visualmente os dados.
+Elas possuem diversos métodos especializados na criação de diferentes tipos de gráﬁ-
+cos, incluindo gráﬁcos de linha, colunas verticais, barras horizontais e gráﬁcos de pizza,
+que são úteis para analisar a distribuição de dados ao longo do tempo e comparar propor-
+ções. Além disso, ela conta com métodos auxiliares, como tabela_para_download, que
+permite aos usuários exportar os dados tratados em formato CSV, e mostrar_mensagem_nao_aplicavel,
+que exibe alertas para combinações de ﬁltros e gráﬁcos que não fazem sentido.
+3.4.1
+Graco
+Inicialmente pensada para ser a única classe do projeto, Graco foi feita de forma que
+seus métodos pudessem ser passados para apenas um Dataframe por vez, como pode ser
+visto em seu construtor na ﬁgura 3.11.
+O construtor da classe Graﬁco, deﬁnido pelo método especial __init__, tem a função
+de inicializar um objeto da classe a partir de um DataFrame do Pandas, que será utilizado
+para gerar gráﬁcos e tabelas. Esse método é chamado automaticamente sempre que um
+novo objeto da classe Graﬁco é instanciado.
+O funcionamento do construtor começa com a deﬁnição do parâmetro df, que deve ser
+um DataFrame do Pandas contendo os dados que serão manipulados. O uso da anotação
+de tipo df: pd.DataFrame não é obrigatório, mas ajuda a documentar o código e deixar
+claro que esse argumento deve ser um objeto do tipo DataFrame. Dentro do método, o
+parâmetro df é armazenado como um atributo da instância, acessível através de self.df.
+Isso signiﬁca que qualquer método dentro da classe pode acessar e utilizar esse conjunto
+de dados sem precisar receber o DataFrame diretamente como argumento.
+Nas ﬁguras 3.12, 3.13, 3.14, 3.15, 3.16, 3.17, 3.18, 3.19 e 3.20 a seguir veremos os
+métodos implementados para a classe.
+A imagem abaixo é um método implementado para exibir uma mensagem informando
+quando a combinação escolhida for inválida para gerar uma visualização de dados.
+nada combinação.
+um mesmo tipo de atendimento.
+3.4.2
+multGracos
+Com a necessidade dos métodos de gráﬁcos serem passados para dois ou mais Da-
+taframes, multGracos foi projetado para receber uma lista. Com essa classe é possível
+exibir gráﬁcos comparando dois períodos diferentes de um mesmo tipo de atendimento e,
+além de mostrar seus respectivos valores, podemos mostrar cada valor com sua data ao
+invés de mostrar apenas as datas referentes ao periodo atual selecionado. Os métodos da
+classe incluem a geração de gráﬁcos de linha, colunas e barras horizontais.
+O construtor da classe recebe como parâmetro uma lista de DataFrames. Essa lista
+pode conter, por exemplo, um DataFrame representando um período atual e outro repre-
+sentando um período anterior. O uso de self.dataframes permite armazenar esses dados
+na instância do objeto, tornando-os acessíveis a todos os métodos da classe.
+3.5
+Tratamento de dados
+O trecho de código mostrado na ﬁgura 3.26 tem a função de ﬁltrar, processar e es-
+truturar os dados garantindo que a visualização deles seja clara. O processo ocorre em
+algumas etapas principais, que incluem a ﬁltragem dos dados, a contagem de ocorrências
+por data, o preenchimento de lacunas temporais, e a formatação dos dados para a geração
+de gráﬁcos.
+negação). O parâmetro case=False torna a busca insensível a maiúsculas e minúsculas, e
+na=False evita erros ao lidar com valores nulos.
+Após essa ﬁltragem, os dados de df_agendaJunta são armazenados em df_agendaJunta_table,
+que é passado para um objeto da classe Graﬁco, permitindo que os dados sejam manipu-
+lados para visualização. Em seguida, o código contabiliza as ocorrências de atendimentos
+por data, utilizando .value_counts(), que conta o número de ocorrências de cada data
+presente na coluna "Data Início", e reorganiza esses valores em ordem cronológica com
+.sort_values(by=’Data Início’, ascending=True), garantindo que as datas sejam exibidas
+de forma crescente.
+Um ponto importante na preparação dos dados é o preenchimento de datas ausentes,
+realizado pela função FD.preencher_datas_faltantes(). Como alguns dias podem não ter
+registros de perícias, essa função garante que todas as datas dentro do período selecionado
+estejam presentes no DataFrame, preenchendo os dias ausentes com 0 na contagem de
+atendimentos. Isso é essencial para manter a integridade visual dos gráﬁcos, evitando que
+a ausência de registros crie "buracos"na visualização.
+Após essa etapa de preenchimento, os dados processados são armazenados na variável
+df_juntab4ClassGraﬁco, preservando o conjunto estruturado antes de sua conversão para
+um objeto da classe Graﬁco. Finalmente, df_agendaJunta é transformado em um objeto
+gráﬁco (graﬁcos.Graﬁco(df_agendaJunta)), o que indica que os dados estão prontos para
+receberem os métodos e os gráﬁcos serem gerados.
+Para os outros tipos de atendimento seguimos com essa mesma metodologia de trata-
+mento de dados, mas com palavras-chave especíﬁcas para cada um.
+3.6
+Mapeamento de combinações
+Esse mecanismo proporciona ﬂexibilidade e escalabilidade ao sistema, pois permite
+adicionar novos tipos de gráﬁcos ou análises sem modiﬁcar diretamente a lógica principal
+do programa. Como as funções são armazenadas dentro do dicionário, basta incluir novas
+combinações dentro da estrutura para expandir as funcionalidades sem comprometer a
+legibilidade e a eﬁciência do código. Além disso, a utilização de funções lambda garante
+que a execução de cada opção seja realizada apenas quando a combinação especíﬁca for
+selecionada pelo usuário, otimizando o desempenho da aplicação.
+com a combinação.
+O código começa deﬁnindo a variável chave, que armazena uma tupla contendo os
+valores selecionados pelo usuário nos widgets interativos do Streamlit, vistos na ﬁgura
+3.1.
+Em seguida, há uma veriﬁcação condicional para determinar se a chave gerada a partir
+das seleções do usuário existe dentro do dicionário de mapeamento. Caso a chave esteja
+presente (if chave in mapeamento_funcoes:), a função correspondente àquela combina-
+ção especíﬁca é executada utilizando mapeamento_funcoes[chave](). Isso signiﬁca que
+o código chama dinamicamente a função previamente deﬁnida dentro do dicionário, sem
+precisar de estruturas if-else extensas para cada combinação possível.
+Se a chave não existir no dicionário, o código executa o bloco else, exibindo uma
+mensagem de erro na interface do Streamlit com st.error("Opção de gráﬁco não disponí-
+vel para a combinação selecionada."). Esse tratamento evita que a aplicação tente gerar
+gráﬁcos inválidos, garantindo uma melhor experiência para o usuário e prevenindo erros
+inesperados.
+Capítulo 4
+Experimentos e Resultados
+A implementação do sistema proposto para a Divisão de Atenção à Saúde do Servidor
+(DAS) da Universidade Federal do Rio Grande do Norte (UFRN) foi concluída com su-
+cesso, atendendo aos requisitos estabelecidos no início do projeto. O sistema permitiu a
+automação do processo de visualização e análise de atendimentos médicos, consolidando
+informações em tempo real por meio da integração com o Google Sheets. A interface
+desenvolvida com Streamlit mostrou-se intuitiva e responsiva, possibilitando aos usuários
+a seleção de períodos de análise e a geração de gráﬁcos detalhados sem necessidade de
+conhecimentos avançados em manipulação de dados.
+Os resultados obtidos demonstram a eﬁciência do sistema na organização e apresen-
+tação de informações sobre os atendimentos. O uso de gráﬁcos interativos, gerados com
+as bibliotecas Plotly e Matplotlib, permitiu uma melhor compreensão da distribuição dos
+atendimentos ao longo do tempo.
+Além disso, a utilização do st.session_state garantiu a persistência das conﬁgurações
+do usuário, tornando a experiência de navegação mais ﬂuida. A ﬁltragem de dados, imple-
+mentada por meio das funções ﬁltroDeDatas e preencher_datas_faltantes, contribuiu para
+uma análise mais precisa, garantindo que nenhum dado fosse perdido durante a consulta.
+A opção de exportação de dados para CSV viabilizou o armazenamento e compartilha-
+mento de informações, facilitando a comunicação interna da unidade.
+O sistema demonstrou desempenho satisfatório, com tempos de resposta rápidos e in-
+terface intuitiva, cumprindo com êxito o objetivo de aprimorar a análise dos atendimentos
+médicos realizados na unidade SIASS.
+A seguir estarão algumas imagens do sistema funcionando e alguns exemplos de com-
+binações para gerar os gráﬁcos.
+datas.
+com o periodo anterior.
+Na ﬁgura 4.4 está um gráﬁco de linha para os atendimentos de perícia singular. Im-
+plementado com o algoritmo mostrado na ﬁgura 3.12.
+Na ﬁgura 4.5 está um gráﬁco de coluna para os atendimentos de perícia documental
+com uma comparação com "x"dias anteriores, onde esse "x"representa a quantidade de
+dias do período selecionado, como foi cidado no capítulo 3 quando foi falado sobre as
+funcionalidades. Implementado com o algoritmo mostrado na ﬁgura 3.24.
+"x"dias anteriores.
+anterior.
+Na ﬁgura 4.7 está um gráﬁco de barra para os atendimentos de perícia odontológica.
+Implementado com o algoritmo mostrado na ﬁgura 3.14.
+com periodo anterior.
+na ﬁgura 3.20.
+"x"dias anteriores.
+Na ﬁgura 4.9 está um gráﬁco de linha para os atendimentos de perícia documental
+comparando o periodo atual com o mês anterior. Implementado com o algoritmo mos-
+trado na ﬁgura 3.23.
+Na ﬁgura 4.10 está uma tabela para os atendimentos de perícia singular mostrando
+data de atendimento e médicos que o realizaram. Implementado com o algoritmo mos-
+trado na ﬁgura 3.15.
+Na ﬁgura 4.11 mostra a mensagem exibida para combinações que não geram gráﬁcos
+ou tabelas. Implementado com o algoritmo mostrado na ﬁgura 3.16.
+Capítulo 5
+Conclusão
+O desenvolvimento deste sistema representou um avanço signiﬁcativo na gestão e vi-
+sualização de dados dos atendimentos realizados no SIASS da UFRN. A implementação
+bem-sucedida de uma solução que combina Python, Streamlit e Google Sheets demons-
+trou que é possível integrar ferramentas modernas para automatizar a análise de informa-
+ções e otimizar ﬂuxos de trabalho administrativos.
+Com a conclusão do projeto, veriﬁcou-se que o sistema atendeu aos requisitos estabe-
+lecidos, proporcionando um ambiente interativo para consulta e análise de atendimentos
+médicos. A interface desenvolvida facilitou a navegação e permitiu aos usuários sele-
+cionar períodos especíﬁcos para a geração de gráﬁcos detalhados. A funcionalidade de
+comparação entre períodos tornou-se um diferencial na avaliação da demanda por perí-
+cias, permitindo que gestores identiﬁquem padrões de atendimento e otimizem a alocação
+de recursos.
+A integração com o Google Sheets, utilizando a biblioteca Pygsheets, garantiu a atu-
+alização dinâmica dos dados, assegurando que as análises fossem sempre baseadas em
+informações atualizadas. A utilização de gráﬁcos interativos melhorou a experiência dos
+usuários, proporcionando uma visualização clara e intuitiva dos dados processados.
+Diante dos resultados alcançados, pode-se concluir que o sistema desenvolvido trouxe
+ganhos signiﬁcativos na eﬁciência e transparência da análise dos atendimentos médicos,
+tornando-se uma ferramenta útil para a unidade SIASS da UFRN. A modularidade do
+sistema também permite futuras expansões, possibilitando a incorporação de novas fun-
+cionalidades conforme a necessidade do setor.
+Como trabalhos futuros, sugere-se a implementação de novos métodos de análise es-
+tatística, além da possibilidade de integração com outros sistemas administrativos da uni-
+versidade. A inclusão de relatórios automáticos e alertas para padrões atípicos nos aten-
+dimentos pode ampliar ainda mais o impacto positivo da ferramenta na gestão da saúde
+dos servidores da UFRN.
+Referências Bibliográcas
+[1] GOV.BR. Agência Nacional de Aviação Civil (Anac). Manual de Perícia Ocial
+em Saúde do Servidor Público Federal. 3. ed. Brasília: MP, 2017. Disponível em:
+https://www.gov.br/anac/pt-br/centrais-de-conteudo/publicacoes/
+arquivos/manual-de-pericia-oficial-em-saude-do-servidor-publico-
+federal-3a-edicao-ano-2017-versao-28abr2017-3.pdf/view. Acesso em:
+12 jan. 2025.
+[2] GOV.BR. Portal do Servidor. Subsistema Integrado de Atenção à Saúde do Servidor
+(SIASS). Disponível em: https://www.gov.br/servidor/pt-br/siass. Acesso
+em: 12 jan. 2025.
+[3] GOV.BR. Portal do Servidor. O que é o SIASS. Disponível em:
+https:
+//www.gov.br/servidor/pt-br/siass/acesso_informacao/institucional/
+apresentacao-o-que-e-o-siass. Acesso em: 12 jan. 2025.
+[4] PYTHON SOFTWARE FOUNDATION. Python: Programming Language. Dispo-
+nível em: https://www.python.org/. Acesso em: 12 jan. 2025.
+[5] STREAMLIT INC. Streamlit: The fastest way to build and share data apps. Dispo-
+nível em: https://streamlit.io/. Acesso em: 12 jan. 2025.
+[6] STREAMLIT
+INC.
+Streamlit
+Documentation.
+Disponível
+em:
+https://
+docs.streamlit.io. Acesso em: 12 jan. 2025.
+[7] THE PANDAS DEVELOPMENT TEAM. Pandas Documentation. Disponível em:
+https://pandas.pydata.org/docs. Acesso em: 12 jan. 2025.
+[8] BLACKARY. st_pages Documentation. Disponível em: https://github.com/
+blackary/st_pages. Acesso em: 12 jan. 2025
+[9] PYGSHEETS.
+Pygsheets
+Documentation.
+Disponível
+em:
+https:
+//pygsheets.readthedocs.io. Acesso em: 12 jan. 2025.
+[10] THE PANDAS DEVELOPMENT TEAM. Pandas to_datetime Documenta-
+tion.
+Disponível
+em:
+https://pandas.pydata.org/docs/reference/api/
+pandas.to_datetime.html. Acesso em: 12 jan. 2025.
+[12] PLOTLY TECHNOLOGIES INC. Plotly Documentation. Disponível em: https:
+//plotly.com/python/. Acesso em: 12 jan. 2025.
+[13] GOOGLE.
+Apps
+Script
+Documentation.
+Disponível
+em:
+https://
+developers.google.com/apps-script. Acesso em: 12 jan. 2025.
+[14] PYTHON. Python Tutorial. Python Software Foundation, 2001. Disponível em:
+https://docs.python.org/3/tutorial/classes.html. Acesso em:
+12 jan.
+2025.
+[15] PYLADIES BH. Gspread:
+Trabalhando com o Google Sheets. Medium,
+15 mar. 2020. Disponível em:
+https://medium.com/pyladiesbh/gspread-
+trabalhando-com-o-google-sheets-f12e53ed1346. Acesso em: 12 jan. 2025.

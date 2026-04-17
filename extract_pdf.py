@@ -1,37 +1,96 @@
 """
-Extract_pdf 
-Usado para extrais os textos dos TCCs de pdf -> txt
+extract_pdf_v2.py — Extração avançada de PDFs acadêmicos
 """
 
 import os
 import fitz  # PyMuPDF
 import re
 
-# Caminhos
 PDF_FOLDER = "TCC"
 OUTPUT_FOLDER = "output"
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-# Função para limpar texto
-def limpar_texto(texto):
-    texto = re.sub(r'\n+', ' ', texto)        # remove quebras de linha
-    texto = re.sub(r'\s+', ' ', texto)        # remove espaços duplicados
-    texto = re.sub(r'\d+\s*', '', texto)      # remove números soltos
+
+# ─────────────────────────────────────────────
+# LIMPEZA INTELIGENTE
+# ─────────────────────────────────────────────
+def limpar_texto_avancado(texto: str) -> str:
+    # normaliza espaços
+    texto = re.sub(r'[ \t]+', ' ', texto)
+
+    # preserva parágrafos (2+ quebras = novo parágrafo)
+    texto = re.sub(r'\n{3,}', '\n\n', texto)
+
+    # remove linhas muito curtas (ruído)
+    linhas = []
+    for linha in texto.split("\n"):
+        l = linha.strip()
+
+        # remove linhas irrelevantes
+        if len(l) <= 2:
+            continue
+        if re.match(r'^\d+$', l):  # número isolado
+            continue
+        if re.match(r'^(Figura|Tabela|Fonte)', l, re.IGNORECASE):
+            continue
+
+        linhas.append(l)
+
+    texto = "\n".join(linhas)
+
+    # remove múltiplos espaços novamente
+    texto = re.sub(r' {2,}', ' ', texto)
+
     return texto.strip()
 
-# Função para extrair texto de um PDF
-def extrair_texto_pdf(pdf_path):
+
+# ─────────────────────────────────────────────
+# REMOÇÃO DE CABEÇALHO/RODAPÉ
+# ─────────────────────────────────────────────
+def remover_cabecalho_rodape(pagina):
+    blocos = pagina.get_text("blocks")
+
+    altura = pagina.rect.height
+
+    texto_util = ""
+
+    for b in blocos:
+        x0, y0, x1, y1, texto, *_ = b
+
+        # remove topo e rodapé (~10%)
+        if y0 < altura * 0.1:
+            continue
+        if y1 > altura * 0.9:
+            continue
+
+        texto_util += texto + "\n"
+
+    return texto_util
+
+
+# ─────────────────────────────────────────────
+# EXTRAÇÃO AVANÇADA
+# ─────────────────────────────────────────────
+def extrair_texto_pdf_avancado(pdf_path):
     texto = ""
+
     try:
         doc = fitz.open(pdf_path)
+
         for pagina in doc:
-            texto += pagina.get_text()
+            texto += remover_cabecalho_rodape(pagina)
+            texto += "\n\n"  # separa páginas
+
     except Exception as e:
         print(f"Erro ao ler {pdf_path}: {e}")
+
     return texto
 
-# Processar todos os PDFs
+
+# ─────────────────────────────────────────────
+# PROCESSAMENTO EM LOTE
+# ─────────────────────────────────────────────
 def processar_pdfs():
     arquivos = [f for f in os.listdir(PDF_FOLDER) if f.endswith(".pdf")]
 
@@ -42,8 +101,8 @@ def processar_pdfs():
 
         print(f"🔍 Processando: {arquivo}")
 
-        texto = extrair_texto_pdf(caminho_pdf)
-        texto_limpo = limpar_texto(texto)
+        texto = extrair_texto_pdf_avancado(caminho_pdf)
+        texto_limpo = limpar_texto_avancado(texto)
 
         nome_saida = arquivo.replace(".pdf", ".txt")
         caminho_saida = os.path.join(OUTPUT_FOLDER, nome_saida)
@@ -55,6 +114,6 @@ def processar_pdfs():
 
     print("🎉 Todos os PDFs foram processados!")
 
-# Executar
+
 if __name__ == "__main__":
     processar_pdfs()

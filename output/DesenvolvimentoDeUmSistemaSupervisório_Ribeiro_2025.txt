@@ -1,1 +1,1064 @@
-UNIVERSIDADE DO RIO GRANDE DO NORTE FEDERAL UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE CENTRO DE TECNOLOGIA GRADUAÇÃO EM ENGENHARIA DE COMPUTAÇÃO Desenvolvimento de um Sistema Supervisório para bancada de estudos do desempenho de células fotovoltaicas Caio Matheus Lopes Ribeiro Orientador: Prof. Dr. Andrés Ortiz Salazar Natal, RN, de janeiro de UNIVERSIDADE DO RIO GRANDE DO NORTE FEDERAL UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE CENTRO DE TECNOLOGIA GRADUAÇÃO EM ENGENHARIA DE COMPUTAÇÃO Desenvolvimento de um Sistema Supervisório para bancada de estudos do desempenho de células fotovoltaicas Caio Matheus Lopes Ribeiro Orientador: Dr. Andres Ortiz Salazar Trabalho de Conclusão de Curso de Gra- duação na modalidade Monografia, subme- tido como parte dos requisitos necessários para conclusão do curso de Engenharia de Computação pela Universidade Federal do Rio Grande do Norte (UFRN/CT). Natal, RN, de janeiro de Ribeiro, Caio Matheus Lopes. Desenvolvimento de um sistema supervisório para bancada de estudos do desempenho de células fotovoltaicas / Caio Matheus Lopes Ribeiro. - . f.: il. Monografia (Graduação) - Universidade Federal do Rio Grande do Norte, Centro de Tecnologia (CT), Engenharia de Computação, Natal, . Orientação: Dr. Andres Ortiz Salazar. . Energia Fotovoltaica - Monografia. . Supervisório - Monografia. . LabVIEW - Monografia. . Bancada de Estudos - Monografia. . Monitoramento em Tempo Real - Monografia. I. Salazar, Andres Ortiz. II. Título. RN/UF/BCZM CDU Universidade Federal do Rio Grande do Norte - UFRN Sistema de Bibliotecas - SISBI Catalogação de Publicação na Fonte. UFRN - Biblioteca Central Zila Mamede Elaborado por Raimundo Muniz de Oliveira - CRB-/Desenvolvimento de um Sistema Supervisório para bancada de estudos do desempenho de células fotovoltaicas Caio Matheus Lopes Ribeiro Monografia aprovada em de janeiro de , pela banca examinadora composta pelos seguintes membros: Prof. Dr. Andres Ortiz Salazar (orientador) . . . . . . . . . . . . . . . . . . . . DCA/UFRN Dr. Diego Antonio de Moura Fonseca . . . . . . . . . . . . . . . . . . . . . . PPgEEC/UFRN Eng. Rafael Augusto de Oliveira Guedes . . . . . . . . . . . . . . . . . . . . . . DCA/UFRN Aos meus pais, Cezilma Lopes de Medeiros e Marcelo Erivaldo Ribeiro. Agradecimentos Aos meus pais, Cezilma Lopes de Medeiros e Marcelo Erivaldo Ribeiro, por sempre me permitirem seguir o caminho que eu escolhesse, e nunca faltarem com apoio e incentivo em tudo que já realizei na vida. Aos meus tios, Ana Cecília Lopes de Medeiros Albuquerque e Aldo Teixeira de Albu- querque Neto, por me oferecem moradia durante meus primeiros semestres de curso, me permitindo ter segurança e conforto para estudar. À minha prima Ilionara Cilanne Lo- pes de Medeiros por dividir sua casa comigo após a pandemia. Ao meu amigo Gustavo Jerônimo Moura de França e sua família por me acolherem em sua residência quando necessitei. À minha companheira e meu grande amor Gabriela Cruz Targino, que esteve ao meu lado nas derrotas e conquistas durante a reta final da graduação. Sou eternamente grato por seu imenso apoio companheirismo, nunca permitindo que eu duvidasse de mim mesmo e jamais desistisse dos meus objetivos. Ao meu orientador, Prof. Dr. Andres Ortiz Salazar, que me apoiou e orientou durante toda minha iniciação científica, contribuindo fundamentalmente para minha formação acadê- mica. À Equipe Potiguar Rocket Design pela oportunidade de aprendizado, em especial Mail- son Rodrigues de Medeiros Guimarães, responsável por me orientar e me apresentar ao mundo da eletrônica. Agradeço também aos amigos da equipe que compõem o subgrupo Cringe Móvel. Aos amigos do Laboratório de Avaliação e Medição em Petróleo, em especial Adson Emanuel Santos Amaral, que enfrentou todos os desafios da graduação junto a mim desde o dia da matrícula na UFRN, e Rafael Augusto de Oliveira Guedes que, em tão pouco tempo, se tornou um grande amigo e parceiro de estudos. À UFRN, pela estrutura e oportunidades oferecidas durante toda a graduação. Resumo A energia solar tem ganhado destaque no Brasil devido à sua grande disponibilidade e ao crescente interesse por fontes de energia renovável. O país, com sua vasta incidência solar ao longo do ano, apresenta condições ideais para o aproveitamento dessa forma de energia, contribuindo para a diversificação da matriz energética e a redução de impactos ambientais. Diante desse contexto, este trabalho apresenta o desenvolvimento de um sis- tema supervisório para monitoramento e controle de uma bancada de estudos em energia fotovoltaica, localizada no Laboratório de Avaliação de Medição em Petróleo (LAMP). O sistema foi implementado utilizando a plataforma LabVIEW, que permite a aquisição e análise de dados em tempo real, garantindo uma supervisão eficiente dos parâmetros críticos, como corrente, tensão, irradiância solar, temperatura do módulo fotovoltaico e do ambiente, armazenando os dados coletados. O sistema supervisório oferece ao usuário a possibilidade de monitorar a bancada em tempo real, possibilitando a detecção de falhas e anomalias durante testes. Palavras-chave: Energia Fotovoltaica, Supervisório, LabVIEW, Bancada de Estudos, Monitoramento em Tempo Real. Abstract Solar energy has gained prominence in Brazil due to its abundant availability and the growing interest in renewable energy sources. With its vast year-round solar incidence, the country presents ideal conditions for harnessing this form of energy, contributing to the diversification of the energy matrix and the reduction of environmental impacts. In this context, this work presents the development of a supervisory system for monitoring and controlling a photovoltaic energy study bench, located in the Laboratório de Avalia- ção e Medição de Petróleo (LAMP). The system was implemented using the LabVIEW platform, which enables real-time data acquisition and analysis, ensuring efficient super- vision of critical parameters such as current, voltage, solar irradiance, the temperature of the photovoltaic module and the environment, while storing the collected data. The supervisory system provides users with the capability to monitor the bench in real-time, allowing the detection of faults and anomalies during tests. Keywords: Photovoltaic Energy, Supervisory System, LabVIEW, Experimental Bench, Real-Time Monitoring. Sumário Sumário i Lista de Figuras iii Lista de Tabelas v Introdução Problema .Bancada de Estudos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Objetivos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Monitoramento de temperaturas . . . . . . . . . . . . . . . . . . ..Monitoramento de tensão e corrente . . . . . . . . . . . . . . . . ..Controle e monitoramento de luminosidade . . . . . . . . . . . . ..Armazenamento de dados . . . . . . . . . . . . . . . . . . . . . Fundamentação Teórica .Sistemas fotovoltaicos . . . . . . . . . . . . . . . . . . . . . . . . . . . .Sistema supervisório . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Ponto de máxima potência . . . . . . . . . . . . . . . . . . . . . . . . . .Comunicação IC . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Metodologia .Materiais . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..INA. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..BH. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Sensores de Temperatura: LMe LM. . . . . . . . . . . . ..Módulo com Relés . . . . . . . . . . . . . . . . . . . . . . . . ..NI USB. . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Arduino UNO . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Arquitetura e funcionamento do Sistema . . . . . . . . . . . . . . . . . . Implementação .Implementação do supervisório no LabVIEW . . . . . . . . . . . . . . . ..Controle de luminosidade . . . . . . . . . . . . . . . . . . . . . ..Monitoramento de tensão, corrente e luminosidade . . . . . . . . ..Monitoramento de temperaturas . . . . . . . . . . . . . . . . . . i ..Armazenamento de dados . . . . . . . . . . . . . . . . . . . . . Experimentos e Resultados .Controle de luminosidade . . . . . . . . . . . . . . . . . . . . . . . . . . .Monitoramento de tensão, corrente e luminosidade . . . . . . . . . . . . .Monitoramento de temperaturas . . . . . . . . . . . . . . . . . . . . . . .Armazenamento de dados . . . . . . . . . . . . . . . . . . . . . . . . . . Conclusão .Trabalhos futuros . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Referências bibliográficas A Informações adicionais A.Algoritmo Arduino . . . . . . . . . . . . . . . . . . . . . . . . . . . . . A.Código completo LabVIEW . . . . . . . . . . . . . . . . . . . . . . . . Lista de Figuras .Bancada de estudos. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Mapa de irradiação do Brasil. . . . . . . . . . . . . . . . . . . . . . . . . .Sistema supervisório de um poço automatizado com bombeio mecânico . .Curvas I-V e P-V de um módulo ou conjunto de módulos fotovoltaicos. . .Comunicação IC entre controlador e periférico. . . . . . . . . . . . . . . .Sensor de corrente e tensão INA. . . . . . . . . . . . . . . . . . . . . .Sensor de corrente e tensão BH. . . . . . . . . . . . . . . . . . . . . .Sensor de corrente e tensão INA. . . . . . . . . . . . . . . . . . . . . .Módulo de relés. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Módulo de aquisição de dados NI USB. . . . . . . . . . . . . . . . . .Pinos do DAQ USB. . . . . . . . . . . . . . . . . . . . . . . . . . . .Arduino UNO. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Arquitetura do sistema. . . . . . . . . . . . . . . . . . . . . . . . . . . . .Interface do sistema supervisório. . . . . . . . . . . . . . . . . . . . . . .Módulo de gráficos do sistema supervisório. . . . . . . . . . . . . . . . . .Módulo de controle de luminosidade. . . . . . . . . . . . . . . . . . . . .Configuração dos pinos de saída USB. . . . . . . . . . . . . . . . . .Módulo relés conectado às lâmpadas. . . . . . . . . . . . . . . . . . . .Montagem de um circuito de lâmpadas acionadas por relé. . . . . . . . . .Lógica implementada em LabVIEW para o acionamento das lâmpadas. . .Configuração de porta e leitura dos dados na tela do supervisório. . . . . . .Lógica implementada em LabVIEW para a leitura do Arduino. . . . . . . .Apresentação das temperaturas na tela do supervisório. . . . . . . . . . . .Configuração dos pinos de entrada analógica USB. . . . . . . . . . . .Lógica implementada em LabVIEW para o monitoramento de temperatura. .Caminho do arquivo na tela do supervisório. . . . . . . . . . . . . . . . . .Código do armazenamento de dados . . . . . . . . . . . . . . . . . . . . .Sistema acionado com apenas % de luminosidade total. . . . . . . . . . .Sistema acionado com % de luminosidade. . . . . . . . . . . . . . . . .Montagem do circuito teste com o LED. . . . . . . . . . . . . . . . . . . .Teste de monitoramento do INAe BH. . . . . . . . . . . . . . . .Monitoramento de temperaturas com as lâmpadas ligadas. . . . . . . . .Foto dos dados salvos formato .xlsx. . . . . . . . . . . . . . . . . . . . . iii A.Algoritmo completo em LabVIEW. . . . . . . . . . . . . . . . . . . . . . Lista de Tabelas .Especificações do INA. . . . . . . . . . . . . . . . . . . . . . . . . .Especificações do BH. . . . . . . . . . . . . . . . . . . . . . . . . .Especificações do LM. . . . . . . . . . . . . . . . . . . . . . . . . . .Especificações do LM. . . . . . . . . . . . . . . . . . . . . . . . . . .Especificações do Módulo com Relés . . . . . . . . . . . . . . . . . . .Especificações Técnicas do NI USB-. . . . . . . . . . . . . . . . . .Especificações Técnicas do Arduino Uno . . . . . . . . . . . . . . . . . v Capítulo Introdução Nos últimos anos, a crescente preocupação com a sustentabilidade, aliada aos avanços tecnológicos e à redução dos custos dos equipamentos, tem impulsionado os investimen- tos em tecnologias renováveis. O Brasil possui aproximadamente % de sua matriz energética proveniente de energias sustentáveis, sendo a energia solar uma das maiores contribuintes (Governo do Brasil ). A adoção de sistemas fotovoltaicos em usinas, residências e comércios cresce devido à praticidade e ao baixo custo de implementação e manutenção em comparação com hidrelétricas e eólicas. Com a crescente demanda por energia limpa, pesquisas e desenvolvimento contínuos são essenciais para aprimorar os equipamentos e tecnologias, buscando reduzir perdas e aumentar a eficiência, tornando a energia solar mais viável e sustentável. Estudos e testes em ambientes naturais são frequentemente inviáveis devido às condições variáveis, por isso, bancadas experimentais oferecem um ambiente controlado para o desenvolvimento prático do conhecimento teórico. Nesse contexto, um sistema supervisório para monitorar bancadas de estudos fotovol- taicos torna-se um aliado dos pesquisadores, permitindo o acompanhamento em tempo real de dados como tensão, corrente e temperatura, facilitando a identificação de falhas e a análise de desempenho. Isso melhora a precisão dos experimentos e agiliza a tomada de decisão, além de proporcionar uma interface amigável para pesquisadores e estudantes, promovendo uma melhor compreensão dos fenômenos. Este trabalho apresenta o desenvolvimento de um sistema supervisório projetado para uma bancada de estudos de sistemas fotovoltaicos no Laboratório de Avaliação de Medi- ção em Petróleo (LAMP) da UFRN. Utilizando o software Laboratory Virtual Instrument Engineering Workbench (LabVIEW), o sistema monitora e registra dados em tempo real, como tensão, corrente e temperatura de uma célula fotovoltaica, e controla lâmpadas que simulam a irradiação solar, facilitando a análise e otimização dos experimentos. Capítulo Problema .Bancada de Estudos O supervisório desenvolvido neste projeto tem como objetivo monitorar uma bancada de estudo de desempenho de células fotovoltaicas desenvolvida pela equipe do LAMP, apresentada no "th International Conference on Renewable Energies and Power Quality (ICREPQ’)". Essa bancada, ilustrada na Figura ., é composta por um painel fotovoltaico, lâmpa- das que simulam a iluminação solar, células Peltier que resfriam a placa, uma interface homem-máquina para operações manuais e um tanque de água para resfriar as células Pel- tier. A bancada é fundamental para a pesquisa e desenvolvimento no campo fotovoltaico, possibilitando um estudo detalhado e sistemático das condições que afetam a eficiência dos sistemas solares, e o sistema supervisório oferece maior apoio e praticidade para o desenvolvimento de estudos. Figura .: Bancada de estudos. Fonte: Autoria própria, . CAPÍTULO . PROBLEMA .Objetivos O principal objetivo é desenvolver um supervisório capaz de atender às seguintes exi- gências: monitoramento de duas temperaturas diferentes, monitoramento de tensão e cor- rente, monitoramento de luminosidade e armazenamento de dados. ..Monitoramento de temperaturas O monitoramento das temperaturas da placa e do ambiente é necessário por diversos fatores. Um deles é a avaliação da eficiência da célula fotovoltaica, tendo em vista que seu desempenho tende a cair com o aumento da temperatura da placa (Salazar et al. ). Outro fator é a comparação do desempenho da célula sob diversas condições de ambi- ente, oferecendo um contexto para o entendimento da influência de condições externas na eficiência do sistema fotovoltaico. ..Monitoramento de tensão e corrente Monitorar a tensão e a corrente em um sistema fotovoltaico é essencial para garantir seu funcionamento eficiente e seguro. A tensão e a corrente fornecem informações cruci- ais sobre o desempenho do sistema, permitindo determinar o ponto de máxima potência para maximizar a energia gerada. Além disso, variações anormais nesses parâmetros podem indicar falhas, como problemas nos módulos, sombreamento parcial, conexões soltas ou curto-circuito, possibilitando a detecção prévia de problemas. O monitoramento também permite avaliar a eficiência do sistema ao comparar a energia gerada com a irra- diância solar e facilita a manutenção preditiva ao identificar tendências de degradação. ..Controle e monitoramento de luminosidade Executar o controle do luminosidade, especialmente no contexto da bancadas de estu- dos, permite a simulação de diferentes condições de iluminação, possibilitando a realiza- ção de testes controlados e a análise do desempenho dos módulos sob variadas intensida- des de luz. Isso é fundamental para validar o comportamento do sistema em situações que simulam a operação real e para aprimorar o desenvolvimento de tecnologias fotovoltaicas. O monitoramento de luminosidade, por sua vez, é igualmente importante, pois a quan- tidade de luz solar incidente afeta diretamente a energia gerada pelos módulos fotovoltai- cos. A correlação entre a luminosidade e o desempenho do sistema ajuda a identificar situações de sombreamento temporário e a ajustar o sistema para otimizar a geração de energia em diferentes condições de luz. CAPÍTULO . PROBLEMA ..Armazenamento de dados Possuir um sistema de armazenamento dos dados de testes permite a análise histórica do desempenho do sistema, possibilitando a identificação de padrões de operação e ten- dências que podem indicar falhas iminentes ou a necessidade de manutenção. Além disso, a análise dos dados armazenados ajuda a otimizar o sistema ao longo do tempo, ajustando parâmetros para maximizar a eficiência energética. Os dados armazenados também são fundamentais para fins de pesquisa e desenvolvimento, permitindo que os pesquisadores revisem e comparem resultados de diferentes condições de teste. Capítulo Fundamentação Teórica Este capítulo apresenta os fundamentos teóricos que sustentam este estudo, abordando temas cruciais para o entendimento do sistema proposto. São explorados os seguintes tó- picos: sistemas fotovoltaicos, que descrevem a conversão de energia solar em elétrica; sistemas supervisórios, essenciais para o monitoramento e controle de processos; o ponto de máxima potência, conceito fundamental para otimização da eficiência energética em células fotovoltaicas; e o protocolo de comunicação IC, utilizado para a interação efici- ente entre componentes eletrônicos. .Sistemas fotovoltaicos O Brasil possui uma das maiores potências solares do mundo, devido à sua localização geográfica privilegiada próxima à linha do Equador. De acordo com o Atlas Brasileiro de Energia Solar (), a irradiação solar no Brasil varia entre .a .Wh/m² por dia, valores que superam a média de muitos países europeus, onde a energia solar já é amplamente utilizada. Essa abundância de recurso solar torna o Brasil um local estratégico para o desenvolvimento e expansão de sistemas fotovoltaicos. A Figura .exibe o mapa da média anual de irradiação no Brasil. De modo geral, os sistemas fotovoltaicos consistem em módulos que captam a luz so- lar e a convertem em energia elétrica através do efeito fotovoltaico. Esta eletricidade pode ser usada imediatamente, armazenada em baterias para uso posterior, ou ainda injetada na rede elétrica. Os principais componentes de um sistema desse tipo são: módulos fotovol- taicos, inversores, estruturas de suporte, e, em alguns casos, sistemas de armazenamento e monitoramento. O uso do método de captação de energia solar como energia oferece diversos bene- fícios, dentre eles destacam-se: a sua longa vida útil, a pouca necessidade manutenção, não produzem poluição ou ruído e seu combustível é a luz solar natural. Além disso, os sistemas são modulares ou expansíveis, leves, fáceis de transportar e estão disponíveis ao longo de todo o ano (Marini & Rossi ). CAPÍTULO . FUNDAMENTAÇÃO TEÓRICA Figura .: Mapa de irradiação do Brasil. Fonte: INPE, .Sistema supervisório Os sistemas supervisórios desempenham um papel crucial na automação industrial, proporcionando monitoramento, controle e gerenciamento de processos produtivos em tempo real. Segundo Marcondes (), um sistema supervisório é composto por fer- ramentas de software capazes de coletar, processar e apresentar dados provenientes de dispositivos de controle e sensores para os operadores e gestores. Essas plataformas não apenas monitoram variáveis do processo, mas também permitem intervenções manuais ou automáticas no sistema, como o supervisório apresentado na Figura .que trata de uma aplicação na indústria do petróleo, presente no artigo de Souza et al. (). Dessa forma, um supervisório comumente possui uma interface amigável e de fácil interpretação para o operador, proporcionando uma visualização clara e em tempo real dos dados. Outra característica essencial para um supervisório é a capacidade de alertar através de atuadores sonoros e/ou visuais para notificar falhas ou desvios nos parâmetros CAPÍTULO . FUNDAMENTAÇÃO TEÓRICA Figura .: Sistema supervisório de um poço automatizado com bombeio mecânico . Fonte: Souza et al., . em um determinado sistema, além de permitir o controle remoto e a configuração dos dispositivos do sistema. O uso de sistemas assim é comum na indústria, com o objetivo de oferecer uma visão centralizada dos processos, integrando informações provenientes de sensores, controla- dores e outros dispositivos de campo. Essa integração possibilita o monitoramento de variáveis críticas, como temperatura, pressão, fluxo e potência, e a execução de ações cor- retivas automatizadas ou manuais, conforme necessário. Quando a supervisão e o controle de um processo são realizados por meio de um sistema supervisório, o processamento das variáveis de campo torna-se mais ágil e eficiente (COELHO ). .Ponto de máxima potência O conceito de ponto de máxima potência (MPP, do inglês Maximum Power Point) é crucial em sistemas de energia solar fotovoltaica, estando diretamente relacionado à otimização da conversão de energia. As células solares funcionam convertendo a luz solar em eletricidade por meio do efeito fotovoltaico. A energia gerada por um painel solar depende de variáveis como a tensão (V) e a corrente elétrica (I), sendo a potência elétrica expressa pela equação: P = V ·I A relação entre a tensão e a corrente em uma célula solar não é linear, resultando em uma curva característica I ·V, como pode ser observado na Figura .. Nessa curva, existe CAPÍTULO . FUNDAMENTAÇÃO TEÓRICA um ponto específico em que o produto V ·I atinge seu valor máximo, o MPP. Figura .: Curvas I-V e P-V de um módulo ou conjunto de módulos fotovoltaicos. Fonte: Canal Solar, . A análise das curvas I-V (corrente e tensão) e P-V (potência e tensão) é essencial para o dimensionamento e otimização de sistemas fotovoltaicos, onde a curva I-V indica a eficiência da célula em converter luz solar em corrente elétrica, enquanto a curva P-V ajuda a identificar o MPP. O Rastreamento do Ponto de Máxima Potência (MPPT, do inglês Maximum Power Point Tracker), por sua vez, é uma técnica amplamente utilizada em sistemas fotovoltaicos para otimizar a conversão de energia elétrica da placa fotovoltaica. Segundo Abdelaziz & Almoataz (), o MPPT atua ajustando continuamente as condições de operação do sistema fotovoltaico de forma a maximizar a potência extraída do painel solar, mesmo diante de variações de irradiância e temperatura. .Comunicação IC A comunicação IC (Inter-Integrated Circuit) é um protocolo serial síncrono ampla- mente utilizado para comunicação entre dispositivos integrados em sistemas embarca- dos. Desenvolvido pela Philips Semiconductor na década de , o IC é projetado para permitir que múltiplos dispositivos, como microcontroladores, sensores e periféri- cos, compartilhem um mesmo barramento de comunicação, utilizando apenas duas li- nhas: SDA(Serial Data Line) para a transmissão de dados e SCL (Serial Clock Line) para o sincronismo. Esse protocolo opera na configuração controlador-periférico (ou mestre-escravo), no qual um dispositivo controlador administra o barramento e gerencia a comunicação, en- quanto os dispositivos periféricos respondem às solicitações do controlador, como é mos- CAPÍTULO . FUNDAMENTAÇÃO TEÓRICA trado na Figura .. Ele permite a conexão de múltiplos dispositivos no mesmo barra- mento, diferenciados por endereços únicos de ou bits. O protocolo utiliza mensagens estruturadas em pacotes contendo bits de início (start), endereço do periférico, dados e bits de parada (stop). Além disso, esse método de comunicação suporta diferentes modos de velocidade, como Standard Mode (kbps), Fast Mode (kbps) e High-Speed Mode (até ,Mbps) (Mankar et al. ). Utiliza também um sistema de acknowledge para confirmar o recebimento de dados, garantindo a integridade da comunicação. Figura .: Comunicação IC entre controlador e periférico. Fonte: Adaptado de Wantronics, . No início de uma comunicação, o controlador emite um sinal de início (start condi- tion), seguido pelo endereço do dispositivo periférico com o qual deseja se comunicar. O periférico correspondente responde com um sinal de reconhecimento (acknowledge), e a transferência de dados é iniciada. Após a transmissão, o controlador emite um sinal de parada (stop condition), indicando o término da comunicação. Capítulo Metodologia .Materiais Para a implementação do sistema, diversos materiais e componentes foram utilizados, abrangendo desde sensores específicos até módulos de controle e análise. A seguir, serão apresentados os principais componentes empregados, destacando suas funcionalidades, características técnicas e a importância de sua escolha para a realização do projeto. ..INAO sensor INA(Figura .) é um sensor de corrente, tensão e potência de alta precisão que permite a medição da corrente que flui através de um resistor shunt externo, bem como a tensão do sistema. Figura .: Sensor de corrente e tensão INA. Fonte: Arduino e cia., . Ele utiliza comunicação IC para enviar os dados para um microcontrolador, e é um sensor barato, de fácil acesso e com boa faixa de valores para se trabalhar, o que o torna CAPÍTULO . METODOLOGIA ideal para monitoramento de consumo de energia em diversos dispositivos. A Tabela .apresenta as especificações técnicas do INA. Tabela .: Especificações do INAParâmetro Especificação Tensão de alimentação V a .V Faixa de corrente ±.A Resolução de corrente .mA Faixa de tensão de barramento V a V Comunicação IC Precisão % Fonte: Adafruit, . ..BHO BH, presente na Figura .é um sensor digital de luz ambiente que oferece alta precisão e uma interface IC para fácil comunicação com microcontroladores. Ele é amplamente utilizado para medir a luminosidade em ambientes internos e externos, devido a sua faixa de medição de luminosidade que pode ser observada na Tabela ., sendo útil em projetos que exigem controle baseado em iluminação, como sistemas de iluminação automática. Figura .: Sensor de corrente e tensão BH. Fonte: Erriez, . Tabela .: Especificações do BHParâmetro Especificação Tensão de alimentação .V a .V Faixa de medição de luz a lx Precisão % Consumo de corrente .mA Comunicação IC Fonte: Adafruit, . CAPÍTULO . METODOLOGIA ..Sensores de Temperatura: LMe LMOs sensores LMe LMsão sensores de temperatura precisos que fornecem uma saída linear proporcional à temperatura medida. O LMapresentado na Figura .é calibrado em graus Celsius, enquanto o LMé calibrado em Kelvin. Ambos são fáceis de integrar em sistemas de monitoramento de temperatura, devido à sua simplicidade e precisão. Figura .: Sensor de corrente e tensão INA. Fonte: Amazon, . As especificações técnicas e funcionalidades de ambos os sensores são bem similares, com exceção da taxa de conversão. Portanto, as especificações técnicas de ambos os sensores podem ser observadas nas Tabelas .e .abaixo: Tabela .: Especificações do LMParâmetro Especificação Tensão de alimentação V a V Faixa de temperatura -°C a °C Precisão ±.°C Sensibilidade mV/°C Fonte: Texas Instruments, . ..Módulo com Relés O módulo com relés observado na Figura .é um dispositivo amplamente utili- zado para controle de carga em projetos eletrônicos. Cada relé pode ser ativado indivi- dualmente por meio de sinais digitais de microcontroladores, permitindo o controle de CAPÍTULO . METODOLOGIA Tabela .: Especificações do LMParâmetro Especificação Tensão de alimentação V a V Faixa de temperatura de operação -°C a °C Precisão típica ±°C Sensibilidade mV/°C Fonte: Texas Instruments, . dispositivos de alta potência com sinais de baixa potência. Suas especificações técnicas são apresentadas na Figura .. Figura .: Módulo de relés. Fonte: Autoria própria, . Tabela .: Especificações do Módulo com Relés Parâmetro Especificação Tensão de alimentação V DC Corrente por relé A a V AC ou A a V DC Tempo de operação ms Tempo de liberação ms Isolamento Opto-isolado Fonte: Alldatasheet, . ..NI USBCom o objetivo de integrar todos os sensores e componentes do sistema, e devido à sua praticidade e fácil manuseio, o módulo de aquisição de dados DAQ(Data Acquisition) NI-USB(Figura .) foi escolhido para realizar a aquisição de dados. Entre suas principais características, destacam-se as entradas analógicas, configurá- veis como diferenciais ou de terminação única, com resolução de bits e taxa de amos- tragem de até kS/s, além de saídas analógicas também com bits de resolução. O CAPÍTULO . METODOLOGIA Figura .: Módulo de aquisição de dados NI USB. Fonte: Digikey, . módulo conta com canais digitais configuráveis como entrada ou saída, permitindo o controle de dispositivos externos, e um contador de bits para medições de eventos e pulsos (National Instruments ). Alimentado diretamente pela porta USB, o NI USB- dispensa a necessidade de fontes externas de energia. A distribuição de pinos do módulo DAQ é apresentada na Figura .. Figura .: Pinos do DAQ USB. GND AI (AI +) AI (AI –) GND AI (AI +) AI (AI –) GND AI (AI +) AI (AI –) GND AI (AI +) AI (AI –) GND AO AO GND P.P.P.P.P.P.P.P.P.P.P.P.PFI +.V +V GND Fonte: National Instruments, . A praticidade desse dispositivo é ideal para tarefas como medições de sensores, aqui- sição de dados em experimentos científicos, monitoramento de sinais e prototipagem de sistemas. Sua portabilidade, eficiência e fácil integração com o software LabVIEW fo- CAPÍTULO . METODOLOGIA ram cruciais para sua escolha neste projeto. As especificações técnicas do módulo de aquisição de dados são descritas na Tabela .. Tabela .: Especificações Técnicas do NI USB-Característica Especificação Número de Entradas Analógicas (Single-ended) ou (Diferenciais) Resolução bits Taxa de Amostragem kS/s (Taxa Máxima de Amostragem) Intervalo de Entrada Analógica ± V, ± V, ± V, ± V Número de Saídas Analógicas Faixa de Saída Analógica a V Resolução de Saída Analógica bits Número de Entradas Digitais Número de Saídas Digitais Tensão de Operação Digital a V Contadores/Temporizadores contador de bits Comunicação USB .Dimensões ,mm x ,mm x ,mm Peso Aproximadamente g Fonte de Alimentação Alimentado via USB Fonte: National Instruments, . Apesar das inúmeras vantagens, o módulo da National USBpossui uma limitação quanto à comunicação com sensores do tipo IC. Sendo assim, optou-se pela utilização de um Arduino Uno para auxiliar no sistema. ..Arduino UNO O Arduino Uno apresentado na Figura .é uma das placas mais conhecidas da plata- forma Arduino, amplamente utilizada em projetos de prototipagem eletrônica e automa- ção. Baseado no microcontrolador ATmegaP, o Arduino Uno possui pinos digitais, pinos analógicos e recursos como comunicação serial via USB, permitindo fácil intera- ção com um computador para programação e monitoramento. Sua popularidade se deve à simplicidade de uso, grande comunidade de desenvolvedores e à vasta documentação disponível, o que facilita a criação de projetos para iniciantes e especialistas. Uma das características mais vantajosas do Arduino Uno é sua capacidade de comuni- cação IC, um protocolo de comunicação serial que permite a conexão de múltiplos dis- positivos usando apenas dois pinos: SDA (dados) e SCL (clock) (STA Eletrônica ). Esse protocolo facilita a comunicação entre o Arduino e uma grande variedade de senso- res, como o INAe o BH, reduzindo a quantidade de fios e simplificando o design do circuito. O suporte ao IC torna o Arduino Uno ideal para projetos que envolvem o uso de vários sensores e módulos, proporcionando uma integração eficiente e de baixo custo com dispositivos externos. Suas especificações são descritas na Tabela .a seguir: CAPÍTULO . METODOLOGIA Figura .: Arduino UNO. Fonte: D&D Componentes, . Tabela .: Especificações Técnicas do Arduino Uno Característica Especificação Microcontrolador ATmegaP Tensão de Operação V Tensão de Entrada (recomendada) -V Entradas Digitais/Analógicas (PWM) / Corrente DC por I/O Pin mA Corrente DC para .V Pin mA Memória Flash KB (ATmegaP) SRAM KB (ATmegaP) EEPROM KB (ATmegaP) Velocidade do Clock MHz Dimensões ,mm x ,mm Peso g Fonte: STA Eletrônica, . .Arquitetura e funcionamento do Sistema Conforme mostrado na Figura ., no coração do sistema está o USB, que atua na aquisição de dados de sensores de temperatura e controla o acionamento das lâmpadas, e o Arduino atuando na recepção dos dados do INAe do BHatravés da comunicação IC. O sistema de iluminação artificial é controlado pelo módulo de relés de V ao re- ceber comandos do USB, que envia sinais para o acionamento ou desativação dos relés, influenciando diretamente na quantidade de luz que incide sobre os módulos. CAPÍTULO . METODOLOGIA O LabVIEW serve como a interface do supervisório e plataforma de armazenamento de dados. Ele recebe informações tanto do Arduino quanto do NI USB-através da comunicação serial USB. O supervisório exibe em tempo real os parâmetros medidos. Figura .: Arquitetura do sistema. Sistema de Iluminação Arﬁcial Parâmetros NI Temperatura ambiente Temperatura Placa fotovoltaica Controle individual de luminosidade Fonte: Autoria própria, . Capítulo Implementação Neste capítulo é descrito o método de implementação do sistema supervisório no soft- ware LabVIEW, evidenciando como cada um dos subsistemas foi desenvolvido e como eles são apresentados ao usuário através da tela do supervisório. .Implementação do supervisório no LabVIEW O LabVIEW é uma plataforma de desenvolvimento baseada em gráficos voltada para aplicações de teste, medição e controle, amplamente utilizada em diversas áreas da enge- nharia e da ciência, além de ser presente em indústrias. Essa plataforma foi desenvolvida pela National Instruments e permite a criação de sistemas de aquisição de dados, automa- ção de processos e controle industrial, utilizando uma interface de programação gráfica conhecida como G. Uma das grandes vantagens do LabVIEW é sua capacidade de integrar facilmente hardware de diferentes fabricantes, como placas de aquisição de dados, controladores programáveis e sensores, tornando-se uma ferramenta versátil para monitoramento e con- trole em tempo real. No contexto deste projeto, o LabVIEW desempenha um papel crucial como interface supervisória e plataforma de armazenamento de dados, permitindo a aquisição, processa- mento e visualização dos dados coletados pelo sistema de controle das lâmpadas. Através do LabVIEW, é possível configurar parâmetros de operação, monitorar o estado atual do sistema e armazenar os dados para análise posterior, proporcionando uma visão abran- gente do comportamento do sistema ao longo do tempo. Para elucidar o entendimento acerca dos sistemas implementados no software Lab- VIEW, eles serão divididos em Subseções para cada um dos sistemas. Contudo, o código completo está anexado ao Apêndice A.. A tela do supervisório foi desenvolvida com o objetivo de apresentar as informações de forma clara ao operador, evidenciando os diferentes sistemas presentes ao separá-los em blocos distribuídos pela tela. Na Figura .é possível identificar as diferentes seções presentes no sistema, e na Figura .os gráficos que são plotados. CAPÍTULO . IMPLEMENTAÇÃO Figura .: Interface do sistema supervisório. Fonte: Autoria própria, . Figura .: Módulo de gráficos do sistema supervisório. Fonte: Autoria própria, . ..Controle de luminosidade A intensidade de luminosidade do sistema é definida pela quantidade de lâmpadas ligadas simultaneamente, sendo uma lâmpada equivalente a % da luminosidade, e as CAPÍTULO . IMPLEMENTAÇÃO quatro lâmpadas o total de %. O painel de controle das lâmpadas na tela do supervi- sório é mostrado na Figura .. Figura .: Módulo de controle de luminosidade. Fonte: Autoria própria, . Esse controle é feito com o uso do módulo USB, configurando quatro pinos di- gitais como saída no modo de geração “Sample (on demand)”, conforme mostrado na Figura .. Essa configuração permite a escrita de um único valor sob demanda, apenas quando solicitado pelo software. É comum em aplicações que não requerem aquisição contínua ou amostragem em alta velocidade. O sinal gerado pelo USBé enviado a um módulo com relés (Figura .). Para a montagem do circuito, a fase foi conectada ao pino comum do relé, e o retorno das lâmpadas ao pino Normalmente Aberto. Assim, o relé começa em Normalmente Fechado, mantendo as lâmpadas desligadas, e ao receber o sinal do DAQ, chaveia para Normalmente Aberto, conforme Figura .. CAPÍTULO . IMPLEMENTAÇÃO Figura .: Configuração dos pinos de saída USB. Fonte: Autoria própria, . Figura .: Módulo relés conectado às lâmpadas. Fonte: Autoria própria, . CAPÍTULO . IMPLEMENTAÇÃO Figura .: Montagem de um circuito de lâmpadas acionadas por relé. Fonte: Maker, . A lógica de acionamento das lâmpadas foi dividida em três etapas, conforme Figura .. Figura .: Lógica implementada em LabVIEW para o acionamento das lâmpadas. Fonte: Autoria própria, . . Os interruptores do supervisório fornecem valores booleanos de true ou false, con- forme seu estado. . O LabVIEW cria um vetor com os valores dos interruptores, que o DAQ lê e atribui às saídas analógicas para acionar os relés. . O vetor é separado em elementos individuais, que passam por uma porta NOT para corrigir a inversão lógica, garantindo que os LEDs acendam corretamente. CAPÍTULO . IMPLEMENTAÇÃO ..Monitoramento de tensão, corrente e luminosidade Para integrar o ambiente LabVIEW com o microcontrolador Arduino, foi necessá- rio utilizar a API de software Virtual Instrument Software Architecture (VISA), que for- nece uma interface padrão de comunicação através de portas seriais entre o LabVIEW e dispositivos de hardware, como Controladores Lógicos Programáveis e instrumentos de medição, como Osciloscópios, Geradores de função, entre outros. No contexto do projeto, os dados coletados através dos sensores de luminosidade e corrente/tensão são escritos na porta serial do Arduino, e o VISA é utilizado para permitir que ocorra a leitura e operação dos dados obtidos via porta serial. O código carregado no Arduino foi anexado ao apêndice A.. A configuração da porta e a visualização dos dados na tela do supervisório pode ser observada na Figura .a seguir: Figura .: Configuração de porta e leitura dos dados na tela do supervisório. Fonte: Autoria própria, . Assim como o algoritmo do controle de luminosidade, a lógica implementada para obtenção dos dados de corrente, tensão e luminosidade foi dividida em seções, conforme ilustra a Figura .. . Inicialmente é realizada a configuração do Visa Serial, informando qual porta o Arduino está conectado, informação do baud rate e o delay padrão do bloco; . Dentro do loop, o bloco Property Nodes lê as propriedades do objeto (no caso o Ar- duino) a partir do número de bytes escritos na serial. Como o resultado do Property Nodes é um vetor contendo todos os dados coletados pelo Arduino, é necessário separar esses dados utilizando o String Subset para dividir o array a partir de uma CAPÍTULO . IMPLEMENTAÇÃO Figura .: Lógica implementada em LabVIEW para a leitura do Arduino. Fonte: Autoria própria, . posição específica e uma quantidade de casas específica. Por exemplo: Para obter a luminosidade está sendo acessado a posição do array de bytes e coletando os bytes do em diante; . As strings particionadas são convertidas em bytes dinâmicos para serem exibidos nos gráficos. Os valores também são direcionados para o módulo de armazena- mento de dados; . Por fim, é encerrada a comunicação do VISA fora do loop. ..Monitoramento de temperaturas Os valores de temperatura ambiente e temperatura da célula fotovoltaica são obtidos a partir das entradas analógica do USB, e exibidas para o usuário conforme mostra a Figura .. Desse modo, foi necessário inicialmente configurar as portas para a coleta dos dados. Para isso, duas portas analógicas foram configuradas como entradas para ler os valores de tensão gerados pelos sensores de temperatura. Além de definir o range de tensão na faixa de a volts, também configurou-se o terminal como "Referenced Single- Ended (RSE)", tendo em vista que os sensores possuem um mesmo referencial (GND). Por fim, o modo de aquisição foi definido como "Continuous Samples", realizando a coleta de forma contínua. Todas as configurações mencionadas podem ser observadas na Figura .. De modo similar aos códigos anteriores, o algoritmo do monitoramento de tempera- tura é dividido em três etapas definidas na Figura .. . No bloco , ocorre o recebimento dos dados através das portas de entrada analógica do DAQ, porém há a necessidade de operar e exibir essas temperaturas separada- mente. Então, a entrada é transformada em um Dynamic Data Type (DDT) com a tag de manipulação de sinal to DDT; . A entrada é separada em dois valores utilizando o bloco Index Array, acessando as posições e do vetor de entrada, que correspondem respectivamente ao valor de CAPÍTULO . IMPLEMENTAÇÃO Figura .: Apresentação das temperaturas na tela do supervisório. Fonte: Autoria própria, . Figura .: Configuração dos pinos de entrada analógica USB. Fonte: Autoria própria, . tensão medido pelo sensor presente da Célula fotovoltaica e o sensor que mede a temperatura ambiente; . Antes de exibir os valores de temperatura para o usuário, é necessário aplicar um ganho para ajustar a temperatura exibida. O valor de ganho implementado foi ob- tido de forma empírica. CAPÍTULO . IMPLEMENTAÇÃO Figura .: Lógica implementada em LabVIEW para o monitoramento de temperatura. Fonte: Autoria própria, . ..Armazenamento de dados Os dados obtidos através dos sensores são armazenados em arquivos de texto ou pla- nilhas. Para isso, o usuário deve definir o caminho onde o arquivo deve ser armazenado utilizando o campo “Caminho para armazenamento de dados (.txt/.xlsx)” na interface do supervisório apresentado na Figura ., sendo possível sobrescrever um arquivo já exis- tente ou ainda criar um novo arquivo em que ocorrerá o armazenamento dos dados do teste. Figura .: Caminho do arquivo na tela do supervisório. Fonte: Autoria própria, . CAPÍTULO . IMPLEMENTAÇÃO A lógica implementada realiza o armazenamento dos dados em arrays que contém a hora exata do computador durante a coleta, e os valores de temperatura da célula fotovol- taica e do ambiente, assim como as correntes e tensões geradas pelo painel. A Figura .apresenta o código em LabVIEW do armazenamento de dados. Figura .: Código do armazenamento de dados Fonte: Autoria própria, . Seguindo as numerações presentes na imagem: . O bloco Open/Create/Read File é o responsáel pela criação do arquivo de aram- zenamento de dados. Ele recebe como parâmetro o caminho do arquivo fornecido pelo usuário, e as ações a serem realizadas. . Na seção ocorre a escrita do cabeçalho do arquivo de dados, ela ocorre fora do loop pois será escrita apenas uma vez. Utilizando o bloco Format into String é informado todos os parâmetros do cabeçalho, com um espaçamento tab entre eles. O bloco Format into String fornece a string para o bloco Write to Text File realizar a escrita da string. . Dentro do loop, similar ao item anterior, é realizado a escrita usando o Write to Text File e o Format into String, porém escrevendo os dados lidos. . Por fim, o bloco Close File encerra o arquivo escrito. Capítulo Experimentos e Resultados Para validar o funcionamento do sistema supervisório desenvolvido, foram realizados alguns testes utilizando a bancada mencionada na Seção . .Controle de luminosidade O objetivo do teste é realizar o controle do acionamento das lâmpadas que simulam irradiação solar através do sistema supervisório. Com o circuito apresentado na seção .., o usuário é capaz de controlar o acionamento das lâmpadas através dos comandos gerados pelo USBe enviados para o módulo de quatro relés. As Figuras .e .apresentam o monitoramento das lâmpadas acionadas no supervisório durante testes. É possível observar que o comportamento observado nas lâmpadas presentes na bancada é refletido no sistema supervisório. Figura .: Sistema acionado com apenas % de luminosidade total. Fonte: Autoria própria, . CAPÍTULO . EXPERIMENTOS E RESULTADOS Figura .: Sistema acionado com % de luminosidade. Fonte: Autoria própria, . .Monitoramento de tensão, corrente e luminosidade Para validar a supervisão de corrente e tensão, foi montado um circuito auxiliar uti- lizando o INAaferindo os valores de um LED (ver Figura .), pois a bancada de estudos não estava operacional. Tendo em vista que o objetivo do trabalho é validar o funcionamento do sistema supervisório, optou-se por validá-lo monitorando um LED como carga. Para a obtenção da luminosidade, o BHfoi posicionado próximo às lâmpadas, para ser capaz de responder a variações de luminosidade controladas pelo acionamento da iluminação artificial. A resposta do sensor de luminosidade observada na Figura .é um valor na unidade Lux, que é a quantidade de luz que atinge uma área de metro quadrado (m²). Uma forma comum de interpretar a unidade Lux é: • lux: Total escuridão; • lux: Luz de uma vela vista de perto; • lux: Iluminação de ambiente interno moderado (uma lâmpada de W a cerca de metro de distância); • lux: Iluminação mais intensa, como em uma sala bem iluminada ou sob luz fluorescente; • .lux ou mais: Luz intensa como a luz solar direta em um dia claro. Embora o Arduino esteja realizando a comunicação com o sistema de maneira correta, há um delay de cerca de segundos entre o que é escrito na serial e o que o LabVIEW lê. Acredita-se que esse delay é causado pela configuração padrão do VISA no LabVIEW. CAPÍTULO . EXPERIMENTOS E RESULTADOS Figura .: Montagem do circuito teste com o LED. Fonte: Autoria própria, . Figura .: Teste de monitoramento do INAe BH. Fonte: Autoria própria, . .Monitoramento de temperaturas Para o monitoramento das temperaturas da célula fotovoltaica e do ambiente, os sen- sores LMe LMforam posicionados na bancada de modo que um deles estivesse CAPÍTULO . EXPERIMENTOS E RESULTADOS mais próximo às lâmpadas e o outro mais distante, como aconteceria no funcionamento convencional da bancada. Os valores monitorados são apresentados na interface e podem ser observados na Figura .Figura .: Monitoramento de temperaturas com as lâmpadas ligadas. Fonte: Autoria própria, . O usuário é capaz de monitorar em tempo real os valores medidos das temperaturas pelo supervisório e, em caso de superaquecimento ou qualquer comportamento inespe- rado, o operador é capaz de tomar uma rápida decisão de interromper o teste e preservar a integridade do sistema. CAPÍTULO . EXPERIMENTOS E RESULTADOS .Armazenamento de dados Os dados coletados durante o teste são armazenados em planilhas .XLSX ou .TXT, como mostra a Figura .. De posse desses dados, é possível gerar gráficos e realizar análises dos testes, comparando-os entre si, além de possibilitar um histórico de desem- penho do sistema sob diferentes condições. Uma outra utilidade dos dados é a detecção de anomalias do sistema que podem passar despercebidas se ocorrerem rapidamente. Figura .: Foto dos dados salvos formato .xlsx. Fonte: Autoria própria, . Capítulo Conclusão O desenvolvimento do sistema supervisório proposto para o monitoramento e con- trole de uma bancada de estudos em energia fotovoltaica mostrou resultados satisfatórios, possibilitando a aquisição e análise em tempo real de parâmetros críticos, como tensão, corrente, luminosidade, e temperaturas da placa fotovoltaica e do ambiente. A integra- ção do sistema com a plataforma LabVIEW proporcionou uma interface amigável para os usuários, facilitando a supervisão e o armazenamento dos dados. Embora funcional, o sistema apresenta algumas limitações, pois a velocidade de trans- ferência de dados e taxa de atualização entre o Arduino e o LabVIEW apresentam um delay significativo, podendo prejudicar execução de testes. A comunicação pode ser oti- mizada para suportar maiores volumes de dados ou velocidades de transmissão, especial- mente em testes de longa duração ou sob condições variáveis. Além disso, implementação da interface gráfica para análise das curvas não está % funcional. Os resultados obtidos evidenciam a capacidade do uso do supervisório desenvolvido para aplicações práticas em estudos de energia fotovoltaica, destacando-se como uma ferramenta valiosa para o monitoramento e a análise de desempenho capaz de oferecer aos pesquisadores um maior controle acerca dos processos que ocorrem durante os testes da bancada. Entretanto, há espaço para aprimoramentos que possam aumentar ainda mais a eficiência, precisão e funcionalidade do sistema, oferecendo maior confiabilidade para os usuários. .Trabalhos futuros Desse modo, algumas sugestões de novos trabalhos em cima dessa temática podem ser feitas para os projetos do supervisório e da bancada de estudo. Entre elas, destacam- se principalmente a implementação da simulação de passagem de nuvens, que pode ser feita utilizando algum material translúcido que gere um sombreamento e seja capaz de reter parte da luminosidade gerada pelas lâmpadas. O desenvolvimento de um algoritmo capaz de rastrear o MPPT e ajustá-lo automati- camente para que a célula fotovoltaica permaneça em seu ponto de operação o máximo possível pode ser uma grande melhoria para o sistema. Uma outra sugestão de experi- mento seria o controle de direção ou inclinação do painel. Essas funcionalidades implementas podem ser controladas através do supervisório, CAPÍTULO . CONCLUSÃO como controle de parâmetros de rastreio do MPPT e variável de inclinação da placa. O sistema de supervisão poderia, também, apresentar uma melhora no tratamento de erros, sendo capaz de identificar um erro grave como aumento desproporcional de corrente no circuito, e desligar o sistema automaticamente como medida de segurança. Referências Bibliográficas Abdelaziz, Almoataz Y & Y Almoataz (), Modern maximum power point tracking techniques for photovoltaic energy systems, Springer. Amazon (n.d.), ‘Sensor de temperatura lmpara arduino e raspberry’, https: //www.amazon.com.br/Sensor-Temperatura-Lm-Arduino-Raspberry/dp/ BQFB. Acessado em: jan. . Arduino e Cia (n.d.), ‘Sensor de corrente dc ina’, https://www.arduinoecia.com. br/product/sensor-de-corrente-dc-ina/. Acessado em: jan. . COELHO, Marcelo S (), ‘Apostila de sistemas supervisórios’, Curso superior de tecnologia em automação e controle de processos industriais contínuos. Instituto Federal de Educação, Ciência e Tecnologia de São Paulo Campus Cubatão . DeD Componentes Eletrônicos (n.d.), ‘Arduino uno roriginal da itália’, https://www. dedcomponentes.com.br/produto/arduino-uno-r-original-da-italia/. Acessado em: jan. . Erriez (n.d.), ‘Erriez bhdigital light sensor library’, https://github.com/ Erriez/ErriezBH. Acessado em: jan. . Gates, Luis F. (), Telecomunicações Baseadas na Arquitetura BALSE, Tese de dou- torado, UFSCG, Matosinhos, SP. Gates, Luis F., Rossano P. Pinto, Eliane G. Solimães & Katianna Silva (), Mobile agents in telecommunication services, em J. C.A. Loureiro, ed., ‘Proceedings of LACOXS’’, Sociedade Brasileira de Ciências Físicas, Ouro Preto, MG, pp. – . Governo do Brasil (), ‘Energia renovável chega a quase % da matriz elétrica brasileira’. Acessado em: . URL: https://www.gov.br/pt-br/noticias/energia-minerais-e- combustiveis///energia-renovavel-chega-a-quase--da-matriz-eletrica- brasileira-Industries, Adafruit (n.d.), ‘Adafruit bhlight sensor’, https://www.adafruit. com/product/. Acessado em: jan. . REFERÊNCIAS BIBLIOGRÁFICAS INPE (), Atlas Brasileiro de Energia Solar, Instituto Nacional de Pesquisas Espaci- ais, São José dos Campos, Brasil. Acesso em: jan. . URL: http://www.dsr.inpe.br/sbsr/files/p.pdf Instruments, National (n.d.a), ‘Usb-specifications’, https://www.digikey.com. br/pt/products/detail/ni/-/. Acessado em: jan. . Instruments, National (n.d.b), ‘Usb-/pinout and signal descriptions’. Acessado: . URL: https://www.ni.com/docs/en-US/bundle/usb---feature/page/pinout- signal-descrip.html Instruments, Texas (n.d.a), ‘Lmdata sheet’, https://www.ti.com/lit/ds/ symlink/lm.pdf. Acessado em: jan. . Instruments, Texas (n.d.b), ‘Lmprecision centigrade temperature sensors’, https:// www.ti.com/product/LM. Acessado em: jan. . IONA (), Orbix Programming Reference, IONA Technologies PLC, Dublin, Ireland. MakerHero (), ‘Controle de módulo relé com arduino’. Acessado em: . URL: https://www.makerhero.com/blog/controle-modulo-rele-arduino/ Mankar, Jayant, Chaitali Darode, Komal Trivedi, Madhura Kanoje & Prachi Shahare (), ‘Review of ic protocol’, International Journal of Research in Advent Tech- nology (). Marcondes, Danilo (), Automação Industrial: Controle do Movimento e Processos Contínuos, Editora Érica, São Paulo. Marini, José Adriano & Luiz Antonio Rossi (), ‘Projeto de sistemas fotovoltaicos para oferta de energia elétrica a comunidades rurais’, Procedings of the th Encontro de Energia no Meio Rural . Meireles, Flamingo (), NOVET’s homepage, Página na internet, The Academic Computer Society, Caicó, RN. URL: http://www.aligatesta.com.su/ Mittelbach, Frank & Michel Goossens (), The LATEX Companion, ª edição, Addison- Wesley, San Francisco, EUA. National Instruments (), NI USB-Specifications. Accessed: --. URL: https://www.ni.com/docs/en-US/bundle/usb--specs/page/specs.html OMG (), Audio/video streams, version ., OMG Specification formal/--, Object Management Group, Paris. URL: http://www.omg.org/ REFERÊNCIAS BIBLIOGRÁFICAS Pedrycz, Witold & Fernando A. C. Gomide (), An Introduction to Fuzzy Sets: Analy- sis and Design (Complex Adaptive Systems), MIT Press, Boston. Pinto, Alexandre S., Luis F. Gates & Katianna Silva (), A BALSE-based environment for mobile applications, em J. N.de Souza & R.Boutaba, eds., ‘Managing QoS in Multimedia Networks’, Kluwer Academic Publishers, New York, pp. –. Pirmez, Luci, Luis Fernando Carmo & Raimundo José Macêdo, eds. (), XX Simpósio Brasileiro de Redes de Computadores, Vol. , Núcleo de Computação Eletrônica da UFRJ, Sociedade Brasileira de Computação, Rio de Janeiro. Relay, Songle (n.d.), ‘Srd-vdc-sl-c datasheet’, https://www.alldatasheet.com/ datasheet-pdf/view//SONGLERELAY/SRDVDCSLC.html. Acessado em: jan. . Salazar, Andres O, Diego A de M Fonseca, Caio ML Ribeiro, Vinicius M Xavier, Ga- briela MS Lopes, Kalynne G da S Maciel et al. (), ‘Study of the relationship between temperature and efficiency in photovoltaic systems’, RE&PQJ (). Salazar, Andres Ortiz & RM Stephan (), ‘A bearingless method for induction machi- nes’, IEEE Transactions on Magnetics (), –. Santos, Euripedes P. & Fernando J. Von-Zuben (), Recurrent Neural Networks: De- sign and Applications, Vol. de International Series on Computational Intelli- gence, CRC Press, Madrid, capítulo Efficient Second-Order Learning Algorithms for Discrete-Time Recurrent Neural Networks, pp. –. Santos-Filho, José C. S. (), Combinação por ganho igual em ambiente com desvane- cimento arbitrário, Dissertação de mestrado, Faculdade de Engenharia Elétrica e de Computação, UNICAMP, Campinas, SP. Sichman, Jaime S. (), Sobre agentes móveis e fixos. Comunicação pessoal por e- mail. Solar, Canal (n.d.), ‘Inversores com múltiplos mppt’. Acessado: . URL: https://canalsolar.com.br/inversores-com-multiplos-mppt/ Solimães, Eliane G., Antonio T. Mircolles, Jamerson L. Pereira, Bruno G. Americano, Katianna Silva, Marcelo Borges & Mauricio F. Magalhães (), ‘A virtual la- boratory for autonomous airplanes experiments’, IEEE Transactions on Education (), –. Souza, Rodrigo B, Adelardo AD Medeiros, João MA Nascimento, André L Maitelli & Heitor P Gomes (), Sisal, um sistema supervisório para elevação artificial de petróleo, em ‘Rio Oil & Gas Expo and Conference’, pp. –. STA Eletrônica (), ‘Características principais do arduino uno’. Acessado em: jan. . REFERÊNCIAS BIBLIOGRÁFICAS URL: https://www.sta-eletronica.com.br/artigos/arduinos/caracteristicas- principais-do-arduino-uno Wantronics (n.d.), ‘Comunicação ic: O que é e como funciona’, https://wantronics. com.br////comunicacao-ic/. Acessado em: jan. . Apêndice A Informações adicionais A.Algoritmo Arduino #include <Wire.h> #include <Adafruit_INA.h> #include <BH.h> // Instanciação dos sensores Adafruit_INAina; BHlightMeter; void setup() { // Inicialização da comunicação serial Serial.begin(); // Inicialização do sensor INAif (!ina.begin()) { Serial.println("Falha ao inicializar o INA. Verifique as conexões!"); while (); } // Inicialização do sensor BHlightMeter.begin(); } void loop() { // Leitura de valores do INAfloat shuntvoltage = ina.getShuntVoltage_mV(); float busvoltage = ina.getBusVoltage_V(); float current_mA = ina.getCurrent_mA(); float voltage = busvoltage + (shuntvoltage / ); // Leitura de valores do BHAPÊNDICE A. INFORMAÇÕES ADICIONAIS uint_t lux = lightMeter.readLightLevel(); // Exibição dos valores na serial no formato especificado Serial.print(current_mA); Serial.print(";"); Serial.print(voltage * ); // Convertendo para mV Serial.print(";"); Serial.print(voltage * current_mA); Serial.print(";"); Serial.println(lux); delay(); // Aguarda ms antes da próxima leitura } A.Código completo LabVIEW Figura A.: Algoritmo completo em LabVIEW. Fonte: Autoria própria, .
+UNIVERSIDADE
+DO RIO GRANDE DO NORTE
+FEDERAL
+UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE
+CENTRO DE TECNOLOGIA
+GRADUAÇÃO EM ENGENHARIA DE COMPUTAÇÃO
+Desenvolvimento de um Sistema Supervisório
+para bancada de estudos do desempenho de
+células fotovoltaicas
+Caio Matheus Lopes Ribeiro
+Orientador: Prof. Dr. Andrés Ortiz Salazar
+Natal, RN, 17 de janeiro de 2025
+UNIVERSIDADE
+DO RIO GRANDE DO NORTE
+FEDERAL
+UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE
+CENTRO DE TECNOLOGIA
+GRADUAÇÃO EM ENGENHARIA DE COMPUTAÇÃO
+Desenvolvimento de um Sistema Supervisório
+para bancada de estudos do desempenho de
+células fotovoltaicas
+Caio Matheus Lopes Ribeiro
+Orientador: Dr. Andres Ortiz Salazar
+Trabalho de Conclusão de Curso de Gra-
+duação na modalidade Monografia, subme-
+tido como parte dos requisitos necessários
+para conclusão do curso de Engenharia de
+Computação pela Universidade Federal do
+Rio Grande do Norte (UFRN/CT).
+Natal, RN, 17 de janeiro de 2025
+Ribeiro, Caio Matheus Lopes.
+Desenvolvimento de um sistema supervisório para bancada de
+estudos do desempenho de células fotovoltaicas / Caio Matheus
+Lopes Ribeiro. - 2025.
+52f.: il.
+Monografia (Graduação) - Universidade Federal do Rio Grande
+do Norte, Centro de Tecnologia (CT), Engenharia de Computação,
+Natal, 2025.
+Orientação: Dr. Andres Ortiz Salazar.
+1. Energia Fotovoltaica - Monografia. 2. Supervisório -
+Monografia. 3. LabVIEW - Monografia. 4. Bancada de Estudos -
+Monografia. 5. Monitoramento em Tempo Real - Monografia. I.
+Salazar, Andres Ortiz. II. Título.
+RN/UF/BCZM CDU 004
+Universidade Federal do Rio Grande do Norte - UFRN
+Sistema de Bibliotecas - SISBI
+Catalogação de Publicação na Fonte. UFRN - Biblioteca Central Zila Mamede
+Elaborado por Raimundo Muniz de Oliveira - CRB-15/429
+Desenvolvimento de um Sistema Supervisório
+para bancada de estudos do desempenho de
+células fotovoltaicas
+Caio Matheus Lopes Ribeiro
+Monografia aprovada em 17 de janeiro de 2025, pela banca examinadora composta pelos
+seguintes membros:
+Prof. Dr. Andres Ortiz Salazar (orientador) . . . . . . . . . . . . . . . . . . . . DCA/UFRN
+Dr. Diego Antonio de Moura Fonseca . . . . . . . . . . . . . . . . . . . . . . PPgEEC/UFRN
+Eng. Rafael Augusto de Oliveira Guedes . . . . . . . . . . . . . . . . . . . . . . DCA/UFRN
+Aos meus pais, Cezilma Lopes de
+Medeiros e Marcelo Erivaldo
+Ribeiro.
+Agradecimentos
+Aos meus pais, Cezilma Lopes de Medeiros e Marcelo Erivaldo Ribeiro, por sempre me
+permitirem seguir o caminho que eu escolhesse, e nunca faltarem com apoio e incentivo
+em tudo que já realizei na vida.
+Aos meus tios, Ana Cecília Lopes de Medeiros Albuquerque e Aldo Teixeira de Albu-
+querque Neto, por me oferecem moradia durante meus primeiros semestres de curso, me
+permitindo ter segurança e conforto para estudar. À minha prima Ilionara Cilanne Lo-
+pes de Medeiros por dividir sua casa comigo após a pandemia. Ao meu amigo Gustavo
+Jerônimo Moura de França e sua família por me acolherem em sua residência quando
+necessitei.
+À minha companheira e meu grande amor Gabriela Cruz Targino, que esteve ao meu lado
+nas derrotas e conquistas durante a reta final da graduação. Sou eternamente grato por
+seu imenso apoio companheirismo, nunca permitindo que eu duvidasse de mim mesmo e
+jamais desistisse dos meus objetivos.
+Ao meu orientador, Prof. Dr. Andres Ortiz Salazar, que me apoiou e orientou durante toda
+minha iniciação científica, contribuindo fundamentalmente para minha formação acadê-
+mica.
+À Equipe Potiguar Rocket Design pela oportunidade de aprendizado, em especial Mail-
+son Rodrigues de Medeiros Guimarães, responsável por me orientar e me apresentar ao
+mundo da eletrônica. Agradeço também aos amigos da equipe que compõem o subgrupo
+Cringe Móvel.
+Aos amigos do Laboratório de Avaliação e Medição em Petróleo, em especial Adson
+Emanuel Santos Amaral, que enfrentou todos os desafios da graduação junto a mim desde
+o dia da matrícula na UFRN, e Rafael Augusto de Oliveira Guedes que, em tão pouco
+tempo, se tornou um grande amigo e parceiro de estudos.
+À UFRN, pela estrutura e oportunidades oferecidas durante toda a graduação.
+Resumo
+A energia solar tem ganhado destaque no Brasil devido à sua grande disponibilidade
+e ao crescente interesse por fontes de energia renovável. O país, com sua vasta incidência
+solar ao longo do ano, apresenta condições ideais para o aproveitamento dessa forma de
+energia, contribuindo para a diversificação da matriz energética e a redução de impactos
+ambientais. Diante desse contexto, este trabalho apresenta o desenvolvimento de um sis-
+tema supervisório para monitoramento e controle de uma bancada de estudos em energia
+fotovoltaica, localizada no Laboratório de Avaliação de Medição em Petróleo (LAMP).
+O sistema foi implementado utilizando a plataforma LabVIEW, que permite a aquisição
+e análise de dados em tempo real, garantindo uma supervisão eficiente dos parâmetros
+críticos, como corrente, tensão, irradiância solar, temperatura do módulo fotovoltaico e
+do ambiente, armazenando os dados coletados. O sistema supervisório oferece ao usuário
+a possibilidade de monitorar a bancada em tempo real, possibilitando a detecção de falhas
+e anomalias durante testes.
+Palavras-chave: Energia Fotovoltaica, Supervisório, LabVIEW, Bancada de Estudos,
+Monitoramento em Tempo Real.
+Abstract
+Solar energy has gained prominence in Brazil due to its abundant availability and the
+growing interest in renewable energy sources. With its vast year-round solar incidence,
+the country presents ideal conditions for harnessing this form of energy, contributing to
+the diversification of the energy matrix and the reduction of environmental impacts. In
+this context, this work presents the development of a supervisory system for monitoring
+and controlling a photovoltaic energy study bench, located in the Laboratório de Avalia-
+ção e Medição de Petróleo (LAMP). The system was implemented using the LabVIEW
+platform, which enables real-time data acquisition and analysis, ensuring efficient super-
+vision of critical parameters such as current, voltage, solar irradiance, the temperature
+of the photovoltaic module and the environment, while storing the collected data. The
+supervisory system provides users with the capability to monitor the bench in real-time,
+allowing the detection of faults and anomalies during tests.
+Keywords: Photovoltaic Energy, Supervisory System, LabVIEW, Experimental Bench,
+Real-Time Monitoring.
+Sumário
+Sumário
+Lista de Figuras
+iii
+Lista de Tabelas
+Introdução
+Problema
+2.1
+Bancada de Estudos . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2
+Objetivos
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2.1
+Monitoramento de temperaturas . . . . . . . . . . . . . . . . . .
+2.2.2
+Monitoramento de tensão e corrente . . . . . . . . . . . . . . . .
+2.2.3
+Controle e monitoramento de luminosidade . . . . . . . . . . . .
+2.2.4
+Armazenamento de dados
+. . . . . . . . . . . . . . . . . . . . .
+Fundamentação Teórica
+3.1
+Sistemas fotovoltaicos
+. . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2
+Sistema supervisório
+. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.3
+Ponto de máxima potência
+. . . . . . . . . . . . . . . . . . . . . . . . .
+3.4
+Comunicação I2C . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Metodologia
+4.1
+Materiais
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.1.1
+INA219 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.1.2
+BH1750 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.1.3
+Sensores de Temperatura: LM35 e LM335
+. . . . . . . . . . . .
+4.1.4
+Módulo com 4 Relés . . . . . . . . . . . . . . . . . . . . . . . .
+4.1.5
+NI USB6008 . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.1.6
+Arduino UNO . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.2
+Arquitetura e funcionamento do Sistema . . . . . . . . . . . . . . . . . .
+5.1.4
+Armazenamento de dados
+. . . . . . . . . . . . . . . . . . . . .
+Experimentos e Resultados
+6.1
+Controle de luminosidade . . . . . . . . . . . . . . . . . . . . . . . . . .
+6.2
+Monitoramento de tensão, corrente e luminosidade
+. . . . . . . . . . . .
+6.3
+Monitoramento de temperaturas
+. . . . . . . . . . . . . . . . . . . . . .
+6.4
+Armazenamento de dados . . . . . . . . . . . . . . . . . . . . . . . . . .
+Conclusão
+7.1
+Trabalhos futuros . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Referências bibliográficas
+A Informações adicionais
+A.1
+Algoritmo Arduino . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+A.2
+Código completo LabVIEW
+. . . . . . . . . . . . . . . . . . . . . . . .
+Lista de Figuras
+2.1
+Bancada de estudos. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.1
+Mapa de irradiação do Brasil. . . . . . . . . . . . . . . . . . . . . . . . .
+3.2
+Sistema supervisório de um poço automatizado com bombeio mecânico .
+3.3
+Curvas I-V e P-V de um módulo ou conjunto de módulos fotovoltaicos.
+3.4
+Comunicação I2C entre controlador e periférico. . . . . . . . . . . . . . .
+4.1
+Sensor de corrente e tensão INA219. . . . . . . . . . . . . . . . . . . . .
+4.2
+Sensor de corrente e tensão BH1750. . . . . . . . . . . . . . . . . . . . .
+4.3
+Sensor de corrente e tensão INA219. . . . . . . . . . . . . . . . . . . . .
+4.4
+Módulo de 4 relés.
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.5
+Módulo de aquisição de dados NI USB6008. . . . . . . . . . . . . . . . .
+4.6
+Pinos do DAQ USB6008. . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.7
+Arduino UNO.
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.8
+Arquitetura do sistema. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+5.1
+Interface do sistema supervisório.
+. . . . . . . . . . . . . . . . . . . . .
+5.2
+Módulo de gráficos do sistema supervisório. . . . . . . . . . . . . . . . .
+5.3
+Módulo de controle de luminosidade.
+. . . . . . . . . . . . . . . . . . .
+5.4
+Configuração dos pinos de saída USB6008.
+. . . . . . . . . . . . . . . .
+5.5
+Módulo 4 relés conectado às lâmpadas.
+. . . . . . . . . . . . . . . . . .
+5.6
+Montagem de um circuito de lâmpadas acionadas por relé.
+. . . . . . . .
+5.7
+Lógica implementada em LabVIEW para o acionamento das lâmpadas.
+5.8
+Configuração de porta e leitura dos dados na tela do supervisório. . . . . .
+5.9
+Lógica implementada em LabVIEW para a leitura do Arduino. . . . . . .
+5.10 Apresentação das temperaturas na tela do supervisório. . . . . . . . . . .
+5.11 Configuração dos pinos de entrada analógica USB6008. . . . . . . . . . .
+5.12 Lógica implementada em LabVIEW para o monitoramento de temperatura. 26
+5.13 Caminho do arquivo na tela do supervisório. . . . . . . . . . . . . . . . .
+5.14 Código do armazenamento de dados . . . . . . . . . . . . . . . . . . . .
+6.1
+Sistema acionado com apenas 50% de luminosidade total. . . . . . . . . .
+6.2
+Sistema acionado com 100% de luminosidade. . . . . . . . . . . . . . . .
+6.3
+Montagem do circuito teste com o LED. . . . . . . . . . . . . . . . . . .
+6.4
+Teste de monitoramento do INA219 e BH1750. . . . . . . . . . . . . . .
+6.5
+Monitoramento de temperaturas com as 4 lâmpadas ligadas.
+. . . . . . .
+6.6
+Foto dos dados salvos formato .xlsx. . . . . . . . . . . . . . . . . . . . .
+A.1
+Algoritmo completo em LabVIEW. . . . . . . . . . . . . . . . . . . . . .
+Lista de Tabelas
+4.1
+Especificações do INA219
+. . . . . . . . . . . . . . . . . . . . . . . . .
+4.2
+Especificações do BH1750 . . . . . . . . . . . . . . . . . . . . . . . . .
+4.3
+Especificações do LM35
+. . . . . . . . . . . . . . . . . . . . . . . . . .
+4.4
+Especificações do LM335 . . . . . . . . . . . . . . . . . . . . . . . . . .
+4.5
+Especificações do Módulo com 4 Relés
+. . . . . . . . . . . . . . . . . .
+4.6
+Especificações Técnicas do NI USB-6008 . . . . . . . . . . . . . . . . .
+4.7
+Especificações Técnicas do Arduino Uno
+. . . . . . . . . . . . . . . . .
+Capítulo 1
+Introdução
+Nos últimos anos, a crescente preocupação com a sustentabilidade, aliada aos avanços
+tecnológicos e à redução dos custos dos equipamentos, tem impulsionado os investimen-
+tos em tecnologias renováveis. O Brasil possui aproximadamente 50% de sua matriz
+energética proveniente de energias sustentáveis, sendo a energia solar uma das maiores
+contribuintes (Governo do Brasil 2021). A adoção de sistemas fotovoltaicos em usinas,
+residências e comércios cresce devido à praticidade e ao baixo custo de implementação e
+manutenção em comparação com hidrelétricas e eólicas.
+Com a crescente demanda por energia limpa, pesquisas e desenvolvimento contínuos
+são essenciais para aprimorar os equipamentos e tecnologias, buscando reduzir perdas e
+aumentar a eficiência, tornando a energia solar mais viável e sustentável. Estudos e testes
+em ambientes naturais são frequentemente inviáveis devido às condições variáveis, por
+isso, bancadas experimentais oferecem um ambiente controlado para o desenvolvimento
+prático do conhecimento teórico.
+Nesse contexto, um sistema supervisório para monitorar bancadas de estudos fotovol-
+taicos torna-se um aliado dos pesquisadores, permitindo o acompanhamento em tempo
+real de dados como tensão, corrente e temperatura, facilitando a identificação de falhas e
+a análise de desempenho. Isso melhora a precisão dos experimentos e agiliza a tomada de
+decisão, além de proporcionar uma interface amigável para pesquisadores e estudantes,
+promovendo uma melhor compreensão dos fenômenos.
+Este trabalho apresenta o desenvolvimento de um sistema supervisório projetado para
+uma bancada de estudos de sistemas fotovoltaicos no Laboratório de Avaliação de Medi-
+ção em Petróleo (LAMP) da UFRN. Utilizando o software Laboratory Virtual Instrument
+Engineering Workbench (LabVIEW), o sistema monitora e registra dados em tempo real,
+como tensão, corrente e temperatura de uma célula fotovoltaica, e controla lâmpadas que
+simulam a irradiação solar, facilitando a análise e otimização dos experimentos.
+Capítulo 2
+Problema
+2.1
+Bancada de Estudos
+O supervisório desenvolvido neste projeto tem como objetivo monitorar uma bancada
+de estudo de desempenho de células fotovoltaicas desenvolvida pela equipe do LAMP,
+apresentada no "21th International Conference on Renewable Energies and Power Quality
+(ICREPQ’23)".
+Essa bancada, ilustrada na Figura 2.1, é composta por um painel fotovoltaico, lâmpa-
+das que simulam a iluminação solar, células Peltier que resfriam a placa, uma interface
+homem-máquina para operações manuais e um tanque de água para resfriar as células Pel-
+tier. A bancada é fundamental para a pesquisa e desenvolvimento no campo fotovoltaico,
+possibilitando um estudo detalhado e sistemático das condições que afetam a eficiência
+dos sistemas solares, e o sistema supervisório oferece maior apoio e praticidade para o
+desenvolvimento de estudos.
+2.2
+Objetivos
+O principal objetivo é desenvolver um supervisório capaz de atender às seguintes exi-
+gências: monitoramento de duas temperaturas diferentes, monitoramento de tensão e cor-
+rente, monitoramento de luminosidade e armazenamento de dados.
+2.2.1
+Monitoramento de temperaturas
+O monitoramento das temperaturas da placa e do ambiente é necessário por diversos
+fatores. Um deles é a avaliação da eficiência da célula fotovoltaica, tendo em vista que seu
+desempenho tende a cair com o aumento da temperatura da placa (Salazar et al. 2023).
+Outro fator é a comparação do desempenho da célula sob diversas condições de ambi-
+ente, oferecendo um contexto para o entendimento da influência de condições externas na
+eficiência do sistema fotovoltaico.
+2.2.2
+Monitoramento de tensão e corrente
+Monitorar a tensão e a corrente em um sistema fotovoltaico é essencial para garantir
+seu funcionamento eficiente e seguro. A tensão e a corrente fornecem informações cruci-
+ais sobre o desempenho do sistema, permitindo determinar o ponto de máxima potência
+para maximizar a energia gerada. Além disso, variações anormais nesses parâmetros
+podem indicar falhas, como problemas nos módulos, sombreamento parcial, conexões
+soltas ou curto-circuito, possibilitando a detecção prévia de problemas. O monitoramento
+também permite avaliar a eficiência do sistema ao comparar a energia gerada com a irra-
+diância solar e facilita a manutenção preditiva ao identificar tendências de degradação.
+2.2.3
+Controle e monitoramento de luminosidade
+Executar o controle do luminosidade, especialmente no contexto da bancadas de estu-
+dos, permite a simulação de diferentes condições de iluminação, possibilitando a realiza-
+ção de testes controlados e a análise do desempenho dos módulos sob variadas intensida-
+des de luz. Isso é fundamental para validar o comportamento do sistema em situações que
+simulam a operação real e para aprimorar o desenvolvimento de tecnologias fotovoltaicas.
+O monitoramento de luminosidade, por sua vez, é igualmente importante, pois a quan-
+tidade de luz solar incidente afeta diretamente a energia gerada pelos módulos fotovoltai-
+cos. A correlação entre a luminosidade e o desempenho do sistema ajuda a identificar
+situações de sombreamento temporário e a ajustar o sistema para otimizar a geração de
+energia em diferentes condições de luz.
+2.2.4
+Armazenamento de dados
+Possuir um sistema de armazenamento dos dados de testes permite a análise histórica
+do desempenho do sistema, possibilitando a identificação de padrões de operação e ten-
+dências que podem indicar falhas iminentes ou a necessidade de manutenção. Além disso,
+a análise dos dados armazenados ajuda a otimizar o sistema ao longo do tempo, ajustando
+parâmetros para maximizar a eficiência energética. Os dados armazenados também são
+fundamentais para fins de pesquisa e desenvolvimento, permitindo que os pesquisadores
+revisem e comparem resultados de diferentes condições de teste.
+Capítulo 3
+Fundamentação Teórica
+Este capítulo apresenta os fundamentos teóricos que sustentam este estudo, abordando
+temas cruciais para o entendimento do sistema proposto. São explorados os seguintes tó-
+picos: sistemas fotovoltaicos, que descrevem a conversão de energia solar em elétrica;
+sistemas supervisórios, essenciais para o monitoramento e controle de processos; o ponto
+de máxima potência, conceito fundamental para otimização da eficiência energética em
+células fotovoltaicas; e o protocolo de comunicação I2C, utilizado para a interação efici-
+ente entre componentes eletrônicos.
+3.1
+Sistemas fotovoltaicos
+O Brasil possui uma das maiores potências solares do mundo, devido à sua localização
+geográfica privilegiada próxima à linha do Equador. De acordo com o Atlas Brasileiro
+de Energia Solar (2017), a irradiação solar no Brasil varia entre 4.500 a 6.300 Wh/m²
+por dia, valores que superam a média de muitos países europeus, onde a energia solar
+já é amplamente utilizada. Essa abundância de recurso solar torna o Brasil um local
+estratégico para o desenvolvimento e expansão de sistemas fotovoltaicos. A Figura 3.1
+exibe o mapa da média anual de irradiação no Brasil.
+De modo geral, os sistemas fotovoltaicos consistem em módulos que captam a luz so-
+lar e a convertem em energia elétrica através do efeito fotovoltaico. Esta eletricidade pode
+ser usada imediatamente, armazenada em baterias para uso posterior, ou ainda injetada na
+rede elétrica. Os principais componentes de um sistema desse tipo são: módulos fotovol-
+taicos, inversores, estruturas de suporte, e, em alguns casos, sistemas de armazenamento
+e monitoramento.
+O uso do método de captação de energia solar como energia oferece diversos bene-
+fícios, dentre eles destacam-se: a sua longa vida útil, a pouca necessidade manutenção,
+não produzem poluição ou ruído e seu combustível é a luz solar natural. Além disso, os
+sistemas são modulares ou expansíveis, leves, fáceis de transportar e estão disponíveis ao
+longo de todo o ano (Marini & Rossi 2002).
+3.2
+Sistema supervisório
+Os sistemas supervisórios desempenham um papel crucial na automação industrial,
+proporcionando monitoramento, controle e gerenciamento de processos produtivos em
+tempo real. Segundo Marcondes (2005), um sistema supervisório é composto por fer-
+ramentas de software capazes de coletar, processar e apresentar dados provenientes de
+dispositivos de controle e sensores para os operadores e gestores. Essas plataformas não
+apenas monitoram variáveis do processo, mas também permitem intervenções manuais
+ou automáticas no sistema, como o supervisório apresentado na Figura 3.2 que trata de
+uma aplicação na indústria do petróleo, presente no artigo de Souza et al. (2006).
+Dessa forma, um supervisório comumente possui uma interface amigável e de fácil
+interpretação para o operador, proporcionando uma visualização clara e em tempo real
+dos dados. Outra característica essencial para um supervisório é a capacidade de alertar
+através de atuadores sonoros e/ou visuais para notificar falhas ou desvios nos parâmetros
+em um determinado sistema, além de permitir o controle remoto e a configuração dos
+dispositivos do sistema.
+O uso de sistemas assim é comum na indústria, com o objetivo de oferecer uma visão
+centralizada dos processos, integrando informações provenientes de sensores, controla-
+dores e outros dispositivos de campo. Essa integração possibilita o monitoramento de
+variáveis críticas, como temperatura, pressão, fluxo e potência, e a execução de ações cor-
+retivas automatizadas ou manuais, conforme necessário. Quando a supervisão e o controle
+de um processo são realizados por meio de um sistema supervisório, o processamento das
+variáveis de campo torna-se mais ágil e eficiente (COELHO 2010).
+3.3
+Ponto de máxima potência
+O conceito de ponto de máxima potência (MPP, do inglês Maximum Power Point)
+é crucial em sistemas de energia solar fotovoltaica, estando diretamente relacionado à
+otimização da conversão de energia. As células solares funcionam convertendo a luz
+solar em eletricidade por meio do efeito fotovoltaico. A energia gerada por um painel
+solar depende de variáveis como a tensão (V) e a corrente elétrica (I), sendo a potência
+elétrica expressa pela equação:
+P = V ·I
+A relação entre a tensão e a corrente em uma célula solar não é linear, resultando em
+uma curva característica I ·V, como pode ser observado na Figura 3.3. Nessa curva, existe
+um ponto específico em que o produto V ·I atinge seu valor máximo, o MPP.
+A análise das curvas I-V (corrente e tensão) e P-V (potência e tensão) é essencial
+para o dimensionamento e otimização de sistemas fotovoltaicos, onde a curva I-V indica
+a eficiência da célula em converter luz solar em corrente elétrica, enquanto a curva P-V
+ajuda a identificar o MPP.
+O Rastreamento do Ponto de Máxima Potência (MPPT, do inglês Maximum Power
+Point Tracker), por sua vez, é uma técnica amplamente utilizada em sistemas fotovoltaicos
+para otimizar a conversão de energia elétrica da placa fotovoltaica. Segundo Abdelaziz
+& Almoataz (2020), o MPPT atua ajustando continuamente as condições de operação do
+sistema fotovoltaico de forma a maximizar a potência extraída do painel solar, mesmo
+diante de variações de irradiância e temperatura.
+3.4
+Comunicação I2C
+A comunicação I2C (Inter-Integrated Circuit) é um protocolo serial síncrono ampla-
+mente utilizado para comunicação entre dispositivos integrados em sistemas embarca-
+dos. Desenvolvido pela Philips Semiconductor na década de 1980, o I2C é projetado
+para permitir que múltiplos dispositivos, como microcontroladores, sensores e periféri-
+cos, compartilhem um mesmo barramento de comunicação, utilizando apenas duas li-
+nhas: SDA(Serial Data Line) para a transmissão de dados e SCL (Serial Clock Line) para
+o sincronismo.
+Esse protocolo opera na configuração controlador-periférico (ou mestre-escravo), no
+qual um dispositivo controlador administra o barramento e gerencia a comunicação, en-
+quanto os dispositivos periféricos respondem às solicitações do controlador, como é mos-
+trado na Figura 3.4. Ele permite a conexão de múltiplos dispositivos no mesmo barra-
+mento, diferenciados por endereços únicos de 7 ou 10 bits. O protocolo utiliza mensagens
+estruturadas em pacotes contendo bits de início (start), endereço do periférico, dados e
+bits de parada (stop). Além disso, esse método de comunicação suporta diferentes modos
+de velocidade, como Standard Mode (100 kbps), Fast Mode (400 kbps) e High-Speed
+Mode (até 3,4 Mbps) (Mankar et al. 2014). Utiliza também um sistema de acknowledge
+para confirmar o recebimento de dados, garantindo a integridade da comunicação.
+No início de uma comunicação, o controlador emite um sinal de início (start condi-
+tion), seguido pelo endereço do dispositivo periférico com o qual deseja se comunicar. O
+periférico correspondente responde com um sinal de reconhecimento (acknowledge), e a
+transferência de dados é iniciada. Após a transmissão, o controlador emite um sinal de
+parada (stop condition), indicando o término da comunicação.
+Capítulo 4
+Metodologia
+4.1
+Materiais
+Para a implementação do sistema, diversos materiais e componentes foram utilizados,
+abrangendo desde sensores específicos até módulos de controle e análise. A seguir, serão
+apresentados os principais componentes empregados, destacando suas funcionalidades,
+características técnicas e a importância de sua escolha para a realização do projeto.
+4.1.1
+INA219
+O sensor INA219 (Figura 4.1) é um sensor de corrente, tensão e potência de alta
+precisão que permite a medição da corrente que flui através de um resistor shunt externo,
+bem como a tensão do sistema.
+ideal para monitoramento de consumo de energia em diversos dispositivos. A Tabela 4.1
+apresenta as especificações técnicas do INA219.
+Parâmetro
+Especificação
+Tensão de alimentação
+3V a 5.5V
+Faixa de corrente
+±3.2A
+Resolução de corrente
+0.1mA
+Faixa de tensão de barramento
+0V a 26V
+Comunicação
+I2C
+Precisão
+4.1.2
+BH1750
+O BH1750, presente na Figura 4.2 é um sensor digital de luz ambiente que oferece
+alta precisão e uma interface I2C para fácil comunicação com microcontroladores. Ele
+é amplamente utilizado para medir a luminosidade em ambientes internos e externos,
+devido a sua faixa de medição de luminosidade que pode ser observada na Tabela 4.2,
+sendo útil em projetos que exigem controle baseado em iluminação, como sistemas de
+iluminação automática.
+Parâmetro
+Especificação
+Tensão de alimentação
+2.4V a 3.6V
+Faixa de medição de luz
+1 a 65535 lx
+Precisão
+20%
+Consumo de corrente
+0.12mA
+Comunicação
+I2C
+4.1.3
+Sensores de Temperatura: LM35 e LM335
+Os sensores LM35 e LM335 são sensores de temperatura precisos que fornecem uma
+saída linear proporcional à temperatura medida. O LM35 apresentado na Figura 4.3 é
+calibrado em graus Celsius, enquanto o LM335 é calibrado em Kelvin. Ambos são fáceis
+de integrar em sistemas de monitoramento de temperatura, devido à sua simplicidade e
+precisão.
+As especificações técnicas e funcionalidades de ambos os sensores são bem similares,
+com exceção da taxa de conversão. Portanto, as especificações técnicas de ambos os
+sensores podem ser observadas nas Tabelas 4.3 e 4.4 abaixo:
+Parâmetro
+Especificação
+Tensão de alimentação
+4V a 30V
+Faixa de temperatura
+-55°C a 150°C
+Precisão
+±0.5°C
+Sensibilidade
+10mV/°C
+4.1.4
+Módulo com 4 Relés
+Parâmetro
+Especificação
+Tensão de alimentação
+4V a 30V
+Faixa de temperatura de operação
+-40°C a 100°C
+Precisão típica
+±1°C
+Sensibilidade
+10mV/°C
+dispositivos de alta potência com sinais de baixa potência. Suas especificações técnicas
+são apresentadas na Figura 4.5.
+Parâmetro
+Especificação
+Tensão de alimentação
+5V DC
+Corrente por relé
+10A a 250V AC ou 10A a 30V DC
+Tempo de operação
+10ms
+Tempo de liberação
+5ms
+Isolamento
+Opto-isolado
+4.1.5
+NI USB6008
+módulo conta com 12 canais digitais configuráveis como entrada ou saída, permitindo o
+controle de dispositivos externos, e um contador de 32 bits para medições de eventos e
+pulsos (National Instruments 2018). Alimentado diretamente pela porta USB, o NI USB-
+6008 dispensa a necessidade de fontes externas de energia. A distribuição de pinos do
+módulo DAQ é apresentada na Figura 4.6.
+1 2 3 4 5 6 7 8 9 10111213141516
+GND
+AI 0 (AI 0+)
+AI 4 (AI 0–)
+GND
+AI 1 (AI 1+)
+AI 5 (AI 1–)
+GND
+AI 2 (AI 2+)
+AI 6 (AI 2–)
+GND
+AI 3 (AI 3+)
+AI 7 (AI 3–)
+GND
+AO 0
+AO 1
+GND
+P0.0
+P0.1
+P0.2
+P0.3
+P0.4
+P0.5
+P0.6
+P0.7
+P1.0
+P1.1
+P1.2
+P1.3
+PFI 0
++2.5 V
++5 V
+GND
+ram cruciais para sua escolha neste projeto. As especificações técnicas do módulo de
+aquisição de dados são descritas na Tabela 4.6.
+Característica
+Especificação
+Número de Entradas Analógicas
+8 (Single-ended) ou 4 (Diferenciais)
+Resolução
+12 bits
+Taxa de Amostragem
+10 kS/s (Taxa Máxima de Amostragem)
+Intervalo de Entrada Analógica
+± 10 V, ± 5 V, ± 2 V, ± 1 V
+Número de Saídas Analógicas
+Faixa de Saída Analógica
+0 a 5 V
+Resolução de Saída Analógica
+12 bits
+Número de Entradas Digitais
+Número de Saídas Digitais
+Tensão de Operação Digital
+0 a 5 V
+Contadores/Temporizadores
+1 contador de 32 bits
+Comunicação
+USB 2.0
+Dimensões
+88,9 mm x 62,2 mm x 23,1 mm
+Peso
+Aproximadamente 85 g
+Alimentado via USB
+Apesar das inúmeras vantagens, o módulo da National USB6008 possui uma limitação
+quanto à comunicação com sensores do tipo I2C. Sendo assim, optou-se pela utilização
+de um Arduino Uno para auxiliar no sistema.
+4.1.6
+Arduino UNO
+O Arduino Uno apresentado na Figura 4.7 é uma das placas mais conhecidas da plata-
+forma Arduino, amplamente utilizada em projetos de prototipagem eletrônica e automa-
+ção. Baseado no microcontrolador ATmega328P, o Arduino Uno possui 14 pinos digitais,
+6 pinos analógicos e recursos como comunicação serial via USB, permitindo fácil intera-
+ção com um computador para programação e monitoramento. Sua popularidade se deve
+à simplicidade de uso, grande comunidade de desenvolvedores e à vasta documentação
+disponível, o que facilita a criação de projetos para iniciantes e especialistas.
+Uma das características mais vantajosas do Arduino Uno é sua capacidade de comuni-
+cação I2C, um protocolo de comunicação serial que permite a conexão de múltiplos dis-
+positivos usando apenas dois pinos: SDA (dados) e SCL (clock) (STA Eletrônica 2025).
+Esse protocolo facilita a comunicação entre o Arduino e uma grande variedade de senso-
+res, como o INA219 e o BH1750, reduzindo a quantidade de fios e simplificando o design
+do circuito. O suporte ao I2C torna o Arduino Uno ideal para projetos que envolvem o
+uso de vários sensores e módulos, proporcionando uma integração eficiente e de baixo
+custo com dispositivos externos. Suas especificações são descritas na Tabela 4.7 a seguir:
+Característica
+Especificação
+Microcontrolador
+ATmega328P
+Tensão de Operação
+5 V
+Tensão de Entrada (recomendada)
+7-12 V
+Entradas Digitais/Analógicas
+14 (6 PWM) / 6
+Corrente DC por I/O Pin
+40 mA
+Corrente DC para 3.3V Pin
+50 mA
+Memória Flash
+32 KB (ATmega328P)
+SRAM
+2 KB (ATmega328P)
+EEPROM
+1 KB (ATmega328P)
+Velocidade do Clock
+16 MHz
+Dimensões
+68,6 mm x 53,4 mm
+Peso
+25 g
+4.2
+Arquitetura e funcionamento do Sistema
+Conforme mostrado na Figura 4.8, no coração do sistema está o USB6008, que atua na
+aquisição de dados de sensores de temperatura e controla o acionamento das lâmpadas, e o
+Arduino atuando na recepção dos dados do INA219 e do BH1750 através da comunicação
+I2C.
+O sistema de iluminação artificial é controlado pelo módulo de 4 relés de 5V ao re-
+ceber comandos do USB6008, que envia sinais para o acionamento ou desativação dos
+relés, influenciando diretamente na quantidade de luz que incide sobre os módulos.
+O LabVIEW serve como a interface do supervisório e plataforma de armazenamento
+de dados. Ele recebe informações tanto do Arduino quanto do NI USB-6008 através da
+comunicação serial USB. O supervisório exibe em tempo real os parâmetros medidos.
+Sistema de
+Iluminação Arﬁcial
+Parâmetros NI 6008
+Temperatura ambiente
+Temperatura Placa fotovoltaica
+Controle individual de luminosidade
+Capítulo 5
+Implementação
+Neste capítulo é descrito o método de implementação do sistema supervisório no soft-
+ware LabVIEW, evidenciando como cada um dos subsistemas foi desenvolvido e como
+eles são apresentados ao usuário através da tela do supervisório.
+5.1
+Implementação do supervisório no LabVIEW
+O LabVIEW é uma plataforma de desenvolvimento baseada em gráficos voltada para
+aplicações de teste, medição e controle, amplamente utilizada em diversas áreas da enge-
+nharia e da ciência, além de ser presente em indústrias. Essa plataforma foi desenvolvida
+pela National Instruments e permite a criação de sistemas de aquisição de dados, automa-
+ção de processos e controle industrial, utilizando uma interface de programação gráfica
+conhecida como G.
+Uma das grandes vantagens do LabVIEW é sua capacidade de integrar facilmente
+hardware de diferentes fabricantes, como placas de aquisição de dados, controladores
+programáveis e sensores, tornando-se uma ferramenta versátil para monitoramento e con-
+trole em tempo real.
+No contexto deste projeto, o LabVIEW desempenha um papel crucial como interface
+supervisória e plataforma de armazenamento de dados, permitindo a aquisição, processa-
+mento e visualização dos dados coletados pelo sistema de controle das lâmpadas. Através
+do LabVIEW, é possível configurar parâmetros de operação, monitorar o estado atual do
+sistema e armazenar os dados para análise posterior, proporcionando uma visão abran-
+gente do comportamento do sistema ao longo do tempo.
+Para elucidar o entendimento acerca dos sistemas implementados no software Lab-
+VIEW, eles serão divididos em Subseções para cada um dos sistemas. Contudo, o código
+completo está anexado ao Apêndice A.2.
+A tela do supervisório foi desenvolvida com o objetivo de apresentar as informações
+de forma clara ao operador, evidenciando os diferentes sistemas presentes ao separá-los
+em blocos distribuídos pela tela. Na Figura 5.1 é possível identificar as diferentes seções
+presentes no sistema, e na Figura 5.2 os gráficos que são plotados.
+5.1.1
+Controle de luminosidade
+A intensidade de luminosidade do sistema é definida pela quantidade de lâmpadas
+ligadas simultaneamente, sendo uma lâmpada equivalente a 25% da luminosidade, e as
+quatro lâmpadas o total de 100%. O painel de controle das lâmpadas na tela do supervi-
+sório é mostrado na Figura 5.3.
+Esse controle é feito com o uso do módulo USB6008, configurando quatro pinos di-
+gitais como saída no modo de geração “1 Sample (on demand)”, conforme mostrado na
+quando solicitado pelo software. É comum em aplicações que não requerem aquisição
+contínua ou amostragem em alta velocidade. O sinal gerado pelo USB6008 é enviado a
+um módulo com 4 relés (Figura 5.5).
+Para a montagem do circuito, a fase foi conectada ao pino comum do relé, e o retorno
+das lâmpadas ao pino Normalmente Aberto. Assim, o relé começa em Normalmente
+Fechado, mantendo as lâmpadas desligadas, e ao receber o sinal do DAQ, chaveia para
+Normalmente Aberto, conforme Figura 5.6.
+A lógica de acionamento das lâmpadas foi dividida em três etapas, conforme Figura
+5.7.
+1. Os interruptores do supervisório fornecem valores booleanos de true ou false, con-
+forme seu estado.
+2. O LabVIEW cria um vetor com os valores dos interruptores, que o DAQ lê e atribui
+às saídas analógicas para acionar os relés.
+3. O vetor é separado em elementos individuais, que passam por uma porta NOT para
+corrigir a inversão lógica, garantindo que os LEDs acendam corretamente.
+5.1.2
+Monitoramento de tensão, corrente e luminosidade
+Para integrar o ambiente LabVIEW com o microcontrolador Arduino, foi necessá-
+rio utilizar a API de software Virtual Instrument Software Architecture (VISA), que for-
+nece uma interface padrão de comunicação através de portas seriais entre o LabVIEW e
+dispositivos de hardware, como Controladores Lógicos Programáveis e instrumentos de
+medição, como Osciloscópios, Geradores de função, entre outros.
+No contexto do projeto, os dados coletados através dos sensores de luminosidade e
+corrente/tensão são escritos na porta serial do Arduino, e o VISA é utilizado para permitir
+que ocorra a leitura e operação dos dados obtidos via porta serial. O código carregado no
+Arduino foi anexado ao apêndice A.1.
+A configuração da porta e a visualização dos dados na tela do supervisório pode ser
+observada na Figura 5.8 a seguir:
+Assim como o algoritmo do controle de luminosidade, a lógica implementada para
+obtenção dos dados de corrente, tensão e luminosidade foi dividida em seções, conforme
+ilustra a Figura 5.9.
+1. Inicialmente é realizada a configuração do Visa Serial, informando qual porta o
+Arduino está conectado, informação do baud rate e o delay padrão do bloco;
+2. Dentro do loop, o bloco Property Nodes lê as propriedades do objeto (no caso o Ar-
+duino) a partir do número de bytes escritos na serial. Como o resultado do Property
+Nodes é um vetor contendo todos os dados coletados pelo Arduino, é necessário
+separar esses dados utilizando o String Subset para dividir o array a partir de uma
+posição específica e uma quantidade de casas específica. Por exemplo: Para obter a
+luminosidade está sendo acessado a posição 18 do array de bytes e coletando os 5
+bytes do 18 em diante;
+3. As strings particionadas são convertidas em bytes dinâmicos para serem exibidos
+nos gráficos. Os valores também são direcionados para o módulo de armazena-
+mento de dados;
+4. Por fim, é encerrada a comunicação do VISA fora do loop.
+5.1.3
+Monitoramento de temperaturas
+Os valores de temperatura ambiente e temperatura da célula fotovoltaica são obtidos
+a partir das entradas analógica do USB6008, e exibidas para o usuário conforme mostra
+a Figura 5.10. Desse modo, foi necessário inicialmente configurar as portas para a coleta
+dos dados. Para isso, duas portas analógicas foram configuradas como entradas para ler
+os valores de tensão gerados pelos sensores de temperatura. Além de definir o range de
+tensão na faixa de 0 a 5 volts, também configurou-se o terminal como "Referenced Single-
+Ended (RSE)", tendo em vista que os sensores possuem um mesmo referencial (GND). Por
+fim, o modo de aquisição foi definido como "Continuous Samples", realizando a coleta
+de forma contínua. Todas as configurações mencionadas podem ser observadas na Figura
+5.11.
+De modo similar aos códigos anteriores, o algoritmo do monitoramento de tempera-
+tura é dividido em três etapas definidas na Figura 5.12.
+1. No bloco 1, ocorre o recebimento dos dados através das portas de entrada analógica
+do DAQ, porém há a necessidade de operar e exibir essas temperaturas separada-
+mente. Então, a entrada é transformada em um Dynamic Data Type (DDT) com a
+tag de manipulação de sinal to DDT;
+2. A entrada é separada em dois valores utilizando o bloco Index Array, acessando as
+posições 0 e 1 do vetor de entrada, que correspondem respectivamente ao valor de
+tensão medido pelo sensor presente da Célula fotovoltaica e o sensor que mede a
+temperatura ambiente;
+3. Antes de exibir os valores de temperatura para o usuário, é necessário aplicar um
+ganho para ajustar a temperatura exibida. O valor de ganho implementado foi ob-
+tido de forma empírica.
+5.1.4
+Armazenamento de dados
+Os dados obtidos através dos sensores são armazenados em arquivos de texto ou pla-
+nilhas. Para isso, o usuário deve definir o caminho onde o arquivo deve ser armazenado
+utilizando o campo “Caminho para armazenamento de dados (.txt/.xlsx)” na interface do
+supervisório apresentado na Figura 5.13, sendo possível sobrescrever um arquivo já exis-
+tente ou ainda criar um novo arquivo em que ocorrerá o armazenamento dos dados do
+teste.
+A lógica implementada realiza o armazenamento dos dados em arrays que contém a
+hora exata do computador durante a coleta, e os valores de temperatura da célula fotovol-
+taica e do ambiente, assim como as correntes e tensões geradas pelo painel. A Figura 5.14
+apresenta o código em LabVIEW do armazenamento de dados.
+Seguindo as numerações presentes na imagem:
+1. O bloco Open/Create/Read File é o responsáel pela criação do arquivo de aram-
+zenamento de dados. Ele recebe como parâmetro o caminho do arquivo fornecido
+pelo usuário, e as ações a serem realizadas.
+2. Na seção 2 ocorre a escrita do cabeçalho do arquivo de dados, ela ocorre fora do
+loop pois será escrita apenas uma vez. Utilizando o bloco Format into String é
+informado todos os parâmetros do cabeçalho, com um espaçamento tab entre eles.
+O bloco Format into String fornece a string para o bloco Write to Text File realizar
+a escrita da string.
+3. Dentro do loop, similar ao item anterior, é realizado a escrita usando o Write to Text
+File e o Format into String, porém escrevendo os dados lidos.
+4. Por fim, o bloco Close File encerra o arquivo escrito.
+Capítulo 6
+Experimentos e Resultados
+Para validar o funcionamento do sistema supervisório desenvolvido, foram realizados
+alguns testes utilizando a bancada mencionada na Seção 2.
+6.1
+Controle de luminosidade
+O objetivo do teste é realizar o controle do acionamento das lâmpadas que simulam
+irradiação solar através do sistema supervisório. Com o circuito apresentado na seção
+5.1.1, o usuário é capaz de controlar o acionamento das lâmpadas através dos comandos
+gerados pelo USB6008 e enviados para o módulo de quatro relés. As Figuras 6.1 e 6.2
+apresentam o monitoramento das lâmpadas acionadas no supervisório durante testes. É
+possível observar que o comportamento observado nas lâmpadas presentes na bancada é
+refletido no sistema supervisório.
+6.2
+Monitoramento de tensão, corrente e luminosidade
+Para validar a supervisão de corrente e tensão, foi montado um circuito auxiliar uti-
+lizando o INA219 aferindo os valores de um LED (ver Figura 6.3), pois a bancada de
+estudos não estava operacional. Tendo em vista que o objetivo do trabalho é validar
+o funcionamento do sistema supervisório, optou-se por validá-lo monitorando um LED
+como carga.
+Para a obtenção da luminosidade, o BH1750 foi posicionado próximo às lâmpadas,
+para ser capaz de responder a variações de luminosidade controladas pelo acionamento
+da iluminação artificial. A resposta do sensor de luminosidade observada na Figura 6.4
+é um valor na unidade Lux, que é a quantidade de luz que atinge uma área de 1 metro
+quadrado (m²). Uma forma comum de interpretar a unidade Lux é:
+• 0 lux: Total escuridão;
+• 10 lux: Luz de uma vela vista de perto;
+• 100 lux: Iluminação de ambiente interno moderado (uma lâmpada de 100W a cerca
+de 1 metro de distância);
+• 1000 lux: Iluminação mais intensa, como em uma sala bem iluminada ou sob luz
+fluorescente;
+• 10.000 lux ou mais: Luz intensa como a luz solar direta em um dia claro.
+Embora o Arduino esteja realizando a comunicação com o sistema de maneira correta,
+há um delay de cerca de 10 segundos entre o que é escrito na serial e o que o LabVIEW lê.
+Acredita-se que esse delay é causado pela configuração padrão do VISA no LabVIEW.
+6.3
+Monitoramento de temperaturas
+Para o monitoramento das temperaturas da célula fotovoltaica e do ambiente, os sen-
+sores LM35 e LM335 foram posicionados na bancada de modo que um deles estivesse
+mais próximo às lâmpadas e o outro mais distante, como aconteceria no funcionamento
+convencional da bancada. Os valores monitorados são apresentados na interface e podem
+ser observados na Figura 6.5
+O usuário é capaz de monitorar em tempo real os valores medidos das temperaturas
+pelo supervisório e, em caso de superaquecimento ou qualquer comportamento inespe-
+rado, o operador é capaz de tomar uma rápida decisão de interromper o teste e preservar
+a integridade do sistema.
+6.4
+Armazenamento de dados
+Os dados coletados durante o teste são armazenados em planilhas .XLSX ou .TXT,
+como mostra a Figura 6.6. De posse desses dados, é possível gerar gráficos e realizar
+análises dos testes, comparando-os entre si, além de possibilitar um histórico de desem-
+penho do sistema sob diferentes condições. Uma outra utilidade dos dados é a detecção
+de anomalias do sistema que podem passar despercebidas se ocorrerem rapidamente.
+Capítulo 7
+Conclusão
+O desenvolvimento do sistema supervisório proposto para o monitoramento e con-
+trole de uma bancada de estudos em energia fotovoltaica mostrou resultados satisfatórios,
+possibilitando a aquisição e análise em tempo real de parâmetros críticos, como tensão,
+corrente, luminosidade, e temperaturas da placa fotovoltaica e do ambiente. A integra-
+ção do sistema com a plataforma LabVIEW proporcionou uma interface amigável para os
+usuários, facilitando a supervisão e o armazenamento dos dados.
+Embora funcional, o sistema apresenta algumas limitações, pois a velocidade de trans-
+ferência de dados e taxa de atualização entre o Arduino e o LabVIEW apresentam um
+delay significativo, podendo prejudicar execução de testes. A comunicação pode ser oti-
+mizada para suportar maiores volumes de dados ou velocidades de transmissão, especial-
+mente em testes de longa duração ou sob condições variáveis. Além disso, implementação
+da interface gráfica para análise das curvas não está 100% funcional.
+Os resultados obtidos evidenciam a capacidade do uso do supervisório desenvolvido
+para aplicações práticas em estudos de energia fotovoltaica, destacando-se como uma
+ferramenta valiosa para o monitoramento e a análise de desempenho capaz de oferecer
+aos pesquisadores um maior controle acerca dos processos que ocorrem durante os testes
+da bancada. Entretanto, há espaço para aprimoramentos que possam aumentar ainda mais
+a eficiência, precisão e funcionalidade do sistema, oferecendo maior confiabilidade para
+os usuários.
+7.1
+Trabalhos futuros
+Desse modo, algumas sugestões de novos trabalhos em cima dessa temática podem
+ser feitas para os projetos do supervisório e da bancada de estudo. Entre elas, destacam-
+se principalmente a implementação da simulação de passagem de nuvens, que pode ser
+feita utilizando algum material translúcido que gere um sombreamento e seja capaz de
+reter parte da luminosidade gerada pelas lâmpadas.
+O desenvolvimento de um algoritmo capaz de rastrear o MPPT e ajustá-lo automati-
+camente para que a célula fotovoltaica permaneça em seu ponto de operação o máximo
+possível pode ser uma grande melhoria para o sistema. Uma outra sugestão de experi-
+mento seria o controle de direção ou inclinação do painel.
+Essas funcionalidades implementas podem ser controladas através do supervisório,
+como controle de parâmetros de rastreio do MPPT e variável de inclinação da placa. O
+sistema de supervisão poderia, também, apresentar uma melhora no tratamento de erros,
+sendo capaz de identificar um erro grave como aumento desproporcional de corrente no
+circuito, e desligar o sistema automaticamente como medida de segurança.
+Referências Bibliográficas
+Abdelaziz, Almoataz Y & Y Almoataz (2020), Modern maximum power point tracking
+techniques for photovoltaic energy systems, Springer.
+Amazon (n.d.), ‘Sensor de temperatura lm35 para arduino e raspberry’, https:
+//www.amazon.com.br/Sensor-Temperatura-Lm35-Arduino-Raspberry/dp/
+B07Q2F715B. Acessado em: 19 jan. 2025.
+Arduino e Cia (n.d.), ‘Sensor de corrente dc ina219’, https://www.arduinoecia.com.
+br/product/sensor-de-corrente-dc-ina219/. Acessado em: 19 jan. 2025.
+COELHO, Marcelo S (2010), ‘Apostila de sistemas supervisórios’, Curso superior de
+tecnologia em automação e controle de processos industriais contínuos. Instituto
+Federal de Educação, Ciência e Tecnologia de São Paulo Campus Cubatão .
+DeD Componentes Eletrônicos (n.d.), ‘Arduino uno r3 original da itália’, https://www.
+dedcomponentes.com.br/produto/arduino-uno-r3-original-da-italia/.
+Acessado em: 19 jan. 2025.
+Erriez (n.d.), ‘Erriez bh1750 digital light sensor library’, https://github.com/
+Erriez/ErriezBH1750. Acessado em: 19 jan. 2025.
+Gates, Luis F. (2000), Telecomunicações Baseadas na Arquitetura BALSE, Tese de dou-
+torado, UFSCG, Matosinhos, SP.
+Gates, Luis F., Rossano P. Pinto, Eliane G. Solimães & Katianna Silva (2001), Mobile
+agents in telecommunication services, em J. C.A. Loureiro, ed., ‘Proceedings of
+LACOXS’05’, Sociedade Brasileira de Ciências Físicas, Ouro Preto, MG, pp. 50–
+61.
+Governo do Brasil (2021), ‘Energia renovável chega a quase 50% da matriz elétrica
+brasileira’. Acessado em: 2025.
+URL:
+https://www.gov.br/pt-br/noticias/energia-minerais-e-
+combustiveis/2021/08/energia-renovavel-chega-a-quase-50-da-matriz-eletrica-
+brasileira-1
+Industries, Adafruit (n.d.), ‘Adafruit bh1750 light sensor’, https://www.adafruit.
+com/product/469. Acessado em: 19 jan. 2025.
+INPE (2017), Atlas Brasileiro de Energia Solar, Instituto Nacional de Pesquisas Espaci-
+ais, São José dos Campos, Brasil. Acesso em: 14 jan. 2025.
+URL: http://www.dsr.inpe.br/sbsr2017/files/p0071.pdf
+Instruments, National (n.d.a), ‘Usb-6008 specifications’, https://www.digikey.com.
+br/pt/products/detail/ni/779051-01/12817874. Acessado em: 19 jan. 2025.
+Instruments, National (n.d.b), ‘Usb-6008/6009 pinout and signal descriptions’. Acessado:
+2024.
+URL: https://www.ni.com/docs/en-US/bundle/usb-6008-6009-feature/page/pinout-
+signal-descrip.html
+Instruments,
+Texas (n.d.a),
+‘Lm335 data sheet’,
+https://www.ti.com/lit/ds/
+symlink/lm335.pdf. Acessado em: 19 jan. 2025.
+Instruments, Texas (n.d.b), ‘Lm35 precision centigrade temperature sensors’, https://
+www.ti.com/product/LM35. Acessado em: 19 jan. 2025.
+IONA (1999), Orbix Programming Reference, IONA Technologies PLC, Dublin, Ireland.
+MakerHero (2025), ‘Controle de módulo relé com arduino’. Acessado em: 2025.
+URL: https://www.makerhero.com/blog/controle-modulo-rele-arduino/
+Mankar, Jayant, Chaitali Darode, Komal Trivedi, Madhura Kanoje & Prachi Shahare
+(2014), ‘Review of i2c protocol’, International Journal of Research in Advent Tech-
+nology 2(1).
+Marcondes, Danilo (2005), Automação Industrial: Controle do Movimento e Processos
+Contínuos, Editora Érica, São Paulo.
+Marini, José Adriano & Luiz Antonio Rossi (2002), ‘Projeto de sistemas fotovoltaicos
+para oferta de energia elétrica a comunidades rurais’, Procedings of the 4th Encontro
+de Energia no Meio Rural .
+Meireles, Flamingo (2003), NOVET’s homepage, Página na internet, The Academic
+Computer Society, Caicó, RN.
+URL: http://www.aligatesta.com.su/
+Mittelbach, Frank & Michel Goossens (2004), The LATEX Companion, 2ª edição, Addison-
+Wesley, San Francisco, EUA.
+National Instruments (2018), NI USB-6008 Specifications. Accessed: 2025-01-18.
+URL: https://www.ni.com/docs/en-US/bundle/usb-6008-specs/page/specs.html
+OMG (2000), Audio/video streams, version 1.0, OMG Specification formal/2000-01-03,
+Object Management Group, Paris.
+URL: http://www.omg.org/
+Pedrycz, Witold & Fernando A. C. Gomide (1998), An Introduction to Fuzzy Sets: Analy-
+sis and Design (Complex Adaptive Systems), MIT Press, Boston.
+Pinto, Alexandre S., Luis F. Gates & Katianna Silva (2000), A BALSE-based environment
+for mobile applications, em J. N.de Souza & R.Boutaba, eds., ‘Managing QoS in
+Multimedia Networks’, Kluwer Academic Publishers, New York, pp. 163–175.
+Pirmez, Luci, Luis Fernando Carmo & Raimundo José Macêdo, eds. (2002), XX Simpósio
+Brasileiro de Redes de Computadores, Vol. 1, Núcleo de Computação Eletrônica da
+UFRJ, Sociedade Brasileira de Computação, Rio de Janeiro.
+Relay, Songle (n.d.), ‘Srd-05vdc-sl-c datasheet’, https://www.alldatasheet.com/
+datasheet-pdf/view/1131944/SONGLERELAY/SRD05VDCSLC.html.
+Acessado
+em: 19 jan. 2025.
+Salazar, Andres O, Diego A de M Fonseca, Caio ML Ribeiro, Vinicius M Xavier, Ga-
+briela MS Lopes, Kalynne G da S Maciel et al. (2023), ‘Study of the relationship
+between temperature and efficiency in photovoltaic systems’, RE&PQJ 21(5).
+Salazar, Andres Ortiz & RM Stephan (1993), ‘A bearingless method for induction machi-
+nes’, IEEE Transactions on Magnetics 29(6), 2965–2967.
+Santos, Euripedes P. & Fernando J. Von-Zuben (2000), Recurrent Neural Networks: De-
+sign and Applications, Vol. 13 de International Series on Computational Intelli-
+gence, CRC Press, Madrid, capítulo Efficient Second-Order Learning Algorithms
+for Discrete-Time Recurrent Neural Networks, pp. 47–75.
+Santos-Filho, José C. S. (2003), Combinação por ganho igual em ambiente com desvane-
+cimento arbitrário, Dissertação de mestrado, Faculdade de Engenharia Elétrica e de
+Computação, UNICAMP, Campinas, SP.
+Sichman, Jaime S. (2002), Sobre agentes móveis e fixos. Comunicação pessoal por e-
+mail.
+Solar, Canal (n.d.), ‘Inversores com múltiplos mppt’. Acessado: 2024.
+URL: https://canalsolar.com.br/inversores-com-multiplos-mppt/
+Solimães, Eliane G., Antonio T. Mircolles, Jamerson L. Pereira, Bruno G. Americano,
+Katianna Silva, Marcelo Borges & Mauricio F. Magalhães (2003), ‘A virtual la-
+boratory for autonomous airplanes experiments’, IEEE Transactions on Education
+46(1), 37–42.
+Souza, Rodrigo B, Adelardo AD Medeiros, João MA Nascimento, André L Maitelli &
+Heitor P Gomes (2006), Sisal, um sistema supervisório para elevação artificial de
+petróleo, em ‘Rio Oil & Gas Expo and Conference’, pp. 11–14.
+STA Eletrônica (2025), ‘Características principais do arduino uno’. Acessado em: 18
+jan. 2025.
+URL:
+https://www.sta-eletronica.com.br/artigos/arduinos/caracteristicas-
+principais-do-arduino-uno
+Wantronics (n.d.), ‘Comunicação i2c: O que é e como funciona’, https://wantronics.
+com.br/2024/01/01/comunicacao-i2c/. Acessado em: 19 jan. 2025.
+Apêndice A
+Informações adicionais
+A.1
+Algoritmo Arduino
+#include <Wire.h>
+#include <Adafruit_INA219.h>
+#include <BH1750.h>
+// Instanciação dos sensores
+Adafruit_INA219 ina219;
+BH1750 lightMeter;
+void setup() {
+// Inicialização da comunicação serial
+Serial.begin(9600);
+// Inicialização do sensor INA219
+if (!ina219.begin()) {
+Serial.println("Falha ao inicializar o INA219. Verifique as conexões!");
+while (1);
+// Inicialização do sensor BH1750
+lightMeter.begin();
+void loop() {
+// Leitura de valores do INA219
+float shuntvoltage = ina219.getShuntVoltage_mV();
+float busvoltage = ina219.getBusVoltage_V();
+float current_mA = ina219.getCurrent_mA();
+float voltage = busvoltage + (shuntvoltage / 1000);
+// Leitura de valores do BH1750
+uint16_t lux = lightMeter.readLightLevel();
+// Exibição dos valores na serial no formato especificado
+Serial.print(current_mA);
+Serial.print(";");
+Serial.print(voltage * 1000); // Convertendo para mV
+Serial.print(";");
+Serial.print(voltage * current_mA);
+Serial.print(";");
+Serial.println(lux);
+delay(500); // Aguarda 500ms antes da próxima leitura
+A.2
+Código completo LabVIEW

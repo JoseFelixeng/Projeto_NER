@@ -1,1 +1,903 @@
-Pantaleon, Efrain Marcelo Pulgar. Uma análise dos sons de alimentação de camarões brancos. uma abordagem de processamento de sinais / Efrain Marcelo Pulgar Pantaleon. - . f.: il. Monografia (Graduação) - Universidade Federal do Rio Grande do Norte, Departamento de Computação e Automação, Bacharelado em Engenharia da Computação, Natal, . Orientação: Dr. Luiz Affonso Henderson Guedes de Oliveira. Coorientação: Dr. Ignacio Sánchez Gendriz. . Bioacustica - Monografia. . Python - Monografia. . Camarão - Monografia. I. Oliveira, Luiz Affonso Henderson Guedes de. II. Gendriz, Ignacio Sánchez. III. Título. RN/UF/BCZM CDU Universidade Federal do Rio Grande do Norte - UFRN Sistema de Bibliotecas - SISBI Catalogação de Publicação na Fonte. UFRN - Biblioteca Central Zila Mamede Elaborado por Raimundo Muniz de Oliveira - CRB-/Efrain Marcelo Pulgar Pantaleon Uma Análise dos Sons de Alimentação de Camarões Brancos. Uma Abordagem de Processamento de Sinais Natal – RN Janeiro de Efrain Marcelo Pulgar Pantaleon Uma Análise dos Sons de Alimentação de Camarões Brancos. Uma Abordagem de Processamento de Sinais Trabalho de Conclusão de Curso de Engenha- ria de Computação da Universidade Federal do Rio Grande do Norte, apresentado como requisito parcial para a obtenção do grau de Bacharel em Engenharia de Computação Orientador: Luiz Aonso Henderson Guedes de Oliveira Coorientador: Ignacio Sánchez Gendriz Universidade Federal do Rio Grande do Norte – UFRN Departamento de Engenharia de Computação e Automação – DCA Curso de Engenharia de Computação Natal – RN Janeiro de Efrain Marcelo Pulgar Pantaleon Uma Análise dos Sons de Alimentação de Camarões Brancos. Uma Abordagem de Processamento de Sinais Trabalho de Conclusão de Curso de Engenha- ria de Computação da Universidade Federal do Rio Grande do Norte, apresentado como requisito parcial para a obtenção do grau de Bacharel em Engenharia de Computação Orientador: Luiz Aonso Henderson Guedes de Oliveira Coorientador: Ignacio Sánchez Gendriz Prof. Dr. Luiz Aﬀonso Henderson Guedes de Oliveira - Orientador UFRN Prof. Dr. Ignacio Sanchez Gendriz - Coorientador UFRN Natal – RN Janeiro de Aos meus pais, cuja força, amor e dedicação foram uma luz constante em minha jornada, enriquecendo cada passo ao longo da vida. À minha família, mesmo à distância, pelo apoio inabalável e pelas palavras de incentivo que me motivaram a superar cada desaﬁo. Aos amigos e colegas, que trouxeram leveza e alegria a essa caminhada com suas companhias e gestos de encorajamento. Aos meus orientadores, pela paciŸncia, dedicação e generosidade ao compartilhar seu vasto conhecimento, guiando este trabalho com sabedoria e inspiração. AGRADECIMENTOS À minha mãe, cuja força, carinho e dedicação constantes iluminaram minha trajetó- ria em todos os momentos. Por acreditar em mim sem hesitação, apoiar incondicionalmente cada sonho que lanço para o futuro, por mais ousado ou inesperado que seja, e por ser minha maior fonte de amor e inspiração. Ao meu pai, que sempre incentivou minha caminhada acadŸmica e, com seus vastos conhecimentos nas áreas exatas, me guiou com sabedoria e entusiasmo, ajudando a moldar minha paixão pela ciŸncia. À Universidade Federal do Rio Grande do Norte (UFRN), pela formação sólida e pelos recursos que tornaram possível minha jornada acadŸmica. À Escola de CiŸncia e Tecnologia (ECT), onde tive o privilégio de construir o primeiro ciclo da minha formação universitária, e ao Departamento de Computação e Automação (DCA), que me acolheu no segundo ciclo, conduzindo-me ao universo da Engenharia de Computação. Aos amigos e colegas, que com sua parceria e apoio tornaram essa caminhada mais leve, seja nos momentos de descontração ou nos estudos coletivos que tanto contribuíram para meu aprendizado. Aos colegas de bolsas e pesquisas, que enriqueceram minha formação técnica e prática, proporcionando experiŸncias que levo comigo até hoje em minha carreira. Com especial admiração, ao professor Ignacio Sanchez, cujo entusiasmo pela área de Processamento de Sinais Digitais transbordava em sala de aula, despertando em mim a empolgação de explorar um mundo rico e fascinante. Sua paixão pela área fez com que eu enxergasse a beleza de decifrar o que a natureza tenta nos comunicar, abrindo portas para minha dedicação a essa temática. A todos que, de alguma forma, contribuíram para a realização deste trabalho, meu mais sincero agradecimento. "Aqueles que são loucos o suﬁciente para pensar que podem mudar o mundo são os que, de fato, o fazem.” (Steve Jobs) RESUMO Este estudo tem como propósito desenvolver métodos utilizando as potencialidades dos tra- dicionais processos de processamento de sinais para a detecção automática de atividade de alimentação de camarões brancos Litopenaeus vannamei. Para atingir esse objetivo, foram implementadas ferramentas de processamento de sinais em Python, aplicadas às gravações de áudio dos camarões em um ambiente laboratorial. Esses camarões foram distribuídos em grupos, categorizados de acordo com seu peso e densidade. A metodologia subjacente aos códigos utilizados possibilita gerar resultados prontamente interpretáveis, permitindo sua aplicação imediata. Os resultados obtidos permitem aos pesquisadores explorar e- cientemente os dados acústicos relacionados à alimentação dos camarões, desvendando padrões e informações valiosas sobre esse processo alimentar. Dessa forma, este estudo contribuí signicativamente para melhorias do processo das análises do comportamento e das interações dos camarões no processo alimentar, uma área de forte interesse para a indústria de carcinicultura. Palavras-chaves: Processamento de Sinais Digitais; Python; Camarões; Ecologia Aquática ; Bioacústica ABSTRACT This study aims to develop methods using the potential of traditional signal processing processes for the automatic detection of feeding activity of white shrimp Litopenaeus vannamei. To achieve this goal, innovative signal processing tools in Python were used for shrimp audio applications in a laboratory environment. These shrimp were distributed into groups, categorized according to their weight and density. The methodology underlying the codes used makes it possible to generate readily interpretable results, allowing their immediate application. The results obtained allow researchers to eciently explore acoustic data related to shrimp feeding, uncovering patterns and valuable information about this feeding process. In this way, this study signicantly contributes to improvements in the process of analyzing the behavior and interactions of shrimp in the food process, an area of strong interest for the shrimp farming industry. Keywords: Digital Signal Processing; Python; Shrimp Aquatic Ecology; Bioacoustic LISTA DE ILUSTRAÇÕES Figura – Exemplar da espécie Litopenaeus vannamei . . . . . . . . . . . . . . . Figura – Sinal de Audio (imagem de cima) e Spectograma do sinal (imagem de baixo) de uma mordida/"click"de um camarão. O eixo X representa o tempo em milissegundos e as cores representam a energia do sinal em diferentes frequŸncias ao longo do tempo. Cores mais quentes (amarelo/- vermelho) indicam maior intensidade de energia, enquanto cores mais frias (azul/verde) representam menor intensidade. . . . . . . . . . . . Figura – A análise de um sinal composto pela soma de sinais senoidais básicos pode ser realizada através da Transformada Discreta de Fourier (DFT), que permite a visão do sinal tanto no domínio do tempo quanto no domínio da frequŸncia. Enquanto a DFT transforma o sinal do domínio do tempo para o domínio da frequŸncia, a Transformada Inversa de Fourier (iDFT) faz o oposto, convertendo-o do domínio da frequŸncia para o domínio do tempo. . . . . . . . . . . . . . . . . . . . . . . . . . Figura – Classicação de Pesquisas Cientícas de acordo com Turrioni e Mello . Figura – Aplicação de destaques para a classicação de pesquisa cientíca deste trabalho . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Figura – Pipeline do Algoritmo de processamento e registro dos momentos de atividade alimentar de camarão dentro do audio . . . . . . . . . . . . Figura – Análise de detecção de atividade alimentar: (a) Forma de onda do áudio, (b) Espectrograma do trecho de áudio, (c) Instantes de detecção automáticos via Librosa (linhas vermelhas) e semi-automáticos via Raven (linhas verdes). . . . . . . . . . . . . . . . . . . . . . . . . . . . Figura – Grade composta por grácos. As colunas representam diferentes pesos dos camarões (g, g, g, g e g), enquanto as linhas indicam diferentes densidades populacionais (, e camarões/m). Em cada gráco, são apresentados dois stem plots: o gráco azul representa o nível de atividade alimentar a cada segundos, calculado com as ferramentas da biblioteca Librosa, e o gráco vermelho mostra o nível alimentar, também a cada segundos, obtido pelo software Raven. Imagens adicionais com os subplots de todas as comparações realizadas no banco de dados estão disponíveis no Anexo. . . . . . . . . . . . . . Figura – Heatmap dos valores de RMSE entre os vetores de resultados obtidos pelo software Raven e pelo algoritmo implementado com a biblioteca Librosa na qual as linhas representam diferentes tamanhos de camarões (g, g, g, g e g) avaliados na amostra, enquanto as colunas representam densidades de camarões (, e camarões/m), subdivididas pelos arquivos A, B e C. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Figura – Heatmap dos valores de correlação entre os vetores de resultados obtidos pelo software Raven e pelo algoritmo implementado com a biblioteca Librosa. As linhas representam os diferentes tamanhos de camarões ava- liados (g, g, g, g e g), enquanto as colunas indicam as densidades populacionais (, e camarões/m), subdivididas pelos arquivos A, B e C. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Figura – Grade comparativa dos métodos de detecção aplicada a todas as amos- tras de áudio dos camarões com peso de g. . . . . . . . . . . . . . . . Figura – Grade comparativa dos métodos de detecção aplicada a todas as amos- tras de áudio dos camarões com peso de g. . . . . . . . . . . . . . . . Figura – Grade comparativa dos métodos de detecção aplicada a todas as amos- tras de áudio dos camarões com peso de g. . . . . . . . . . . . . . . . Figura – Grade comparativa dos métodos de detecção aplicada a todas as amos- tras de áudio dos camarões com peso de g. . . . . . . . . . . . . . . . Figura – Grade comparativa dos métodos de detecção aplicada a todas as amos- tras de áudio dos camarões com peso de g. . . . . . . . . . . . . . . . LISTA DE ABREVIATURAS E SIGLAS UFRPE Universidade Federal Rural do Pernambuco PAM Passive Acoustic Monitoring PDS Processamento Digital de Sinais RMSE Root Mean Squared Error IA InteligŸncia Artiﬁcial CNN Convolutional Neural Network RNN Recurrent Neural Network LISTA DE SÍMBOLOS ω Ômega SUMÁRIO INTRODUÇÃO . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Contextualização do Problema . . . . . . . . . . . . . . . . . . . . . . .Expectativas com o Desenvolvimento do Trabalho . . . . . . . . . . .Objetivos . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Estrutura do Trabalho . . . . . . . . . . . . . . . . . . . . . . . . . . . REVISÃO BIBLIOGRÁFICA . . . . . . . . . . . . . . . . . . . . . . .Importância econômica do Camarão Branco . . . . . . . . . . . . . . .Acústica da Alimentação: Mecanismos e Características . . . . . . . .Fundamentos de Processamento Digital de Sinais relacionados ao Trabalho . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Transformada Discreta de Fourier : Domínio FrequŸncia . . . . . . . . . . . ..STFT e Spectrograma . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Correlação de Pearson . . . . . . . . . . . . . . . . . . . . . . . . . . . . MATERIAIS E MÉTODOS . . . . . . . . . . . . . . . . . . . . . . . .Classiﬁcação da Pesquisa . . . . . . . . . . . . . . . . . . . . . . . . . .Processo de Coleta dos Dados Sonoros . . . . . . . . . . . . . . . . . ..Coleta de Dados . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..Descrição dos Grupos Estudados . . . . . . . . . . . . . . . . . . . . . . . ..Descrição da Detecção Semi-Automática de atividade alimentar utilizando o Software Raven . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .Método de Detecção Automática de Atividade Alimentar em Cama- rões utilizando Python . . . . . . . . . . . . . . . . . . . . . . . . . . . RESULTADOS E DISCUSSÕES . . . . . . . . . . . . . . . . . . . . .Visualização do Comportamento Predito em Comparação com os Dados Reais Obtidos via Software Raven . . . . . . . . . . . . . . . .Análise do Erro Médio Quadrático (RMSE) na Comparação dos Métodos de Detecção . . . . . . . . . . . . . . . . . . . . . . . . . . .Análise da Correlação na Comparação dos Métodos de Detecção . CONSIDERAÇÕES FINAIS . . . . . . . . . . . . . . . . . . . . . . . REFERĹNCIAS . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ANEXOS ANEXO A – GRADE DE ANÁLISE COMPARATIVA DOS MÉTO- DOS DE DETECÇÃO . . . . . . . . . . . . . . . . . INTRODUÇÃO .Contextualização do Problema A aquicultura é uma atividade agropecuária baseada na produção de organismos aquáticos em qualquer estágio de seu desenvolvimento, mantidos em ambiente controlado e de connamento (SIQUEIRA, ).O Brasil representa uma força signicativa no cenário mundial da Aquicultura, destacando-se como um dos principais produtores do continente americano e com potencial para se tornar um líder global dessa área. Nos últimos anos, a produção nacional neste setor vem sofrendo um crescimento consistente, expandindo-se em média % a cada ano, saltando de .toneladas no ano de para expressivas .toneladas em . Esse crescimento é impulsionado por diversos fatores, incluindo um mercado interno robusto, uma indústria de ração de animais aquáticos bem estabelecida e as condições ambientais favoráveis encontradas pelo extenso território brasileiro, marcado por um clima tropical com abundância de recursos hídricos, propícios para o cultivo aquícola. (VALENTI et al., ) em seu estudo sobre a Aquicultura no Brasil destaca a região Nordeste com um grande papel histórico e crucial na produção aquícola do país, sendo a principal área produtiva de camarão branco. Em suas notações constatou que dentro da região se salienta o cultivo de espécies em diferentes setores, como peixes de água doce, camarão marinho, moluscos, camarões de água doce e rãs, beneciadas por um ambiente propício ao seu desenvolvimento. Vale ressaltar que a produção de camarão marinho se concentra principalmente nos estados do Ceará e Rio Grande do Norte, onde as condições ambientais e a infraestrutura disponível favorecem essa atividade (PEIXOTO et al., ). No contexto da aquicultura supramencionado, um dos principais desaos enfrenta- dos pelos produtores é o custo signicativo ligado à alimentação dos organismos aquáticos. Esses gastos com alimentação representam uma parte substancial, variando entre a %, do total de despesas incorridas na operação (ARAUJO et al., ). Além disso, o desperdício decorrente do excesso de ração não aproveitada na água não apenas aumenta os custos com alimentação, mas também eleva os riscos de contaminação, gerando despesas adicionais relacionadas à manutenção da qualidade da água nas estruturas de criação desses organismos subaquáticos. A indústria de carcinicultura enfrenta essas diculdades relacio- nadas ao baixo aproveitamento dos insumos investidos e à escassez de informações sobre o desenvolvimento desses animais subaquáticos, o que impacta diretamente nos produtores, que enfrentam diariamente uma série de obstáculos prejudiciais à eciŸncia operacional e à Capítulo . Introdução sustentabilidade do seu negócio. Um estudo com base no Censo da Carcinicultura de , realizado pela Associação Brasileira de Criadores de Camarão (ABCC), constatou que a maioria esmagadora das fazendas (%) é considerada tecnicamente ineciente (ARAUJO et al., ). A principal causa atribuída a essa ineciŸncia foi a baixa densidade média de estocagem, ou seja, a quantidade média de camarões mantidos em um determinado espaço do viveiro. Quando essa densidade está abaixo do nível desejado, pode resultar em uma utilização inecaz dos recursos disponíveis, como espaço, água e ração. Esse cenário pode levar a um aumento nos custos operacionais por unidade de camarão produzido, uma vez que os custos xos associados à operação do viveiro, tais como os custos de construção e manutenção, são distribuídos entre um número menor de camarões. Devido ao contexto abordado, criadores de camarão estão em busca de soluções tecnológicas que propiciem melhorias aos métodos de alimentação. Entre elas, a automação do processo alimentar vem se tornando o maior avanço em inovação, controle e eciŸncia de produção e na redução de custos. Essa automação melhora o crescimento animal e as taxas de conversão alimentar, que é a relação de quantos quilos de ração são necessários para produzir kg de camarão vivo, além de reduzir as necessidades de mão-de-obra. Essa crescente demanda por soluções tecnológicas ecazes ressalta a relevância de pesquisas como a presente, que buscam desenvolver ferramentas e métodos para aprimorar a produtividade e a gestão dos viveiros de camarão, visando impulsionar a aquicultura de camarões a novos patamares de eciŸncia e sustentabilidade. .Expectativas com o Desenvolvimento do Trabalho O desenvolvimento do software proposto nesta pesquisa representa um marco importante para a indústria da carcinicultura, especialmente em relação ao método atualmente utilizado, o software Raven, amplamente empregado na análise das detecções de alimentação. Embora o Raven seja uma ferramenta consolidada, sua aplicação depende de licenças pagas e de alto poder computacional, o que pode limitar o acesso e a implementação em diversos contextos. Por outro lado, o software desenvolvido nesta pesquisa utiliza bibliotecas open source, como a Librosa, e foi inteiramente implementado em Python, o que traz signicativos ganhos em termos de acessibilidade e exibilidade. Além disso, por ser desenvolvido em Python, o software apresenta uma grande facilidade para ser embarcado em sistemas de Internet das Coisas (IoT), permitindo sua integração com dispositivos de monitoramento em tempo real diretamente nos viveiros. Esses aspectos tornam o software uma solução mais leve, acessível e econômica para os produtores, possibilitando maior adesão à tecnologia e ampliando seu impacto na indústria. O monitoramento acústico passivo (PAM) tem se tornado uma ferramenta cada vez Capítulo . Introdução mais popular para estudar o comportamento de animais aquáticos, e a aplicação de técnicas de processamento de sinal de áudio oferece uma perspectiva de impacto positivo signicativo na eciŸncia e rentabilidade da produção de camarão (REIS et al., ) . A instalação do equipamento em viveiros, juntamente com os serviços de monitoramento da atividade alimentar, surge como uma solução promissora para otimizar o manejo dos recursos e melhorar a qualidade da produção. O PAM é em uma linha de pesquisa já previamente explorada pelo autor, que resultou em publicações como "EcoAcousticAnalyzer: A long-term acoustic data analysis tool for environmental monitoring ()"(PULGAR-PANTALEON; SANCHEZ-GENDRIZ; GUEDES, ) e "Python-based acoustic detection of Penaeus vannamei feeding behavior ()"(SáNCHEZ-GENDRIZ et al., ). Este avanço tecnológico visa superar desaos identicados anteriormente, como a falta de transparŸncia no crescimento e desenvolvimento alimentar dos camarões, bem como o uso inadequado de insumos na sua criação. Ao proporcionar uma compreensão mais detalhada do comportamento dos camarões em relação aos insumos fornecidos e das condições do ambiente aquático, essas soluções tŸm o potencial de gerar indicadores precisos sobre o desempenho alimentar. Isso possibilita a tomada de decisões mais informadas, que aprimoram as práticas de manejo e nutrição, resultando em uma produção mais eciente e sustentável. Assim, o desenvolvimento do software proposto não só representa uma evolução tecnológica, mas também uma contribuição signicativa para a indústria da carcinicultura, já que ao reduzir a necessidade de equipamentos robustos e caros, o software facilita o monitoramento contínuo e automatizado, melhorando a eciŸncia alimentar e a gestão dos viveiros de camarões. Essa inovação, portanto, abre caminhos para a modernização da carcinicultura, promovendo maior sustentabilidade e competitividade no setor. .Objetivos O presente trabalho tem como Objetivo Geral desenvolver um detector de eventos sonoros associado à atividade alimentar de camarões (Litopenaeus vannamei), implemen- tado utilizando bibliotecas de Python, com foco em criar uma solução inovadora e acessível para a indústria de carcinicultura, facilitando o monitoramento automatizado e eciente do comportamento alimentar desses organismos. Para alcançar esse objetivo, foram denidos os seguintes objetivos especíﬁcos: • Adaptar e simplicar técnicas de processamento de sinal já empregadas no estudo da atividade alimentar de camarões (Litopenaeus vannamei), que atualmente utilizam o software Raven. Capítulo . Introdução • Implementar essas técnicas em um software mais acessível, visando oferecer uma ferramenta de detecção automatizada que possa ser amplamente utilizada pelos produtores de camarão. • Desenvolver um algoritmo que automatize o cálculo do nível de atividade alimen- tar, garantindo uma análise eciente e fornecendo informações valiosas sobre o comportamento alimentar dos camarões. • Assegurar que a implementação do software permita uma execução rápida e ecaz, proporcionando resultados em tempo hábil para a tomada de decisões estratégicas pelos produtores. Dessa forma, os objetivos e metas estabelecidos neste trabalho tŸm o propósito de desenvolver uma solução tecnológica que atenda às necessidades especícas do setor da carcinicultura, proporcionando aos produtores ferramentas ecientes para otimizar a produção e a gestão de seus viveiros de camarão. .Estrutura do Trabalho Esta parte do trabalho apresenta uma introdução ao tema, destacando os fatores que motivam a implantação da ideia, além da justicativa e dos objetivos estabelecidos. Em seguida, o Capítulo aborda a Descrição e Fundamentos Teóricos nos quais a pesquisa se baseia. O Capítulo , por sua vez, detalha a metodologia e os materiais utilizados para o desenvolvimento do estudo. O Capítulo apresenta os resultados obtidos e as discussões das implementações realizadas. Por m, o Capítulo traz as principais conclusões e contribuições deste trabalho, encerrando a análise de forma conclusiva e apontando possíveis direções para futuras pesquisas. REVISÃO BIBLIOGRÁFICA .Importância econômica do Camarão Branco Com base em um estudo conduzido pela Organização das Nações Unidas para Alimentação e Agricultura (FAO, ) , é possível observar que o camarão branco do Pacíco, Litopenaeus vannamei, emerge como a espécie preponderante na carcinicultura mundial. Resultados da pesquisa considera que no ano de , deu-se a maior produção no mercado com ,milhões de toneladas concebidas, o que equivalente a % da produção global de crustáceos daquele ano. Valenti (VALENTI et al., ) investigaram a relação entre o mercado de carcinicultura e a expressiva presença do L. vannamei. Ficou evidente que as vantagens do cultivo dessa espécie estão intrinsecamente ligadas à sua capacidade de resistŸncia e adaptação a diferentes condições ambientais e de manejo. Adicionalmente, destaca-se seu potencial de crescimento acelerado e sua habilidade em transformar dietas articiais em ganho de peso, resultando em um retorno econômico satisfatório na atividade. Com esse leque de proveitos, o Camarão Branco do Pacíco reforça sua demanda e consolida sua posição como uma das espécies mais relevantes e valorizadas na indústria global da carcinicultura. No Brasil, o Litopenaeus vannamei ocupa um lugar de destaque na aquicultura nacional, sendo a espécie marinha mais cultivada no país. As principais áreas produtivas estão localizadas no Nordeste, com os estados do Rio Grande do Norte e Ceará liderando a produção. O Rio Grande do Norte é o maior produtor, responsável por cerca de % da produção nacional, enquanto o Ceará contribui com aproximadamente %. Juntos, esses dois estados respondem por mais de % da produção de camarão branco no Brasil, consolidando a importância dessa espécie para a economia local e para o mercado brasileiro de aquicultura (VALENTI et al., ). Capítulo . Revisão Bibliográﬁca Figura – Exemplar da espécie Litopenaeus vannamei Fonte: https://gia.org.br/portal/camarao-marinho-litopenaeus-vanammei-boone-/ .Acústica da Alimentação: Mecanismos e Características Lillis et al. () investigaram a correlação entre o som produzido por diferentes espécies de crustáceos e os momentos especícos em que ocorrem. Um exemplo notável foi o som emitido pelo camarão-pistola (Alpheus spp.) ao fechar sua garra adaptada durante a defesa territorial, evidenciando essa relação. Além disso, outras referŸncias na literatura corroboram essas descobertas. (JéZéQUEL et al., ) examinaram o comportamento das lagostas do gŸnero Homarus em situações de perigo e observaram um susurro acentuado ao contraírem músculos especícos. Em análises semelhantes envolvendo outra família de lagostas (Palinuridae), (HAMILTON et al., ) registraram o som de uma raspagem, produzido por meio de um sistema estridulatório localizado na base da antena. Diversos estudos, como os conduzidos por (COQUEREAU et al., ), (SILVA et al., ) e (SMITH; TABRETT, ), destacam que atividades como movimentação no substrato, natação e alimentação podem resultar em ruídos involuntários por parte dos crustáceos. Além disso, (BERK, ), por meio do Monitoramento Acústico Passivo em uma população de Litopenaeus setiferus, também conhecido como Camarão Branco do Norte, no Golfo do México, registrou um padrão sonoro associado à atividade alimentar desses camarões, detalhando os atributos sonoros desse padrão e descrevendo-o como um tipo de som semelhante a "fritura"e mais tarde esse padrão sonoro cou popularmente conhecido como "clicks". Esse estudo se destaca pela sua relevância para os avanços da Ecoacústica, evidenciando a importância do entendimento dos sons emitidos pelos crustáceos. Capítulo . Revisão Bibliográﬁca Figura – Sinal de Audio (imagem de cima) e Spectograma do sinal (imagem de baixo) de uma mordida/"click"de um camarão. O eixo X representa o tempo em milissegundos e as cores representam a energia do sinal em diferentes frequŸncias ao longo do tempo. Cores mais quentes (amarelo/vermelho) indicam maior intensidade de energia, enquanto cores mais frias (azul/verde) representam menor intensidade. Fonte: Autor () .Fundamentos de Processamento Digital de Sinais relacionados ao Trabalho Sanchez-Gendriz (SANCHEZ-GENDRIZ, ) enfatiza que o campo da ecoacústica tem tirado grande proveito ao considerar os sons do ambiente como atributos ecológicos imprescindíveis e ressalta que esses sons podem oferecer insights marcantes sobre o funcionamento desses ecossistemas. Nesse contexto, o autor reconhece que o uso intenso do PAM e os avanços tecnológicos, tornou viável a coleta de sons continuamente por longos períodos, proporcionando uma oportunidade única para novas descobertas, mas também representando desaos signicativos na análise desses dados. Para essa análise mais aprofundada, o domínio e aplicação dos princípios de Processamento Digital de Sinais (PDS) se tornam cruciais. Com o emprego dessas técnicas, é possível extrair informações valiosas dos dados acústicos coletados, promovendo uma compreensão mais detalhada dos padrões e tendŸncias presentes na paisagem sonora. A seção em questão tem como propósito apresentar os principais conceitos e técnicas fundamentais de PDS empregados no estudo, os quais se mostram relevantes para a análise dos sinais acústicos associados ao comportamento alimentar dos camarões. Ao assimilar e aplicar esses fundamentos, os pesquisadores estarão habilitados a explorar de maneira mais aprofundada os dados acústicos, proporcionando uma compreensão mais abrangente das interações entre os camarões e os sons associados à sua atividade alimentar. Essa análise Capítulo . Revisão Bibliográﬁca detalhada permitirá identicar padrões acústicos especícos relacionados ao comportamento alimentar, o que pode ser crucial para otimizar o manejo e a alimentação dos camarões em ambientes controlados. ..Transformada Discreta de Fourier : Domínio FrequŸncia Lyons (LYONS, ) endossa a importância da decomposição do sinal em distintas bandas de frequŸncia. Nessa direção, o autor destaca que a Transformada Discreta de Fourrier (DFT) demonstra ser uma importante ferramenta para destacar os objetivos supramencionados, haja vista que nos métodos mais ordinários a principal paramerização ocorre em função do tempo, na qual a representação do sinal será evidenciada pelas alternâncias de suas amplitudes ao longo da série temporal, já na DFT o desmembramento resultará em uma série senoidal, que pamaretrizará o sinal não mais em função do tempo, mas sim nas suas amplitudes e frequŸncias, compondo, portanto, o sinal original em um outro domínio analítico. A expressão matemática que aplica a DFT sobre um sinal discreto pode ser descrita da seguinte forma: X[k] = N− n=x[n] · e−j π N kn Diante desse arcabouço teórico, é relevante reforçar que é possível utilizar a inversa da DFT para a eventual reconstrução do sinal com o intuito de restaurar as propriedades originais. Capítulo . Revisão Bibliográﬁca Figura – A análise de um sinal composto pela soma de sinais senoidais básicos pode ser realizada através da Transformada Discreta de Fourier (DFT), que permite a visão do sinal tanto no domínio do tempo quanto no domínio da frequŸncia. Enquanto a DFT transforma o sinal do domínio do tempo para o domínio da frequŸncia, a Transformada Inversa de Fourier (iDFT) faz o oposto, convertendo- o do domínio da frequŸncia para o domínio do tempo. Fonte: (SANCHEZ-GENDRIZ, ) Embora a aplicação direta da DFT possa ser lenta quando se envolve grandes conjuntos de dados, existem os algoritmos de Transformada Rápida de Fourier (FFT) que aceleram o processo. Esses algoritmos estão amplamente presentes em softwares como Matlab, Python e R. Apesar de útil para decompor o sinal em componentes de frequŸncia, a DFT não pode acompanhar as variações dessas componentes ao longo do tempo. Para isso, utilizamos métodos como a Transformada de Fourier de Tempo Curto (STFT), que nos permitem analisar essas mudanças. ..STFT e Spectrograma A partir das diretrizes conceituais supramencionadas, pode-se constatar que a STFT (Transformada de Fourier de Curto Prazo) permite uma compreensão muito rica e detalhada da evolução espectral dos sinais digitais ao longo de uma série temporal. Essa técnica, ao contrário da Transformada de Fourier tradicional, que analisa um sinal em sua totalidade, segmenta o sinal em pequenos trechos, ou janelas, e aplica a Transformada de Fourier a cada janela separadamente. Isso permite capturar informações sobre a variação espectral do sinal ao longo do tempo, fornecendo uma representação mais detalhada das mudanças de frequŸncia que ocorrem durante a execução do sinal. Para calcular a STFT de um sinal discreto, temos a seguinte expressão matemática : Capítulo . Revisão Bibliográﬁca X[m, ω] = N N− n=x[n] · w[n −m] · e−jωn Essa expressão deverá receber um tamanho do janelamento que irá particionar o sinal e aplicar a DFT em cima dos "pedaços"de sinais discretos. Uma das representações visuais mais comuns da STFT é o espectrograma, que exibe a magnitude da transformada de Fourier de curto prazo em um gráco bidimensional, onde o eixo horizontal representa o tempo, o eixo vertical representa a frequŸncia e a intensidade das cores ou tons representa a magnitude da energia espectral em cada ponto no tempo e frequŸncia. Oppenheim, A. V. e Schafer, R. W (OPPENHEIM, ) realçam que a representação gráca fornece uma visualização intuitiva e informativa das características temporais e espectrais do sinal, podendo ser vivamente aplicada em observação de sinais de áudio, como na análise de fala, música, sinais de sonar e muitas outras aplicações. ..Correlação de Pearson A correlação de Pearson é uma ferramenta estatística crucial em muitos estudos e análises de dados por ter como kernel metodológico avaliar a relação linear entre duas variáveis através de um coeciente r que varia de -a (MUKAKA, ). Essa metodo- logia permite aos pesquisadores e analistas identicar padrões, tendŸncias e associações importantes nos dados (SCHOBER; BOER; SCHWARTE, ). Isso não apenas ajuda na compreensão da estrutura subjacente dos fenômenos estudados, mas também pode fornecer insights valiosos para orientar a tomada de decisões em uma ampla gama de contextos. Pode-se obter esse coeciente de correlação seguindo a seguinte expressão matemá- tica: r = n i=(xi −¯x)(yi −¯y) n i=(xi −¯x)n i=(yi −¯y)Com a devida interpretação da fórmula, como resposta o valor de indica uma correlação positiva perfeita, o que signica que conforme uma variável aumenta, a outra também aumenta de forma linear. Um valor de -indica uma correlação negativa perfeita, o oposto da correlação positiva perfeita, onde conforme uma variável aumenta, a outra diminui linearmente. Um valor de indica nenhuma correlação linear, o que signica que não há uma relação linear entre as duas variáveis. Quanto mais próximo o valor de restiver de -ou , mais forte é a relação linear entre as variáveis, enquanto valores próximos de indicam uma correlação mais fraca tendendo a nula. MATERIAIS E MÉTODOS O capítulo em questão fornecerá uma análise detalhada dos instrumentos e métodos empregados para conduzir esta pesquisa a m de oferecer uma visão abrangente do processo de coleta, processamento e a análise de dados. Inicialmente, haverá uma classicação da pesquisa cientíca, visando contextualizar o estudo dentro do panorama acadŸmico. Em seguida, haverá uma exposição sobre as técnicas de gravação adotadas, fornecendo uma descrição minuciosa dos parâmetros utilizados, como taxa de amostragem e resolução de bits, que resultaram na base de dados sonoros como principal artefato do estudo. Posteriormente, examinaremos os protocolos de alimentação dos camarões em ambiente laboratorial, destacando a importância do controle preciso das condições ambientais para garantir resultados conáveis. Além disso, discutiremos as ferramentas de programação empregadas para montar o material de estudo, enfatizando sua relevância na organização e análise dos dados obtidos. Através dessa abordagem integrada, buscamos fornecer uma compreensão abrangente dos métodos utilizados nesta pesquisa e sua contribuição para o avanço do conhecimento na área. .Classiﬁcação da Pesquisa Este Trabalho de Conclusão de Curso (TCC) será especicado segundo a classicação da pesquisa cientíca desenvolvida por Turrioni e Mello (TURRIONI; MELLO, ), na qual leva em consideração uma variedade de aspectos metodológicos empregados, o que proporciona uma base sólida para orientar a condução e a análise de estudos tecnológicos, obtendo uma compreensão mais clara e organizada do processo tratado. Figura – Classicação de Pesquisas Cientícas de acordo com Turrioni e Mello Fonte: Adaptado de (TURRIONI; MELLO, ) Podemos iniciar destacando que este trabalho possui uma natureza aplicada visto se baseará em dados reais como objeto de estudo, com o objetivo de explorar esses Capítulo . Materiais e Métodos dados utilizando fundamentos de Processamento Digital de Sinais. Essa abordagem será predominantemente quantitativa, focada na análise numérica dos dados. Para isso, serão empregados métodos experimentais, nos quais os algoritmos serão testados e os resultados serão registrados sistematicamente. A partir da elucidação das informações podemos destacar sobre a gura os campos de reconhecimento ciŸntico do presente TCC gerando um plano classicatório para nosso desenvolvimento metodológico como o visto na gura . Figura – Aplicação de destaques para a classicação de pesquisa cientíca deste trabalho Fonte: Adaptado de (TURRIONI; MELLO, ) .Processo de Coleta dos Dados Sonoros A corrente seção visa detalhar o principal instrumento de investigação empregado nesta pesquisa, abordando minuciosamente o processo de coleta dos dados sonoros durante a alimentação dos camarões. Ao utilizar uma variedade de grupos de áudio, pretende-se possuir um arcabouço extenso de informações rico e diversicado, pronto para ser explorado em profundidade. Além disso, será apresentado o método atualmente utilizado para marcar os momentos de atividade alimentar na qual já foi abordado anteriormente em estudos do autor, em "Python-based acoustic detection of Penaeus vannamei feeding behavior ()"(SáNCHEZ-GENDRIZ et al., ). Posteriormente adentra-se em uma descrição de um novo algoritmo para realizar essa tarefa. Este algoritmo, desenvolvido com o auxílio de bibliotecas de código aberto, visa introduzir uma nova abordagem para a detecção da atividade alimentar, proporcionando uma perspectiva inovadora e eciente para a análise dos dados coletados. ..Coleta de Dados A norma adotada para a extração dos dados efetuou-se em um ambiente controlado, localizado no laboratório de pesquisadores da Universidade Federal Rural de Pernambuco (UFRPE). Este ambiente consistia em um aquário de vidro preenchido com água, no qual Capítulo . Materiais e Métodos foi instalado um gravador conectado a um hidrofone submerso. O processo de gravação dos camarões foi realizado com cuidado para garantir a alta qualidade dos dados acústicos capturados. O sistema de captura de sinal acústico operava com um hidrofone omnidirecional SoundTrap STD (Ocean Instruments, Nova Zelândia), com uma taxa de amostragem de kHz, bits de resolução e sensibilidade de -dB, permitindo a captura de sons com frequŸncias máximas de kHz. Essa conguração foi escolhida para capturar os sons característicos de "fritura"gerados pelos "cliques"dos camarões durante a alimentação. O ambiente monitorado estava livre de ruídos e qualquer outra interferŸncia sonora, garantindo a captura de sons de alta qualidade (HAMILTON et al., ). O processo de gravação seguiu um protocolo rigoroso: os camarões foram transferidos para um tanque de gravação de plástico forrado internamente com espuma acústica, preenchido com L de água do mar articial, preparada com a mistura de sais especícos em proporções adequadas para simular a composição química da água do mar natural. Após um período de aclimatação de uma hora, foram realizadas gravações de minutos para cada classe de peso de camarões. Para lidar com o tamanho dos arquivos de som gerados devido à alta taxa de amostragem (kHz), foi aplicado um ltro de banda para remover a largura de banda acima de kHz. Isso simulou uma taxa de amostragem de kHz, permitindo comparar se essa redução afetava a potŸncia máxima e a frequŸncia de pico. No nal, os arquivos resultantes de áudio foram salvos no formato .wav. ..Descrição dos Grupos Estudados Para enriquecer as observações, foram realizadas capturas de áudio utilizando diferentes grupos de camarões branco. Estes grupos foram divididos com base no peso dos indivíduos, medido em gramas, e na densidade populacional, expressa pela quantidade de camarões por metro cúbico. Ao todo foram selecionadas classes de camarões com pesos distintos para comporem as análises, sendo elas camarões de g, g, g, g e g. Em relação à densidade populacional, foram escolhidos grupos distintos, com densidades de , e unidades por metro cúbico. Para obter uma melhor variedade de informações pertinentes a cada subgrupo, por exemplo, na coleta de dados do grupo de camarões de gramas amostrados em densidade de unidades por metro cúbico, foram realizadas gravações, totalizando assim grupos para pesos, grupos de densidade e subgrupos, totalizando gravações de áudio para nosso estudo. Essa abordagem permitiu uma investigação mais detalhada sobre como o comportamento sonoro durante o processo alimentar varia entre camarões de diferentes pesos e em ambientes com distintas densidades populacionais (HAMILTON et al., ). Esses parâmetros adicionais de tamanho e de densidade de camarões nas amostras de áudio foram essenciais para enriquecer o objeto de estudo, fornecendo uma gama mais ampla de dados que serão posteriormente submetidos Capítulo . Materiais e Métodos a ferramentas de processamento de sinais. ..Descrição da Detecção Semi-Automática de atividade alimentar utili- zando o Software Raven O software Raven (Bioacoustics Research Program, ) é uma ferramenta de grande relevância na bioacústica, com aplicações signicativas na detecção de sons em diversas áreas de pesquisa, especialmente em estudos sobre mamíferos marinhos e anfíbios. O Raven Pro, versão ., é uma ferramenta interativa de análise de som que permite aos pesquisadores processar e examinar registros acústicos de forma detalhada. Com funcionalidades avançadas, como a visualização de espectrogramas e a identicação de padrões sonoros especícos, o Raven Pro é essencial para a identicação e estudo das vocalizações de animais. Além disso, o software facilita a análise de dados acústicos, contribuindo signicativamente para a compreensão do comportamento e da ecologia das espécies estudadas. Conforme mencionado, o uso do software Raven foi adotado pela equipe de pes- quisadores da UFRPE em seus estudos sobre atividades alimentares de camarões. As funcionalidades avançadas do Raven foram utilizadas para identicar os padrões sonoros que compõem o "click" dos diferentes tamanhos de camarões. No software, foram inseridos os parâmetros adequados para a identicação dessas atividades, conseguindo detectar atividades alimentares de camarões a partir de ,g. O software foi aplicado ao banco de dados de áudio mencionado anteriormente, com o objetivo de coletar os momentos especícos (em segundos) do áudio em que ocorriam as mordidas, alcançando uma precisão de milissegundos em suas detecções (HAMILTON et al., ). Os registros dos instantes de tempo dos "clicks" de cada áudio foram armazenados em uma pasta, com uma identicação clara para cada arquivo, indicando a qual gravação aqueles dados pertencem. Esses dados são de extrema importância para a pesquisa, pois servirão como mecanismo para validação dos resultados do método de detecção que será abordado posteriormente. Isso permitirá vericar se as detecções estão ocorrendo nos momentos desejados e se as taxas de atividades por uma determinada janela de tempo estão se comportando conforme o esperado. Além disso, é importante destacar que essas anotações, indicando os instantes de tempo dos "clicks" , possibilitam novas formas de visualizar o banco de dados, atribuindo rótulos para o momento do audio e suas caracteristicas relacionadas ao processo alimentar. Essa categorização pode ser extremamente útil para estudos futuros, oferecendo um recurso valioso para a análise e interpretação dos dados. Capítulo . Materiais e Métodos .Método de Detecção Automática de Atividade Alimentar em Camarões utilizando Python Para desenvolver uma ferramenta de detecção automatica de processos alimentares de camarão, optou-se por implementar na linguagem de programação Python (Python Soft- ware Foundation, ) e essa escolha se deve ao fato dele ser amplamente reconhecido pela sua simplicidade e eciŸncia, permitindo que os pesquisadores desenvolvam e implementem algoritmos complexos de maneira intuitiva e ecaz.Além disso o Python oferece uma gama diversicada de bibliotecas robustas e atualizadas, como NumPy, SciPy, Matplotlib e, especialmente, a biblioteca Librosa (MCFEE et al., ), que é amplamente utilizada para a análise de sinais de áudio. Essas bibliotecas fornecem ferramentas poderosas e versáteis para o desenvolvimento de soluções sosticadas, desde a ltragem e transformação de sinais até a visualização e interpretação dos dados analisados. Dada a relevância das bibliotecas do Python previamente mencionadas, especial- mente a Librosa, já devidamente validada em diversos estudos acadŸmicos que versem a análise de informações sonoras, utilizamos funções consagradas dessa biblioteca para detectar a atividade alimentar dos camarões. Especicamente, emprega-se as funções ‘librosa.onset_strength‘ e ‘librosa.onset_detect‘. A função ‘librosa.onset_strength‘ calcula a força dos onsets, descreve a variação da amplitude do sinal ao longo do tempo, desta- cando mudanças signicativas na intensidade. Essa representação é crucial para identicar momentos em que ocorrem eventos acústicos notáveis, como os sons produzidos pelos camarões durante a alimentação. Detectar essas variações permite que algoritmos, como o ’librosa.onset_detect’, identiquem os onsets, que são pontos no tempo caracterizados por aumentos repentinos na energia do sinal, correspondendo a eventos sonoros distintos. No contexto da nossa pesquisa, esses onsets representam os momentos de atividade alimentar dos camarões, como os "clicks" que ocorrem durante a alimentação. A utilização dessas funções em conjunto são fundamentais para identicar os instantes exatos em que ocorrem os eventos de alimentação, permitindo uma análise precisa e detalhada da atividade alimentar dos camarões. Ao captar os instantes de tempo detectados por ‘librosa.onset_detect‘, podemos mapear os padrões de alimentação e, assim, obter uma compreensão mais profunda do comportamento alimentar dos camarões sob diferentes condições experimentais. Para cada arquivo de áudio, aplicou-se um algoritmo que processava os dados sonoros e gerava um vetor contendo os instantes em segundos em que ocorreram as atividades alimentares. Devido à extensão dos arquivos de áudio, a leitura era realizada em fragmentos de minuto, garantindo uma gestão eciente da memória e do processamento. Cada fragmento era analisado individualmente para detectar os instantes de onsets, correspondentes aos eventos de alimentação. Ao nal do processamento, todos os momentos Capítulo . Materiais e Métodos detectados em cada minuto eram consolidados em um único vetor, que era então salvo em um arquivo no formato .h. Posteriormente, esses momentos identicados pelo algoritmo serão comparados com os instantes de atividade alimentar coletados pelos pesquisadores da Universidade de Pernambuco, permitindo uma validação rigorosa dos resultados obtidos através do nosso método automatizado. Figura – Pipeline do Algoritmo de processamento e registro dos momentos de atividade alimentar de camarão dentro do audio Fonte: Autor () Para visualizar a detecção e avaliar o desempenho do algoritmo descrito anteri- ormente, aplicamos o pipeline a um trecho de sinal de áudio do nosso banco de dados, com duração de segundo. Essa abordagem permite analisar o trecho de áudio, suas características e os instantes detectados pelo algoritmo. No subplot projetado, o gráco superior exibe a forma de onda do sinal de áudio, permitindo uma análise direta do padrão temporal. O gráco intermediário apresenta um espectrograma desse trecho de áudio, proporcionando uma observação mais detalhada das atividades no domínio da frequŸncia ao longo do tempo, permitindo detectar visualmente os instantes de atividade. O terceiro subplot mostra os instantes de detecção identicados automaticamente via Librosa, in- dicados por linhas verticais vermelhas. Para ns de comparação, também incluímos os dados detectados semi-automaticamente utilizando o software Raven, com os instantes identicados por linhas verticais verdes, possibilitando a validação da precisão e da ecácia do algoritmo implementado. Capítulo . Materiais e Métodos Figura – Análise de detecção de atividade alimentar: (a) Forma de onda do áudio, (b) Espectrograma do trecho de áudio, (c) Instantes de detecção automáticos via Librosa (linhas vermelhas) e semi-automáticos via Raven (linhas verdes). Fonte: Autor () RESULTADOS E DISCUSSÕES Este capítulo apresenta uma análise aprofundada dos resultados obtidos pelo algoritmo de detecção automática de atividade alimentar. Conforme detalhado no capítulo , a metodologia empregada para a coleta e análise dos dados envolveu o processamento de áudios que geraram vetores contendo os momentos exatos, em segundos, das atividades alimentares detectadas. Esses resultados serão meticulosamente comparados aos vetores que representam os instantes de atividade alimentar observados de maneira semi-automática pelos pesquisadores da Universidade de Pernambuco, utilizando o Software Raven. Essa abordagem não apenas demonstra a viabilidade e ecácia do uso de algoritmos automatizados na detecção de atividades alimentares, mas também contribui signicativa- mente para o aprimoramento das técnicas de monitoramento. A comparação entre os dados obtidos pelo algoritmo e as observações semi-automatizadas fornece insights valiosos, que podem orientar futuras pesquisas e avanços na área. Com uma análise detalhada e crítica, este capítulo busca validar a precisão do método automatizado e explorar as possibilidades de sua aplicação em estudos subsequentes. .Visualização do Comportamento Predito em Comparação com os Dados Reais Obtidos via Software Raven Durante o processo de criação de modelos preditivos, é essencial destacar a impor- tância da ilustração comparativa entre os resultados gerados e os dados reais. (ZUMBA et al., ) armam que os modelos de classicação são justicados não apenas por seus resultados, mas também pela convergŸncia desses resultados com a realidade investigada. Os autores enfatizam que existem várias métricas para medir a aproximação entre o modelo preditivo e a realidade, que geralmente são extraídos de uma matriz de confusão. Neste trabalho, foi utilizado uma grade de grácos comparativos, representada na gura , para essa nalidade. Capítulo . Resultados e Discussões Figura – Grade composta por grácos. As colunas representam diferentes pesos dos camarões (g, g, g, g e g), enquanto as linhas indicam diferentes densidades populacionais (, e camarões/m). Em cada gráco, são apresentados dois stem plots: o gráco azul representa o nível de atividade alimentar a cada segundos, calculado com as ferramentas da biblioteca Librosa, e o gráco vermelho mostra o nível alimentar, também a cada segundos, obtido pelo software Raven. Imagens adicionais com os subplots de todas as comparações realizadas no banco de dados estão disponíveis no Anexo. Fonte: Autor () Ao analisar o conjunto de grácos, observa-se que o comportamento do algoritmo utilizando o Librosa é visualmente próximo ao comportamento observado nos dados coletados através do método semiautomático. As tendŸncias de comportamento entre os dois métodos estão em sintonia, demonstrando que o algoritmo desenvolvido pode replicar os padrões de atividade alimentar com um nível considerável de precisão. No entanto, ao observar grupos especícos, como camarões de menor peso, notam-se algumas inconsistŸncias. O algoritmo Librosa tende a detectar uma maior atividade alimentar do que o método Raven, especialmente nas amostras com menores densidades. Isso sugere que o algoritmo pode ser sensível a ruídos ou variações menores no sinal de áudio, que não são captadas pelo método semiautomático. .Análise do Erro Médio Quadrático (RMSE) na Comparação dos Métodos de Detecção A m de mitigar erros de uma análise manual obtida pela comparação visual dos resultados, existem ferramentas mais robustas que podem ajudar a avaliar com mais clareza Capítulo . Resultados e Discussões o desempenho do algoritmo em Python em relação aos resultados anotados pela equipe de pesquisadores da Universidade de Pernambuco. O Erro Médio Quadrático (RMSE) é uma métrica de acurácia amplamente utilizada em análises comparativas devido à sua capacidade de quanticar a diferença entre valores observados e previstos. A utilização do RMSE neste estudo proporciona uma ferramenta quantitativa robusta para avaliar a similaridade entre os resultados dos métodos de detecção automática e semiautomática. Características como a sensibilidade às discrepâncias de resultados e a interpretação intuitiva dos valores retornados tornam essa métrica essencial para a análise dos resultados deste trabalho. O RMSE foi calculado entre o vetor de quantidade de atividade alimentar por janela de tempo de segundos, obtido via resultado do algoritmo de detecção automática, e o vetor de quantidade de atividade alimentar por janela de tempo de segundos, obtido via resultado da detecção semiautomática pelo software Raven. Para cada áudio, os resultados dos dois algoritmos foram comparados utilizando o RMSE. Diferente da grade de grácos descrita no tópico anterior, esses valores proporcionam uma forma quantitativa de comparação e uma maior precisão na obtenção das análises. Valores menores de RMSE indicam uma maior similaridade entre os métodos, enquanto valores mais altos sugerem discrepâncias maiores. Capítulo . Resultados e Discussões Figura – Heatmap dos valores de RMSE entre os vetores de resultados obtidos pelo software Raven e pelo algoritmo implementado com a biblioteca Librosa na qual as linhas representam diferentes tamanhos de camarões (g, g, g, g e g) avaliados na amostra, enquanto as colunas representam densidades de camarões (, e camarões/m), subdivididas pelos arquivos A, B e C. Fonte: Autor () Observando o heatmap, percebe-se que os maiores valores de RMSE estão concen- trados nos menores tamanhos de camarões, especicamente nos de g. Conforme discutido anteriormente, um maior valor de RMSE indica uma maior discrepância entre os vetores de atividade alimentar detectados automaticamente e os obtidos pelo método semiau- tomático, sinalizando um desempenho inferior do algoritmo. O padrão identicado em nossos resultados sugere que o algoritmo enfrenta diculdades signicativas para detectar a atividade alimentar de camarões muito pequenos. Além disso, o pior cenário é observado quando a menor densidade (camarões/m) é combinada com o peso de g, resultando nos maiores valores de RMSE. Esses achados são críticos para entender as limitações do algoritmo e direcionar futuros aprimoramentos. .Análise da Correlação na Comparação dos Métodos de Detec- ção Como já introduzido anteriormente no capitulo a respeito da correlação de Pearson, observa-se que essa é uma medida estatística amplamente utilizada para avaliar a força e a direção da relação linear entre duas variáveis quantitativas. A m de aprimorar Capítulo . Resultados e Discussões a análise comparativa dos métodos de detecção da atividade alimentar desenvolvida neste capítulo, a correlação de Pearson será utilizada para examinar a correspondŸncia entre os padrões de atividade alimentar detectados pelos dois métodos ao longo do tempo. Especicamente, queremos observar se as variações na atividade alimentar, como aumentos ou diminuições, são representadas de forma consistente pelo algoritmo de detecção automática em comparação com o método semiautomático. Para a comparação que será realizada, o objetivo de cada índice de correlação deve ser pelo menos uma correlação linear positiva. Valores negativos indicam que os dois métodos estão apresentando tendŸncias completamente distintas, como, por exemplo, quando em um tipo de detecção o nível de atividade alimentar está se elevando e no outro está diminuindo. Já uma correlação positiva sugere que a tendŸncia de detecção é a mesma, seja aumentando ou diminuindo. Isso é crucial para validar a ecácia do algoritmo de detecção automática em replicar os resultados do método semiautomático. Capítulo . Resultados e Discussões Figura – Heatmap dos valores de correlação entre os vetores de resultados obtidos pelo software Raven e pelo algoritmo implementado com a biblioteca Librosa. As linhas representam os diferentes tamanhos de camarões avaliados (g, g, g, g e g), enquanto as colunas indicam as densidades populacionais (, e camarões/m), subdivididas pelos arquivos A, B e C. Fonte: Autor () Ao analisar os resultados expressos nos índices de correlação entre as detecções coletadas de eventos dos métodos na , pode-se obter uma visão detalhada sobre como a precisão da detecção de atividade alimentar do algoritmo varia conforme executado sobre áudios com diferenças no tamanho e na densidade dos camarões. A diferença reside na intensidade dessa atividade: em um método, pode-se identicar um aumento signicativo, enquanto no outro o aumento pode ser menos acentuado. Analisando a primeira linha da gura, temos o grupo das correlações de resultados para camarões de g, onde os valores são predominantemente baixos, variando de -.a ., indicando uma baixa correspondŸncia entre os métodos de detecção automática e semiautomática. Isso sugere que o algoritmo não representa adequadamente as variações de atividade alimentar para camarões desse tamanho. Para camarões de g, os coecientes de correlação aumentam signicativamente, variando de .a ., demonstrando uma forte correlação positiva, especialmente nas densidades maiores (e camarões/m). Para camarões de g, a correlação é ainda mais alta, com coecientes variando de .a ., indicando que o algoritmo está funcionando de forma robusta e precisa. Em camarões de g, os valores variam de .a ., com pequenas reduções em algumas densidades especícas, mas, de maneira geral, Capítulo . Resultados e Discussões a detecção é conável. Finalmente, para camarões de g, os valores variam de .a ., mostrando que o algoritmo de detecção automática replica quase perfeitamente os resultados do método semiautomático. As regiões com os melhores resultados, especialmente em camarões de tamanhos intermediários e maiores, demonstram a conabilidade e ecácia do algoritmo de detecção automática. Esses altos valores de correlação validam o uso do algoritmo como uma alternativa ao método semiautomático, proporcionando uma solução eciente e precisa para a detecção de atividade alimentar para certos grupos de camarões. CONSIDERAÇÕES FINAIS Este trabalho de conclusão de curso apresentou o desenvolvimento e a avaliação de um algoritmo de detecção automática de atividade alimentar de camarões, especicamente da espécie Litopenaeus vannamei, utilizando ferramentas da biblioteca Librosa em Python. Através de uma série de análises comparativas, foi possível vericar a ecácia do algoritmo em diferentes condições experimentais, comparando seus resultados com os obtidos pelo método semiautomático utilizando o software Raven. Compilando as informações discutidas no capitulo , nota-se algumas limitações do algoritmo de detecção automática. Em particular, a precisão do algoritmo foi signicati- vamente reduzida para camarões de menor tamanho (g), com valores de correlação de Pearson predominantemente baixos e altos valores de RMSE. Isso sugere que o algoritmo tem diculdade em detectar de forma precisa a atividade alimentar em cenários onde os camarões são muito pequenos. Essas limitações apontam para a necessidade de ajustes e melhorias no algoritmo para lidar melhor com diferentes tamanhos de camarões e variações nas condições de coleta dos sinais de áudio. Apesar das limitações, o desenvolvimento deste algoritmo oferece diversas contribui- ções importantes tanto para a pesquisa acadŸmica quanto para a indústria de carcinicultura. Para a pesquisa acadŸmica, o algoritmo proporciona uma nova ferramenta para a detecção de atividade alimentar de camarões, permitindo análises mais rápidas e menos dependentes de processos manuais intensivos. A metodologia empregada pode ser aplicada a outros estudos de bioacústica, incentivando a automação e o uso de técnicas de processamento digital de sinais em diversas áreas de pesquisa. Na indústria de carcinicultura, a im- plementação de um algoritmo de detecção automática pode reduzir signicativamente os custos operacionais, diminuindo a necessidade de intervenção manual e o tempo de análise. A capacidade de monitorar de forma contínua e precisa a atividade alimentar dos camarões pode levar a uma melhor gestão alimentar, resultando em aumentos na eciŸncia da produção e na saúde dos camarões. Além disso, o uso dessa tecnologia pode ajudar na detecção precoce de problemas de saúde e comportamentais, permitindo intervenções rápidas e efetivas. Para superar as limitações identicadas e aumentar a precisão do algoritmo de detecção automática, especialmente em cenários com camarões de menor tamanho, é essencial aplicar técnicas avançadas de inteligŸncia articial. De acordo com (ZUMBA et al., ), no contexto moderno de vasta quantidade de dados disponíveis, as técnicas avançadas de exploração de informações com o uso de IA são fundamentais para revelar insights ocultos que não seriam detectados com técnicas convencionais. Capítulo . Considerações Finais A implementação de técnicas de aprendizado profundo (deep learning), como redes neurais convolucionais (CNNs) e redes neurais recorrentes (RNNs), pode melhorar signicativamente a capacidade do algoritmo de distinguir sinais de atividade alimentar de ruídos de fundo. Além disso, técnicas de pré-processamento avançadas, como a normalização de dados e a ltragem de ruídos, podem ser aplicadas para melhorar a qualidade dos sinais de entrada. A utilização de algoritmos de machine learning para ajustar automaticamente os parâmetros do modelo em função das características especícas dos sinais de áudio capturados também pode aumentar a robustez e a precisão do algoritmo. Em conclusão, o desenvolvimento do algoritmo de detecção automática de atividade alimentar de camarões representa um avanço signicativo na automação de processos na aquicultura. Embora ainda existam desaos a serem superados, as contribuições potenciais tanto para a pesquisa quanto para a indústria são vastas. A continuidade deste trabalho, com foco em melhorias e adaptações, poderá consolidar ainda mais a ecácia e a aplicabilidade desta tecnologia, beneciando amplamente o setor de carcinicultura. REFERĹNCIAS ARAUJO, J. A. et al. EciŸncia produtiva das fazendas de carcinicultura no estado do ceará. RESR, Piracicaba-SP, v. , n. , p. –, Jan./Mar. . BERK, I. Sound production by white shrimp (penaeus setiferus), analysis of another crustacean-like sound from the gulf of mexico, and applications for passive sonar in the shrimping industry. Journal of Shellﬁsh Research, NATL SHELLFISHERIES ASSOC C/O DR. SANDRA E. SHUMWAY, NATURAL SCIENCE . . . , v. , n. , p. –, . Bioacoustics Research Program. Raven Pro: Interactive Sound Analysis Software (Version .). . The Cornell Lab of Ornithology, Ithaca, NY. Disponível em: <http://ravensoundsoftware.com/>http://ravensoundsoftware.com/. COQUEREAU, L. et al. Sound production and associated behaviours of benthic invertebrates from a coastal habitat in the north-east atlantic. Marine Biology, Springer Science and Business Media LLC, v. , n. , maio . ISSN -. Disponível em: <http://dx.doi.org/./s--->http://dx.doi.org/./s-- -. FAO. The State of World Fisheries and Aquaculture . FAO, . ISBN . Disponível em: <http://dx.doi.org/.- /caen>http://dx.doi.org/./caen. HAMILTON, S. et al. Size matters: Variability in the acoustic parameters during feeding activity of penaeus vannamei in dierent size classes. Aquaculture, Elsevier BV, v. , p. , jun. . ISSN -. Disponível em: <http://dx.doi.org/./j- .aquaculture..>http://dx.doi.org/./j.aquaculture... HAMILTON, S. et al. Sound production mechanism in the brazilian spiny lobsters (family palinuridae). Zoomorphology, Springer, v. , n. , p. –, . JéZéQUEL, Y. et al. Acoustic behaviour of male european lobsters (homarus gammarus) during agonistic encounters. Journal of Experimental Biology, The Company of Biologists, jan. . ISSN -. Disponível em: <http://dx.doi.org/./jeb- .>http://dx.doi.org/./jeb.. LYONS, R. Understanding Digital Signal Processing. Prentice Hall/PTR, . (Prentice Hall professional technical reference). ISBN . Disponível em: <https://books.google.com.br- /books?id=f yCQgAACAAJ>https://books.google.com.br/books?id=f_yCQgAACAAJ. MCFEE, B. et al. librosa: Audio and Music Signal Analysis in Python. . https://librosa.org/. Version ... Disponível em: <https://librosa.org- />https://librosa.org/. MUKAKA, M. Statistics corner: A guide to appropriate use of correlation coecient in medical research. Malawi medical journal : the journal of Medical Association of Malawi, v. , p. –, . ReferŸncias OPPENHEIM, A. Discrete-Time Signal Processing. Pearson Edu- cation, . (Pearson education signal processing series). ISBN . Disponível em: <https://books.google.com.br- /books?id=geTnWKEsC>https://books.google.com.br/books?id=geTnWKEsC. PEIXOTO, S. et al. Acoustic activity of litopenaeus vannamei fed pelleted and extruded diets. Aquaculture, Elsevier BV, v. , p. , ago. . ISSN -. Disponível em: <http://dx.doi.org/./j.aquaculture.- .>http://dx.doi.org/./j.aquaculture... PULGAR-PANTALEON, E. M.; SANCHEZ-GENDRIZ, I.; GUEDES, L. A. Ecoacoustica- nalyzer: A long-term acoustic data analysis tool for environmental monitoring. Software Im- pacts, Elsevier BV, v. , p. , set. . ISSN -. Disponível em: <http://dx- .doi.org/./j.simpa..>http://dx.doi.org/./j.simpa... Python Software Foundation. Python: A Dynamic, Open Source Programming Language. Beaverton, OR, . Version .. Disponível em: <https://www.python.org- />https://www.python.org/. REIS, J. et al. Passive acoustic monitoring as a tool to assess feed response and growth of shrimp in ponds and research systems. Aquaculture, Elsevier BV, v. , p. , jan. . ISSN -. Disponível em: <http://dx.doi.org/./j.aquaculture.- .>http://dx.doi.org/./j.aquaculture... SANCHEZ-GENDRIZ, I. Signal processing basics applied to ecoacoustics. Ecological Infor- matics, Elsevier BV, v. , p. , dez. . ISSN -. Disponível em: <http://dx- .doi.org/./j.ecoinf..>http://dx.doi.org/./j.ecoinf... SCHOBER, P.; BOER, C.; SCHWARTE, L. A. Correlation coecients: Appropriate use and interpretation. Anesthesia amp; Analgesia, Ovid Technologies (Wolters Kluwer Health), v. , n. , p. –, maio . ISSN -. Disponível em: <http://dx.doi.org- /./ANE.>http://dx.doi.org/./ANE.. SILVA, J. F. et al. Acoustic characterization of feeding activity of litopenaeus vannamei in captivity. Aquaculture, Elsevier, v. , p. –, . SIQUEIRA, T. Aquicultura: a nova fronteira para aumentar a produção mundial de alimentos de forma sustentável. Boletim regional, urbano e ambiental do Ipea - Instituto de Pesquisa Econômica Aplicada, v. , p. –, . SMITH, D. V.; TABRETT, S. The use of passive acoustics to measure feed consumption by penaeus monodon (giant tiger prawn) in cultured systems. Aquacultural Engineering, Elsevier BV, v. , p. –, nov. . ISSN -. Disponível em: <http://dx.doi- .org/./j.aquaeng...>http://dx.doi.org/./j.aquaeng.... SáNCHEZ-GENDRIZ, I. et al. Python-based acoustic detection of penaeus vannamei feeding behavior. Aquaculture, Elsevier BV, v. , p. , jan. . ISSN -. Disponível em: <http://dx.doi.org/./j.aquaculture.- .>http://dx.doi.org/./j.aquaculture... TURRIONI, J. B.; MELLO, C. H. P. Metodologia de pesquisa em engenharia de produção. Unifei, Itajubá, v. , p. –, . ReferŸncias VALENTI, W. C. et al. Aquaculture in brazil: past, present and future. Aquaculture Reports, Elsevier BV, v. , p. , mar. . ISSN -. Disponível em: <http://dx.doi- .org/./j.aqrep..>http://dx.doi.org/./j.aqrep... ZUMBA, F. M. et al. Impacto da ciŸncia de dados no modus operandi das organizações: uma perspectiva conceitual. OBSERVATÓRIO DE LA ECONOMÍA LATINOAMERICANA, South Florida Publishing LLC, v. , n. , p. –, ago. . ISSN -. Disponível em: <http://dx.doi.org/./oelvn- >http://dx.doi.org/./oelvn-. Anexos ANEXO A – GRADE DE ANÁLISE COMPARATIVA DOS MÉTODOS DE DETECÇÃO Figura – Grade comparativa dos métodos de detecção aplicada a todas as amostras de áudio dos camarões com peso de g. ANEXO A. Grade de Análise Comparativa dos métodos de detecção Figura – Grade comparativa dos métodos de detecção aplicada a todas as amostras de áudio dos camarões com peso de g. ANEXO A. Grade de Análise Comparativa dos métodos de detecção Figura – Grade comparativa dos métodos de detecção aplicada a todas as amostras de áudio dos camarões com peso de g. ANEXO A. Grade de Análise Comparativa dos métodos de detecção Figura – Grade comparativa dos métodos de detecção aplicada a todas as amostras de áudio dos camarões com peso de g. ANEXO A. Grade de Análise Comparativa dos métodos de detecção Figura – Grade comparativa dos métodos de detecção aplicada a todas as amostras de áudio dos camarões com peso de g.
+Pantaleon, Efrain Marcelo Pulgar.
+Uma análise dos sons de alimentação de camarões brancos. uma
+abordagem de processamento de sinais / Efrain Marcelo Pulgar
+Pantaleon. - 2025.
+49f.: il.
+Monografia (Graduação) - Universidade Federal do Rio Grande
+do Norte, Departamento de Computação e Automação, Bacharelado em
+Engenharia da Computação, Natal, 2025.
+Orientação: Dr. Luiz Affonso Henderson Guedes de Oliveira.
+Coorientação: Dr. Ignacio Sánchez Gendriz.
+1. Bioacustica - Monografia. 2. Python - Monografia. 3.
+Camarão - Monografia. I. Oliveira, Luiz Affonso Henderson Guedes
+de. II. Gendriz, Ignacio Sánchez. III. Título.
+RN/UF/BCZM CDU 004
+Universidade Federal do Rio Grande do Norte - UFRN
+Sistema de Bibliotecas - SISBI
+Catalogação de Publicação na Fonte. UFRN - Biblioteca Central Zila Mamede
+Elaborado por Raimundo Muniz de Oliveira - CRB-15/429
+Uma Análise dos Sons de Alimentação de
+Camarões Brancos. Uma Abordagem de
+Processamento de Sinais
+Natal – RN
+Uma Análise dos Sons de Alimentação de Camarões
+Brancos. Uma Abordagem de Processamento de Sinais
+Trabalho de Conclusão de Curso de Engenha-
+ria de Computação da Universidade Federal
+do Rio Grande do Norte, apresentado como
+requisito parcial para a obtenção do grau de
+Bacharel em Engenharia de Computação
+Orientador:
+Luiz
+Aonso
+Henderson
+Guedes de Oliveira
+Coorientador: Ignacio Sánchez Gendriz
+Universidade Federal do Rio Grande do Norte – UFRN
+Departamento de Engenharia de Computação e Automação – DCA
+Curso de Engenharia de Computação
+Natal – RN
+Janeiro de 2025
+Uma Análise dos Sons de Alimentação de Camarões
+Brancos. Uma Abordagem de Processamento de Sinais
+Trabalho de Conclusão de Curso de Engenha-
+ria de Computação da Universidade Federal
+do Rio Grande do Norte, apresentado como
+requisito parcial para a obtenção do grau de
+Bacharel em Engenharia de Computação
+Orientador:
+Luiz
+Aonso
+Henderson
+Guedes de Oliveira
+Coorientador: Ignacio Sánchez Gendriz
+Prof. Dr. Luiz Aﬀonso Henderson Guedes de Oliveira - Orientador
+UFRN
+Prof. Dr. Ignacio Sanchez Gendriz - Coorientador
+UFRN
+Natal – RN
+Janeiro de 2025
+Aos meus pais, cuja força, amor e dedicação foram uma luz constante em minha jornada,
+enriquecendo cada passo ao longo da vida. À minha família, mesmo à distância, pelo apoio
+inabalável e pelas palavras de incentivo que me motivaram a superar cada desaﬁo. Aos
+amigos e colegas, que trouxeram leveza e alegria a essa caminhada com suas companhias e
+gestos de encorajamento. Aos meus orientadores, pela paciŸncia, dedicação e generosidade
+ao compartilhar seu vasto conhecimento, guiando este trabalho com sabedoria e inspiração.
+À minha mãe, cuja força, carinho e dedicação constantes iluminaram minha trajetó-
+ria em todos os momentos. Por acreditar em mim sem hesitação, apoiar incondicionalmente
+cada sonho que lanço para o futuro, por mais ousado ou inesperado que seja, e por ser
+minha maior fonte de amor e inspiração.
+Ao meu pai, que sempre incentivou minha caminhada acadŸmica e, com seus vastos
+conhecimentos nas áreas exatas, me guiou com sabedoria e entusiasmo, ajudando a moldar
+minha paixão pela ciŸncia.
+À Universidade Federal do Rio Grande do Norte (UFRN), pela formação sólida
+e pelos recursos que tornaram possível minha jornada acadŸmica. À Escola de CiŸncia e
+Tecnologia (ECT), onde tive o privilégio de construir o primeiro ciclo da minha formação
+universitária, e ao Departamento de Computação e Automação (DCA), que me acolheu
+no segundo ciclo, conduzindo-me ao universo da Engenharia de Computação.
+Aos amigos e colegas, que com sua parceria e apoio tornaram essa caminhada mais
+leve, seja nos momentos de descontração ou nos estudos coletivos que tanto contribuíram
+para meu aprendizado. Aos colegas de bolsas e pesquisas, que enriqueceram minha formação
+técnica e prática, proporcionando experiŸncias que levo comigo até hoje em minha carreira.
+Com especial admiração, ao professor Ignacio Sanchez, cujo entusiasmo pela área
+de Processamento de Sinais Digitais transbordava em sala de aula, despertando em mim a
+empolgação de explorar um mundo rico e fascinante. Sua paixão pela área fez com que eu
+enxergasse a beleza de decifrar o que a natureza tenta nos comunicar, abrindo portas para
+minha dedicação a essa temática.
+A todos que, de alguma forma, contribuíram para a realização deste trabalho, meu
+mais sincero agradecimento.
+"Aqueles que são loucos o suﬁciente
+para pensar que podem mudar o mundo
+Este estudo tem como propósito desenvolver métodos utilizando as potencialidades dos tra-
+dicionais processos de processamento de sinais para a detecção automática de atividade de
+alimentação de camarões brancos Litopenaeus vannamei. Para atingir esse objetivo, foram
+implementadas ferramentas de processamento de sinais em Python, aplicadas às gravações
+de áudio dos camarões em um ambiente laboratorial. Esses camarões foram distribuídos
+em grupos, categorizados de acordo com seu peso e densidade. A metodologia subjacente
+aos códigos utilizados possibilita gerar resultados prontamente interpretáveis, permitindo
+sua aplicação imediata. Os resultados obtidos permitem aos pesquisadores explorar e-
+cientemente os dados acústicos relacionados à alimentação dos camarões, desvendando
+padrões e informações valiosas sobre esse processo alimentar. Dessa forma, este estudo
+contribuí signicativamente para melhorias do processo das análises do comportamento
+e das interações dos camarões no processo alimentar, uma área de forte interesse para a
+indústria de carcinicultura.
+Palavras-chaves: Processamento de Sinais Digitais; Python; Camarões; Ecologia Aquática
+; Bioacústica
+This study aims to develop methods using the potential of traditional signal processing
+processes for the automatic detection of feeding activity of white shrimp Litopenaeus
+vannamei. To achieve this goal, innovative signal processing tools in Python were used for
+shrimp audio applications in a laboratory environment. These shrimp were distributed into
+groups, categorized according to their weight and density. The methodology underlying
+the codes used makes it possible to generate readily interpretable results, allowing their
+immediate application. The results obtained allow researchers to eciently explore acoustic
+data related to shrimp feeding, uncovering patterns and valuable information about this
+feeding process. In this way, this study signicantly contributes to improvements in the
+process of analyzing the behavior and interactions of shrimp in the food process, an area
+of strong interest for the shrimp farming industry.
+Keywords: Digital Signal Processing; Python; Shrimp Aquatic Ecology; Bioacoustic
+. . . . . . . . . . . . . . .
+baixo) de uma mordida/"click"de um camarão. O eixo X representa o
+tempo em milissegundos e as cores representam a energia do sinal em
+diferentes frequŸncias ao longo do tempo. Cores mais quentes (amarelo/-
+vermelho) indicam maior intensidade de energia, enquanto cores mais
+frias (azul/verde) representam menor intensidade.
+. . . . . . . . . . .
+pode ser realizada através da Transformada Discreta de Fourier (DFT),
+que permite a visão do sinal tanto no domínio do tempo quanto no
+domínio da frequŸncia. Enquanto a DFT transforma o sinal do domínio
+do tempo para o domínio da frequŸncia, a Transformada Inversa de
+Fourier (iDFT) faz o oposto, convertendo-o do domínio da frequŸncia
+para o domínio do tempo. . . . . . . . . . . . . . . . . . . . . . . . . .
+trabalho . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+atividade alimentar de camarão dentro do audio
+. . . . . . . . . . . .
+áudio, (b) Espectrograma do trecho de áudio, (c) Instantes de detecção
+automáticos via Librosa (linhas vermelhas) e semi-automáticos via
+Raven (linhas verdes). . . . . . . . . . . . . . . . . . . . . . . . . . . .
+pesos dos camarões (1g, 3g, 6g, 9g e 12g), enquanto as linhas indicam
+diferentes densidades populacionais (50, 100 e 150 camarões/m3). Em
+cada gráco, são apresentados dois stem plots: o gráco azul representa
+o nível de atividade alimentar a cada 15 segundos, calculado com as
+ferramentas da biblioteca Librosa, e o gráco vermelho mostra o nível
+alimentar, também a cada 15 segundos, obtido pelo software Raven.
+Imagens adicionais com os subplots de todas as comparações realizadas
+no banco de dados estão disponíveis no Anexo.
+. . . . . . . . . . . . .
+software Raven e pelo algoritmo implementado com a biblioteca Librosa
+na qual as linhas representam diferentes tamanhos de camarões (1g, 3g,
+6g, 9g e 12g) avaliados na amostra, enquanto as colunas representam
+densidades de camarões (50, 100 e 150 camarões/m3), subdivididas pelos
+arquivos A, B e C. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+pelo software Raven e pelo algoritmo implementado com a biblioteca
+Librosa. As linhas representam os diferentes tamanhos de camarões ava-
+liados (1g, 3g, 6g, 9g e 12g), enquanto as colunas indicam as densidades
+populacionais (50, 100 e 150 camarões/m3), subdivididas pelos arquivos
+A, B e C.
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+tras de áudio dos camarões com peso de 1g. . . . . . . . . . . . . . . .
+tras de áudio dos camarões com peso de 3g. . . . . . . . . . . . . . . .
+tras de áudio dos camarões com peso de 6g. . . . . . . . . . . . . . . .
+tras de áudio dos camarões com peso de 9g. . . . . . . . . . . . . . . .
+tras de áudio dos camarões com peso de 12g. . . . . . . . . . . . . . . .
+UFRPE
+Universidade Federal Rural do Pernambuco
+PAM
+Passive Acoustic Monitoring
+PDS
+Processamento Digital de Sinais
+RMSE
+Root Mean Squared Error
+InteligŸncia Artiﬁcial
+CNN
+Convolutional Neural Network
+RNN
+Recurrent Neural Network
+Ômega
+INTRODUÇÃO
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.1
+Contextualização do Problema . . . . . . . . . . . . . . . . . . . . . .
+1.2
+Expectativas com o Desenvolvimento do Trabalho
+. . . . . . . . . .
+1.3
+Objetivos
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.4
+Estrutura do Trabalho . . . . . . . . . . . . . . . . . . . . . . . . . . .
+REVISÃO BIBLIOGRÁFICA
+. . . . . . . . . . . . . . . . . . . . . .
+2.1
+Importância econômica do Camarão Branco . . . . . . . . . . . . . .
+2.2
+Acústica da Alimentação: Mecanismos e Características . . . . . . .
+2.3
+Fundamentos de Processamento Digital de Sinais relacionados ao
+Trabalho . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3.1
+Transformada Discreta de Fourier : Domínio FrequŸncia . . . . . . . . . . .
+2.3.2
+STFT e Spectrograma . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3.3
+Correlação de Pearson
+. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+MATERIAIS E MÉTODOS . . . . . . . . . . . . . . . . . . . . . . .
+3.1
+Classiﬁcação da Pesquisa . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2
+Processo de Coleta dos Dados Sonoros . . . . . . . . . . . . . . . . .
+3.2.1
+Coleta de Dados
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2.2
+Descrição dos Grupos Estudados . . . . . . . . . . . . . . . . . . . . . . .
+3.2.3
+Descrição da Detecção Semi-Automática de atividade alimentar utilizando o
+Software Raven . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.3
+Método de Detecção Automática de Atividade Alimentar em Cama-
+rões utilizando Python . . . . . . . . . . . . . . . . . . . . . . . . . . .
+RESULTADOS E DISCUSSÕES . . . . . . . . . . . . . . . . . . . .
+4.1
+Visualização do Comportamento Predito em Comparação com os
+Dados Reais Obtidos via Software Raven
+. . . . . . . . . . . . . . .
+4.2
+Análise do Erro Médio Quadrático (RMSE) na Comparação dos
+Métodos de Detecção
+. . . . . . . . . . . . . . . . . . . . . . . . . .
+4.3
+Análise da Correlação na Comparação dos Métodos de Detecção
+CONSIDERAÇÕES FINAIS . . . . . . . . . . . . . . . . . . . . . . .
+ANEXO A – GRADE DE ANÁLISE COMPARATIVA DOS MÉTO-
+DOS DE DETECÇÃO
+. . . . . . . . . . . . . . . . .
+1.1
+Contextualização do Problema
+A aquicultura é uma atividade agropecuária baseada na produção de organismos
+aquáticos em qualquer estágio de seu desenvolvimento, mantidos em ambiente controlado e
+de connamento (SIQUEIRA, 2017).O Brasil representa uma força signicativa no cenário
+mundial da Aquicultura, destacando-se como um dos principais produtores do continente
+americano e com potencial para se tornar um líder global dessa área. Nos últimos anos, a
+produção nacional neste setor vem sofrendo um crescimento consistente, expandindo-se
+em média 14% a cada ano, saltando de 13.000 toneladas no ano de 1987 para expressivas
+595.000 toneladas em 2017. Esse crescimento é impulsionado por diversos fatores, incluindo
+um mercado interno robusto, uma indústria de ração de animais aquáticos bem estabelecida
+e as condições ambientais favoráveis encontradas pelo extenso território brasileiro, marcado
+por um clima tropical com abundância de recursos hídricos, propícios para o cultivo
+aquícola.
+(VALENTI et al., 2021) em seu estudo sobre a Aquicultura no Brasil destaca a
+região Nordeste com um grande papel histórico e crucial na produção aquícola do país,
+sendo a principal área produtiva de camarão branco. Em suas notações constatou que
+dentro da região se salienta o cultivo de espécies em diferentes setores, como peixes de
+água doce, camarão marinho, moluscos, camarões de água doce e rãs, beneciadas por
+um ambiente propício ao seu desenvolvimento. Vale ressaltar que a produção de camarão
+marinho se concentra principalmente nos estados do Ceará e Rio Grande do Norte, onde
+as condições ambientais e a infraestrutura disponível favorecem essa atividade (PEIXOTO
+et al., 2020).
+No contexto da aquicultura supramencionado, um dos principais desaos enfrenta-
+dos pelos produtores é o custo signicativo ligado à alimentação dos organismos aquáticos.
+Esses gastos com alimentação representam uma parte substancial, variando entre 40 a
+60%, do total de despesas incorridas na operação (ARAUJO et al., 2018). Além disso, o
+desperdício decorrente do excesso de ração não aproveitada na água não apenas aumenta
+os custos com alimentação, mas também eleva os riscos de contaminação, gerando despesas
+adicionais relacionadas à manutenção da qualidade da água nas estruturas de criação desses
+organismos subaquáticos. A indústria de carcinicultura enfrenta essas diculdades relacio-
+nadas ao baixo aproveitamento dos insumos investidos e à escassez de informações sobre o
+realizado pela Associação Brasileira de Criadores de Camarão (ABCC), constatou que a
+maioria esmagadora das fazendas (99%) é considerada tecnicamente ineciente (ARAUJO
+et al., 2018). A principal causa atribuída a essa ineciŸncia foi a baixa densidade média de
+estocagem, ou seja, a quantidade média de camarões mantidos em um determinado espaço
+do viveiro. Quando essa densidade está abaixo do nível desejado, pode resultar em uma
+utilização inecaz dos recursos disponíveis, como espaço, água e ração. Esse cenário pode
+levar a um aumento nos custos operacionais por unidade de camarão produzido, uma vez
+que os custos xos associados à operação do viveiro, tais como os custos de construção e
+manutenção, são distribuídos entre um número menor de camarões.
+Devido ao contexto abordado, criadores de camarão estão em busca de soluções
+tecnológicas que propiciem melhorias aos métodos de alimentação. Entre elas, a automação
+do processo alimentar vem se tornando o maior avanço em inovação, controle e eciŸncia
+de produção e na redução de custos. Essa automação melhora o crescimento animal e as
+taxas de conversão alimentar, que é a relação de quantos quilos de ração são necessários
+para produzir 1kg de camarão vivo, além de reduzir as necessidades de mão-de-obra. Essa
+crescente demanda por soluções tecnológicas ecazes ressalta a relevância de pesquisas como
+a presente, que buscam desenvolver ferramentas e métodos para aprimorar a produtividade
+e a gestão dos viveiros de camarão, visando impulsionar a aquicultura de camarões a novos
+patamares de eciŸncia e sustentabilidade.
+1.2
+Expectativas com o Desenvolvimento do Trabalho
+O desenvolvimento do software proposto nesta pesquisa representa um marco
+importante para a indústria da carcinicultura, especialmente em relação ao método
+atualmente utilizado, o software Raven, amplamente empregado na análise das detecções
+de alimentação. Embora o Raven seja uma ferramenta consolidada, sua aplicação depende de
+licenças pagas e de alto poder computacional, o que pode limitar o acesso e a implementação
+em diversos contextos.
+Por outro lado, o software desenvolvido nesta pesquisa utiliza bibliotecas open source,
+como a Librosa, e foi inteiramente implementado em Python, o que traz signicativos
+ganhos em termos de acessibilidade e exibilidade. Além disso, por ser desenvolvido em
+Python, o software apresenta uma grande facilidade para ser embarcado em sistemas de
+Internet das Coisas (IoT), permitindo sua integração com dispositivos de monitoramento
+em tempo real diretamente nos viveiros. Esses aspectos tornam o software uma solução mais
+leve, acessível e econômica para os produtores, possibilitando maior adesão à tecnologia e
+de processamento de sinal de áudio oferece uma perspectiva de impacto positivo signicativo
+na eciŸncia e rentabilidade da produção de camarão (REIS et al., 2022) . A instalação
+do equipamento em viveiros, juntamente com os serviços de monitoramento da atividade
+alimentar, surge como uma solução promissora para otimizar o manejo dos recursos e
+melhorar a qualidade da produção. O PAM é em uma linha de pesquisa já previamente
+explorada pelo autor, que resultou em publicações como "EcoAcousticAnalyzer: A long-term
+acoustic data analysis tool for environmental monitoring (2023)"(PULGAR-PANTALEON;
+SANCHEZ-GENDRIZ; GUEDES, 2023) e "Python-based acoustic detection of Penaeus
+vannamei feeding behavior (2024)"(SáNCHEZ-GENDRIZ et al., 2025).
+Este avanço tecnológico visa superar desaos identicados anteriormente, como a
+falta de transparŸncia no crescimento e desenvolvimento alimentar dos camarões, bem
+como o uso inadequado de insumos na sua criação. Ao proporcionar uma compreensão
+mais detalhada do comportamento dos camarões em relação aos insumos fornecidos e das
+condições do ambiente aquático, essas soluções tŸm o potencial de gerar indicadores precisos
+sobre o desempenho alimentar. Isso possibilita a tomada de decisões mais informadas, que
+aprimoram as práticas de manejo e nutrição, resultando em uma produção mais eciente e
+sustentável.
+Assim, o desenvolvimento do software proposto não só representa uma evolução
+tecnológica, mas também uma contribuição signicativa para a indústria da carcinicultura,
+já que ao reduzir a necessidade de equipamentos robustos e caros, o software facilita o
+monitoramento contínuo e automatizado, melhorando a eciŸncia alimentar e a gestão dos
+viveiros de camarões. Essa inovação, portanto, abre caminhos para a modernização da
+carcinicultura, promovendo maior sustentabilidade e competitividade no setor.
+1.3
+Objetivos
+O presente trabalho tem como Objetivo Geral desenvolver um detector de eventos
+sonoros associado à atividade alimentar de camarões (Litopenaeus vannamei), implemen-
+tado utilizando bibliotecas de Python, com foco em criar uma solução inovadora e acessível
+para a indústria de carcinicultura, facilitando o monitoramento automatizado e eciente
+do comportamento alimentar desses organismos.
+Para alcançar esse objetivo, foram denidos os seguintes objetivos especíﬁcos:
+• Adaptar e simplicar técnicas de processamento de sinal já empregadas no estudo da
+atividade alimentar de camarões (Litopenaeus vannamei), que atualmente utilizam
+produtores de camarão.
+• Desenvolver um algoritmo que automatize o cálculo do nível de atividade alimen-
+tar, garantindo uma análise eciente e fornecendo informações valiosas sobre o
+comportamento alimentar dos camarões.
+• Assegurar que a implementação do software permita uma execução rápida e ecaz,
+proporcionando resultados em tempo hábil para a tomada de decisões estratégicas
+pelos produtores.
+Dessa forma, os objetivos e metas estabelecidos neste trabalho tŸm o propósito
+de desenvolver uma solução tecnológica que atenda às necessidades especícas do setor
+da carcinicultura, proporcionando aos produtores ferramentas ecientes para otimizar a
+produção e a gestão de seus viveiros de camarão.
+1.4
+Estrutura do Trabalho
+Esta parte do trabalho apresenta uma introdução ao tema, destacando os fatores
+que motivam a implantação da ideia, além da justicativa e dos objetivos estabelecidos.
+Em seguida, o Capítulo 2 aborda a Descrição e Fundamentos Teóricos nos quais a pesquisa
+se baseia. O Capítulo 3, por sua vez, detalha a metodologia e os materiais utilizados
+para o desenvolvimento do estudo. O Capítulo 4 apresenta os resultados obtidos e as
+discussões das implementações realizadas. Por m, o Capítulo 5 traz as principais conclusões
+e contribuições deste trabalho, encerrando a análise de forma conclusiva e apontando
+possíveis direções para futuras pesquisas.
+2.1
+Importância econômica do Camarão Branco
+Com base em um estudo conduzido pela Organização das Nações Unidas para
+Alimentação e Agricultura (FAO, 2020) , é possível observar que o camarão branco do
+Pacíco, Litopenaeus vannamei, emerge como a espécie preponderante na carcinicultura
+mundial. Resultados da pesquisa considera que no ano de 2018, deu-se a maior produção
+no mercado com 4,9 milhões de toneladas concebidas, o que equivalente a 53% da produção
+global de crustáceos daquele ano. Valenti (VALENTI et al., 2021) investigaram a relação
+entre o mercado de carcinicultura e a expressiva presença do L. vannamei. Ficou evidente
+que as vantagens do cultivo dessa espécie estão intrinsecamente ligadas à sua capacidade
+de resistŸncia e adaptação a diferentes condições ambientais e de manejo. Adicionalmente,
+destaca-se seu potencial de crescimento acelerado e sua habilidade em transformar dietas
+articiais em ganho de peso, resultando em um retorno econômico satisfatório na atividade.
+Com esse leque de proveitos, o Camarão Branco do Pacíco reforça sua demanda e consolida
+sua posição como uma das espécies mais relevantes e valorizadas na indústria global da
+carcinicultura.
+No Brasil, o Litopenaeus vannamei ocupa um lugar de destaque na aquicultura
+nacional, sendo a espécie marinha mais cultivada no país. As principais áreas produtivas
+estão localizadas no Nordeste, com os estados do Rio Grande do Norte e Ceará liderando
+a produção. O Rio Grande do Norte é o maior produtor, responsável por cerca de 57%
+da produção nacional, enquanto o Ceará contribui com aproximadamente 29%. Juntos,
+esses dois estados respondem por mais de 85% da produção de camarão branco no Brasil,
+consolidando a importância dessa espécie para a economia local e para o mercado brasileiro
+de aquicultura (VALENTI et al., 2021).
+2.2
+Acústica da Alimentação: Mecanismos e Características
+Lillis et al. (2017) investigaram a correlação entre o som produzido por diferentes
+espécies de crustáceos e os momentos especícos em que ocorrem. Um exemplo notável foi
+o som emitido pelo camarão-pistola (Alpheus spp.) ao fechar sua garra adaptada durante
+a defesa territorial, evidenciando essa relação. Além disso, outras referŸncias na literatura
+corroboram essas descobertas. (JéZéQUEL et al., 2020) examinaram o comportamento das
+lagostas do gŸnero Homarus em situações de perigo e observaram um susurro acentuado
+ao contraírem músculos especícos. Em análises semelhantes envolvendo outra família de
+lagostas (Palinuridae), (HAMILTON et al., 2019) registraram o som de uma raspagem,
+produzido por meio de um sistema estridulatório localizado na base da antena.
+Diversos estudos, como os conduzidos por (COQUEREAU et al., 2016), (SILVA et
+al., 2019) e (SMITH; TABRETT, 2013), destacam que atividades como movimentação no
+substrato, natação e alimentação podem resultar em ruídos involuntários por parte dos
+crustáceos. Além disso, (BERK, 1998), por meio do Monitoramento Acústico Passivo em
+uma população de Litopenaeus setiferus, também conhecido como Camarão Branco do
+Norte, no Golfo do México, registrou um padrão sonoro associado à atividade alimentar
+desses camarões, detalhando os atributos sonoros desse padrão e descrevendo-o como um
+tipo de som semelhante a "fritura"e mais tarde esse padrão sonoro cou popularmente
+conhecido como "clicks". Esse estudo se destaca pela sua relevância para os avanços
+da Ecoacústica, evidenciando a importância do entendimento dos sons emitidos pelos
+crustáceos.
+de uma mordida/"click"de um camarão. O eixo X representa o tempo em
+milissegundos e as cores representam a energia do sinal em diferentes frequŸncias
+ao longo do tempo. Cores mais quentes (amarelo/vermelho) indicam maior
+intensidade de energia, enquanto cores mais frias (azul/verde) representam
+menor intensidade.
+2.3
+Fundamentos de Processamento Digital de Sinais relacionados
+ao Trabalho
+Sanchez-Gendriz (SANCHEZ-GENDRIZ, 2021) enfatiza que o campo da ecoacústica
+tem tirado grande proveito ao considerar os sons do ambiente como atributos ecológicos
+imprescindíveis e ressalta que esses sons podem oferecer insights marcantes sobre o
+funcionamento desses ecossistemas. Nesse contexto, o autor reconhece que o uso intenso
+do PAM e os avanços tecnológicos, tornou viável a coleta de sons continuamente por
+longos períodos, proporcionando uma oportunidade única para novas descobertas, mas
+também representando desaos signicativos na análise desses dados. Para essa análise
+mais aprofundada, o domínio e aplicação dos princípios de Processamento Digital de Sinais
+(PDS) se tornam cruciais. Com o emprego dessas técnicas, é possível extrair informações
+valiosas dos dados acústicos coletados, promovendo uma compreensão mais detalhada dos
+padrões e tendŸncias presentes na paisagem sonora.
+A seção em questão tem como propósito apresentar os principais conceitos e técnicas
+fundamentais de PDS empregados no estudo, os quais se mostram relevantes para a análise
+dos sinais acústicos associados ao comportamento alimentar dos camarões. Ao assimilar e
+aplicar esses fundamentos, os pesquisadores estarão habilitados a explorar de maneira mais
+em ambientes controlados.
+2.3.1
+Transformada Discreta de Fourier : Domínio FrequŸncia
+Lyons (LYONS, 2004) endossa a importância da decomposição do sinal em distintas
+bandas de frequŸncia. Nessa direção, o autor destaca que a Transformada Discreta de
+Fourrier (DFT) demonstra ser uma importante ferramenta para destacar os objetivos
+supramencionados, haja vista que nos métodos mais ordinários a principal paramerização
+ocorre em função do tempo, na qual a representação do sinal será evidenciada pelas
+alternâncias de suas amplitudes ao longo da série temporal, já na DFT o desmembramento
+resultará em uma série senoidal, que pamaretrizará o sinal não mais em função do tempo,
+mas sim nas suas amplitudes e frequŸncias, compondo, portanto, o sinal original em um
+outro domínio analítico. A expressão matemática que aplica a DFT sobre um sinal discreto
+pode ser descrita da seguinte forma:
+X[k] =
+N−1
+n=0
+x[n] · e−j 2π
+N kn
+Diante desse arcabouço teórico, é relevante reforçar que é possível utilizar a inversa
+da DFT para a eventual reconstrução do sinal com o intuito de restaurar as propriedades
+originais.
+realizada através da Transformada Discreta de Fourier (DFT), que permite a
+visão do sinal tanto no domínio do tempo quanto no domínio da frequŸncia.
+Enquanto a DFT transforma o sinal do domínio do tempo para o domínio da
+frequŸncia, a Transformada Inversa de Fourier (iDFT) faz o oposto, convertendo-
+o do domínio da frequŸncia para o domínio do tempo.
+Embora a aplicação direta da DFT possa ser lenta quando se envolve grandes
+conjuntos de dados, existem os algoritmos de Transformada Rápida de Fourier (FFT) que
+aceleram o processo. Esses algoritmos estão amplamente presentes em softwares como
+Matlab, Python e R.
+Apesar de útil para decompor o sinal em componentes de frequŸncia, a DFT não
+pode acompanhar as variações dessas componentes ao longo do tempo. Para isso, utilizamos
+métodos como a Transformada de Fourier de Tempo Curto (STFT), que nos permitem
+analisar essas mudanças.
+2.3.2
+STFT e Spectrograma
+A partir das diretrizes conceituais supramencionadas, pode-se constatar que a
+STFT (Transformada de Fourier de Curto Prazo) permite uma compreensão muito rica e
+detalhada da evolução espectral dos sinais digitais ao longo de uma série temporal. Essa
+técnica, ao contrário da Transformada de Fourier tradicional, que analisa um sinal em sua
+totalidade, segmenta o sinal em pequenos trechos, ou janelas, e aplica a Transformada de
+Fourier a cada janela separadamente. Isso permite capturar informações sobre a variação
+espectral do sinal ao longo do tempo, fornecendo uma representação mais detalhada das
+mudanças de frequŸncia que ocorrem durante a execução do sinal.
+Para calcular a STFT de um sinal discreto, temos a seguinte expressão matemática
+X[m, ω] = 1
+N−1
+n=0
+x[n] · w[n −m] · e−jωn
+Essa expressão deverá receber um tamanho do janelamento que irá particionar o
+sinal e aplicar a DFT em cima dos "pedaços"de sinais discretos.
+Uma das representações visuais mais comuns da STFT é o espectrograma, que exibe
+a magnitude da transformada de Fourier de curto prazo em um gráco bidimensional, onde
+o eixo horizontal representa o tempo, o eixo vertical representa a frequŸncia e a intensidade
+das cores ou tons representa a magnitude da energia espectral em cada ponto no tempo
+e frequŸncia. Oppenheim, A. V. e Schafer, R. W (OPPENHEIM, 1999) realçam que a
+representação gráca fornece uma visualização intuitiva e informativa das características
+temporais e espectrais do sinal, podendo ser vivamente aplicada em observação de sinais
+de áudio, como na análise de fala, música, sinais de sonar e muitas outras aplicações.
+2.3.3
+Correlação de Pearson
+A correlação de Pearson é uma ferramenta estatística crucial em muitos estudos
+e análises de dados por ter como kernel metodológico avaliar a relação linear entre duas
+variáveis através de um coeciente r que varia de -1 a 1 (MUKAKA, 2012). Essa metodo-
+logia permite aos pesquisadores e analistas identicar padrões, tendŸncias e associações
+importantes nos dados (SCHOBER; BOER; SCHWARTE, 2018). Isso não apenas ajuda
+na compreensão da estrutura subjacente dos fenômenos estudados, mas também pode
+fornecer insights valiosos para orientar a tomada de decisões em uma ampla gama de
+contextos.
+Pode-se obter esse coeciente de correlação seguindo a seguinte expressão matemá-
+tica:
+r =
+i=1(xi −¯x)(yi −¯y)
+n
+i=1(xi −¯x)2 n
+i=1(yi −¯y)2
+Com a devida interpretação da fórmula, como resposta o valor de 1 indica uma
+correlação positiva perfeita, o que signica que conforme uma variável aumenta, a outra
+também aumenta de forma linear. Um valor de -1 indica uma correlação negativa perfeita,
+o oposto da correlação positiva perfeita, onde conforme uma variável aumenta, a outra
+diminui linearmente. Um valor de 0 indica nenhuma correlação linear, o que signica que
+não há uma relação linear entre as duas variáveis. Quanto mais próximo o valor de restiver
+de -1 ou 1, mais forte é a relação linear entre as variáveis, enquanto valores próximos de 0
+O capítulo em questão fornecerá uma análise detalhada dos instrumentos e métodos
+empregados para conduzir esta pesquisa a m de oferecer uma visão abrangente do processo
+de coleta, processamento e a análise de dados. Inicialmente, haverá uma classicação da
+pesquisa cientíca, visando contextualizar o estudo dentro do panorama acadŸmico. Em
+seguida, haverá uma exposição sobre as técnicas de gravação adotadas, fornecendo uma
+descrição minuciosa dos parâmetros utilizados, como taxa de amostragem e resolução
+de bits, que resultaram na base de dados sonoros como principal artefato do estudo.
+Posteriormente, examinaremos os protocolos de alimentação dos camarões em ambiente
+laboratorial, destacando a importância do controle preciso das condições ambientais para
+garantir resultados conáveis. Além disso, discutiremos as ferramentas de programação
+empregadas para montar o material de estudo, enfatizando sua relevância na organização
+e análise dos dados obtidos. Através dessa abordagem integrada, buscamos fornecer uma
+compreensão abrangente dos métodos utilizados nesta pesquisa e sua contribuição para o
+avanço do conhecimento na área.
+3.1
+Classiﬁcação da Pesquisa
+Este Trabalho de Conclusão de Curso (TCC) será especicado segundo a classicação
+da pesquisa cientíca desenvolvida por Turrioni e Mello (TURRIONI; MELLO, 2012), na
+qual leva em consideração uma variedade de aspectos metodológicos empregados, o que
+proporciona uma base sólida para orientar a condução e a análise de estudos tecnológicos,
+obtendo uma compreensão mais clara e organizada do processo tratado.
+predominantemente quantitativa, focada na análise numérica dos dados. Para isso, serão
+empregados métodos experimentais, nos quais os algoritmos serão testados e os resultados
+serão registrados sistematicamente. A partir da elucidação das informações podemos
+destacar sobre a gura 4 os campos de reconhecimento ciŸntico do presente TCC gerando
+um plano classicatório para nosso desenvolvimento metodológico como o visto na gura
+3.2
+Processo de Coleta dos Dados Sonoros
+A corrente seção visa detalhar o principal instrumento de investigação empregado
+nesta pesquisa, abordando minuciosamente o processo de coleta dos dados sonoros durante
+a alimentação dos camarões. Ao utilizar uma variedade de grupos de áudio, pretende-se
+possuir um arcabouço extenso de informações rico e diversicado, pronto para ser explorado
+em profundidade. Além disso, será apresentado o método atualmente utilizado para marcar
+os momentos de atividade alimentar na qual já foi abordado anteriormente em estudos
+do autor, em "Python-based acoustic detection of Penaeus vannamei feeding behavior
+(2024)"(SáNCHEZ-GENDRIZ et al., 2025). Posteriormente adentra-se em uma descrição
+de um novo algoritmo para realizar essa tarefa. Este algoritmo, desenvolvido com o auxílio
+de bibliotecas de código aberto, visa introduzir uma nova abordagem para a detecção da
+atividade alimentar, proporcionando uma perspectiva inovadora e eciente para a análise
+dos dados coletados.
+3.2.1
+Coleta de Dados
+A norma adotada para a extração dos dados efetuou-se em um ambiente controlado,
+dos camarões foi realizado com cuidado para garantir a alta qualidade dos dados acústicos
+capturados.
+O sistema de captura de sinal acústico operava com um hidrofone omnidirecional
+SoundTrap 300 STD (Ocean Instruments, Nova Zelândia), com uma taxa de amostragem
+de 288 kHz, 16 bits de resolução e sensibilidade de -173 dB, permitindo a captura de sons
+com frequŸncias máximas de 144 kHz. Essa conguração foi escolhida para capturar os
+sons característicos de "fritura"gerados pelos "cliques"dos camarões durante a alimentação.
+O ambiente monitorado estava livre de ruídos e qualquer outra interferŸncia sonora,
+garantindo a captura de sons de alta qualidade (HAMILTON et al., 2024).
+O processo de gravação seguiu um protocolo rigoroso: os camarões foram transferidos
+para um tanque de gravação de plástico forrado internamente com espuma acústica,
+preenchido com 30L de água do mar articial, preparada com a mistura de sais especícos
+em proporções adequadas para simular a composição química da água do mar natural.
+Após um período de aclimatação de uma hora, foram realizadas gravações de 30 minutos
+para cada classe de peso de camarões. Para lidar com o tamanho dos arquivos de som
+gerados devido à alta taxa de amostragem (288 kHz), foi aplicado um ltro de banda para
+remover a largura de banda acima de 48 kHz. Isso simulou uma taxa de amostragem de 96
+kHz, permitindo comparar se essa redução afetava a potŸncia máxima e a frequŸncia de
+pico. No nal, os arquivos resultantes de áudio foram salvos no formato .wav.
+3.2.2
+Descrição dos Grupos Estudados
+Para enriquecer as observações, foram realizadas capturas de áudio utilizando
+diferentes grupos de camarões branco. Estes grupos foram divididos com base no peso dos
+indivíduos, medido em gramas, e na densidade populacional, expressa pela quantidade
+de camarões por metro cúbico. Ao todo foram selecionadas 5 classes de camarões com
+pesos distintos para comporem as análises, sendo elas camarões de 1g, 3g, 6g, 9g e
+12g. Em relação à densidade populacional, foram escolhidos 3 grupos distintos, com
+densidades de 50, 100 e 150 unidades por metro cúbico. Para obter uma melhor variedade
+de informações pertinentes a cada subgrupo, por exemplo, na coleta de dados do grupo de
+camarões de 6 gramas amostrados em densidade de 100 unidades por metro cúbico, foram
+realizadas 3 gravações, totalizando assim 5 grupos para pesos, 3 grupos de densidade e 15
+subgrupos, totalizando 45 gravações de áudio para nosso estudo. Essa abordagem permitiu
+uma investigação mais detalhada sobre como o comportamento sonoro durante o processo
+alimentar varia entre camarões de diferentes pesos e em ambientes com distintas densidades
+populacionais (HAMILTON et al., 2024). Esses parâmetros adicionais de tamanho e de
+3.2.3
+Descrição da Detecção Semi-Automática de atividade alimentar utili-
+zando o Software Raven
+O software Raven (Bioacoustics Research Program, 2014) é uma ferramenta de
+grande relevância na bioacústica, com aplicações signicativas na detecção de sons em
+diversas áreas de pesquisa, especialmente em estudos sobre mamíferos marinhos e anfíbios.
+O Raven Pro, versão 1.3, é uma ferramenta interativa de análise de som que permite
+aos pesquisadores processar e examinar registros acústicos de forma detalhada. Com
+funcionalidades avançadas, como a visualização de espectrogramas e a identicação de
+padrões sonoros especícos, o Raven Pro é essencial para a identicação e estudo das
+vocalizações de animais. Além disso, o software facilita a análise de dados acústicos,
+contribuindo signicativamente para a compreensão do comportamento e da ecologia das
+espécies estudadas.
+Conforme mencionado, o uso do software Raven foi adotado pela equipe de pes-
+quisadores da UFRPE em seus estudos sobre atividades alimentares de camarões. As
+funcionalidades avançadas do Raven foram utilizadas para identicar os padrões sonoros
+que compõem o "click" dos diferentes tamanhos de camarões. No software, foram inseridos
+os parâmetros adequados para a identicação dessas atividades, conseguindo detectar
+atividades alimentares de camarões a partir de 0,1 g. O software foi aplicado ao banco
+de dados de áudio mencionado anteriormente, com o objetivo de coletar os momentos
+especícos (em segundos) do áudio em que ocorriam as mordidas, alcançando uma precisão
+de milissegundos em suas detecções (HAMILTON et al., 2024).
+Os registros dos instantes de tempo dos "clicks" de cada áudio foram armazenados
+em uma pasta, com uma identicação clara para cada arquivo, indicando a qual gravação
+aqueles dados pertencem. Esses dados são de extrema importância para a pesquisa, pois
+servirão como mecanismo para validação dos resultados do método de detecção que será
+abordado posteriormente. Isso permitirá vericar se as detecções estão ocorrendo nos
+momentos desejados e se as taxas de atividades por uma determinada janela de tempo
+estão se comportando conforme o esperado.
+Além disso, é importante destacar que essas anotações, indicando os instantes de
+tempo dos "clicks" , possibilitam novas formas de visualizar o banco de dados, atribuindo
+rótulos para o momento do audio e suas caracteristicas relacionadas ao processo alimentar.
+Essa categorização pode ser extremamente útil para estudos futuros, oferecendo um recurso
+valioso para a análise e interpretação dos dados.
+Camarões utilizando Python
+Para desenvolver uma ferramenta de detecção automatica de processos alimentares
+de camarão, optou-se por implementar na linguagem de programação Python (Python Soft-
+ware Foundation, 2023) e essa escolha se deve ao fato dele ser amplamente reconhecido pela
+sua simplicidade e eciŸncia, permitindo que os pesquisadores desenvolvam e implementem
+algoritmos complexos de maneira intuitiva e ecaz.Além disso o Python oferece uma gama
+diversicada de bibliotecas robustas e atualizadas, como NumPy, SciPy, Matplotlib e,
+especialmente, a biblioteca Librosa (MCFEE et al., 2015), que é amplamente utilizada para
+a análise de sinais de áudio. Essas bibliotecas fornecem ferramentas poderosas e versáteis
+para o desenvolvimento de soluções sosticadas, desde a ltragem e transformação de
+sinais até a visualização e interpretação dos dados analisados.
+Dada a relevância das bibliotecas do Python previamente mencionadas, especial-
+mente a Librosa, já devidamente validada em diversos estudos acadŸmicos que versem
+a análise de informações sonoras, utilizamos funções consagradas dessa biblioteca para
+detectar a atividade alimentar dos camarões. Especicamente, emprega-se as funções
+‘librosa.onset_strength‘ e ‘librosa.onset_detect‘. A função ‘librosa.onset_strength‘ calcula
+a força dos onsets, descreve a variação da amplitude do sinal ao longo do tempo, desta-
+cando mudanças signicativas na intensidade. Essa representação é crucial para identicar
+momentos em que ocorrem eventos acústicos notáveis, como os sons produzidos pelos
+camarões durante a alimentação. Detectar essas variações permite que algoritmos, como o
+’librosa.onset_detect’, identiquem os onsets, que são pontos no tempo caracterizados por
+aumentos repentinos na energia do sinal, correspondendo a eventos sonoros distintos. No
+contexto da nossa pesquisa, esses onsets representam os momentos de atividade alimentar
+dos camarões, como os "clicks" que ocorrem durante a alimentação.
+A utilização dessas funções em conjunto são fundamentais para identicar os
+instantes exatos em que ocorrem os eventos de alimentação, permitindo uma análise
+precisa e detalhada da atividade alimentar dos camarões. Ao captar os instantes de tempo
+detectados por ‘librosa.onset_detect‘, podemos mapear os padrões de alimentação e, assim,
+obter uma compreensão mais profunda do comportamento alimentar dos camarões sob
+diferentes condições experimentais.
+Para cada arquivo de áudio, aplicou-se um algoritmo que processava os dados
+sonoros e gerava um vetor contendo os instantes em segundos em que ocorreram as
+atividades alimentares. Devido à extensão dos arquivos de áudio, a leitura era realizada em
+um arquivo no formato .h5. Posteriormente, esses momentos identicados pelo algoritmo
+serão comparados com os instantes de atividade alimentar coletados pelos pesquisadores
+da Universidade de Pernambuco, permitindo uma validação rigorosa dos resultados obtidos
+através do nosso método automatizado.
+alimentar de camarão dentro do audio
+Para visualizar a detecção e avaliar o desempenho do algoritmo descrito anteri-
+ormente, aplicamos o pipeline a um trecho de sinal de áudio do nosso banco de dados,
+com duração de 1 segundo. Essa abordagem permite analisar o trecho de áudio, suas
+características e os instantes detectados pelo algoritmo. No subplot projetado, o gráco
+superior exibe a forma de onda do sinal de áudio, permitindo uma análise direta do padrão
+temporal. O gráco intermediário apresenta um espectrograma desse trecho de áudio,
+proporcionando uma observação mais detalhada das atividades no domínio da frequŸncia
+ao longo do tempo, permitindo detectar visualmente os instantes de atividade. O terceiro
+subplot mostra os instantes de detecção identicados automaticamente via Librosa, in-
+dicados por linhas verticais vermelhas. Para ns de comparação, também incluímos os
+dados detectados semi-automaticamente utilizando o software Raven, com os instantes
+identicados por linhas verticais verdes, possibilitando a validação da precisão e da ecácia
+do algoritmo implementado.
+Espectrograma do trecho de áudio, (c) Instantes de detecção automáticos via
+Librosa (linhas vermelhas) e semi-automáticos via Raven (linhas verdes).
+Este capítulo apresenta uma análise aprofundada dos resultados obtidos pelo
+algoritmo de detecção automática de atividade alimentar. Conforme detalhado no capítulo
+3, a metodologia empregada para a coleta e análise dos dados envolveu o processamento
+de áudios que geraram vetores contendo os momentos exatos, em segundos, das atividades
+alimentares detectadas. Esses resultados serão meticulosamente comparados aos vetores que
+representam os instantes de atividade alimentar observados de maneira semi-automática
+pelos pesquisadores da Universidade de Pernambuco, utilizando o Software Raven.
+Essa abordagem não apenas demonstra a viabilidade e ecácia do uso de algoritmos
+automatizados na detecção de atividades alimentares, mas também contribui signicativa-
+mente para o aprimoramento das técnicas de monitoramento. A comparação entre os dados
+obtidos pelo algoritmo e as observações semi-automatizadas fornece insights valiosos, que
+podem orientar futuras pesquisas e avanços na área. Com uma análise detalhada e crítica,
+este capítulo busca validar a precisão do método automatizado e explorar as possibilidades
+de sua aplicação em estudos subsequentes.
+4.1
+Visualização do Comportamento Predito em Comparação com
+os Dados Reais Obtidos via Software Raven
+Durante o processo de criação de modelos preditivos, é essencial destacar a impor-
+tância da ilustração comparativa entre os resultados gerados e os dados reais. (ZUMBA et
+al., 2023) armam que os modelos de classicação são justicados não apenas por seus
+resultados, mas também pela convergŸncia desses resultados com a realidade investigada.
+Os autores enfatizam que existem várias métricas para medir a aproximação entre o modelo
+preditivo e a realidade, que geralmente são extraídos de uma matriz de confusão. Neste
+trabalho, foi utilizado uma grade de grácos comparativos, representada na gura 8, para
+essa nalidade.
+camarões (1g, 3g, 6g, 9g e 12g), enquanto as linhas indicam diferentes densidades
+populacionais (50, 100 e 150 camarões/m3). Em cada gráco, são apresentados
+dois stem plots: o gráco azul representa o nível de atividade alimentar a cada
+15 segundos, calculado com as ferramentas da biblioteca Librosa, e o gráco
+vermelho mostra o nível alimentar, também a cada 15 segundos, obtido pelo
+software Raven. Imagens adicionais com os subplots de todas as comparações
+realizadas no banco de dados estão disponíveis no Anexo.
+Ao analisar o conjunto de grácos, observa-se que o comportamento do algoritmo
+utilizando o Librosa é visualmente próximo ao comportamento observado nos dados
+coletados através do método semiautomático. As tendŸncias de comportamento entre
+os dois métodos estão em sintonia, demonstrando que o algoritmo desenvolvido pode
+replicar os padrões de atividade alimentar com um nível considerável de precisão. No
+entanto, ao observar grupos especícos, como camarões de menor peso, notam-se algumas
+inconsistŸncias. O algoritmo Librosa tende a detectar uma maior atividade alimentar do
+que o método Raven, especialmente nas amostras com menores densidades. Isso sugere
+que o algoritmo pode ser sensível a ruídos ou variações menores no sinal de áudio, que não
+são captadas pelo método semiautomático.
+4.2
+Análise do Erro Médio Quadrático (RMSE) na Comparação
+dos Métodos de Detecção
+intuitiva dos valores retornados tornam essa métrica essencial para a análise dos resultados
+deste trabalho.
+O RMSE foi calculado entre o vetor de quantidade de atividade alimentar por
+janela de tempo de 15 segundos, obtido via resultado do algoritmo de detecção automática,
+e o vetor de quantidade de atividade alimentar por janela de tempo de 15 segundos,
+obtido via resultado da detecção semiautomática pelo software Raven. Para cada áudio, os
+resultados dos dois algoritmos foram comparados utilizando o RMSE. Diferente da grade
+de grácos descrita no tópico anterior, esses valores proporcionam uma forma quantitativa
+de comparação e uma maior precisão na obtenção das análises. Valores menores de RMSE
+indicam uma maior similaridade entre os métodos, enquanto valores mais altos sugerem
+discrepâncias maiores.
+software Raven e pelo algoritmo implementado com a biblioteca Librosa na
+qual as linhas representam diferentes tamanhos de camarões (1g, 3g, 6g, 9g
+e 12g) avaliados na amostra, enquanto as colunas representam densidades de
+camarões (50, 100 e 150 camarões/m3), subdivididas pelos arquivos A, B e C.
+Observando o heatmap, percebe-se que os maiores valores de RMSE estão concen-
+trados nos menores tamanhos de camarões, especicamente nos de 1g. Conforme discutido
+anteriormente, um maior valor de RMSE indica uma maior discrepância entre os vetores
+de atividade alimentar detectados automaticamente e os obtidos pelo método semiau-
+tomático, sinalizando um desempenho inferior do algoritmo. O padrão identicado em
+nossos resultados sugere que o algoritmo enfrenta diculdades signicativas para detectar
+a atividade alimentar de camarões muito pequenos. Além disso, o pior cenário é observado
+quando a menor densidade (50 camarões/m3) é combinada com o peso de 1g, resultando
+nos maiores valores de RMSE. Esses achados são críticos para entender as limitações do
+algoritmo e direcionar futuros aprimoramentos.
+4.3
+Análise da Correlação na Comparação dos Métodos de Detec-
+ção
+Como já introduzido anteriormente no capitulo 2 a respeito da correlação de
+tempo. Especicamente, queremos observar se as variações na atividade alimentar, como
+aumentos ou diminuições, são representadas de forma consistente pelo algoritmo de detecção
+automática em comparação com o método semiautomático.
+Para a comparação que será realizada, o objetivo de cada índice de correlação
+deve ser pelo menos uma correlação linear positiva. Valores negativos indicam que os
+dois métodos estão apresentando tendŸncias completamente distintas, como, por exemplo,
+quando em um tipo de detecção o nível de atividade alimentar está se elevando e no outro
+está diminuindo. Já uma correlação positiva sugere que a tendŸncia de detecção é a mesma,
+seja aumentando ou diminuindo. Isso é crucial para validar a ecácia do algoritmo de
+detecção automática em replicar os resultados do método semiautomático.
+software Raven e pelo algoritmo implementado com a biblioteca Librosa. As
+linhas representam os diferentes tamanhos de camarões avaliados (1g, 3g, 6g,
+9g e 12g), enquanto as colunas indicam as densidades populacionais (50, 100
+e 150 camarões/m3), subdivididas pelos arquivos A, B e C.
+Ao analisar os resultados expressos nos índices de correlação entre as detecções
+coletadas de eventos dos métodos na 10, pode-se obter uma visão detalhada sobre como a
+precisão da detecção de atividade alimentar do algoritmo varia conforme executado sobre
+áudios com diferenças no tamanho e na densidade dos camarões. A diferença reside na
+intensidade dessa atividade: em um método, pode-se identicar um aumento signicativo,
+enquanto no outro o aumento pode ser menos acentuado. Analisando a primeira linha
+da gura, temos o grupo das correlações de resultados para camarões de 1g, onde os
+valores são predominantemente baixos, variando de -0.67 a 0.068, indicando uma baixa
+correspondŸncia entre os métodos de detecção automática e semiautomática. Isso sugere
+que o algoritmo não representa adequadamente as variações de atividade alimentar para
+camarões desse tamanho.
+Para camarões de 3g, os coecientes de correlação aumentam signicativamente,
+variando de 0.59 a 0.98, demonstrando uma forte correlação positiva, especialmente nas
+densidades maiores (100 e 150 camarões/m3). Para camarões de 6g, a correlação é ainda
+mais alta, com coecientes variando de 0.97 a 0.99, indicando que o algoritmo está
+resultados do método semiautomático.
+As regiões com os melhores resultados, especialmente em camarões de tamanhos
+intermediários e maiores, demonstram a conabilidade e ecácia do algoritmo de detecção
+automática. Esses altos valores de correlação validam o uso do algoritmo como uma
+alternativa ao método semiautomático, proporcionando uma solução eciente e precisa
+para a detecção de atividade alimentar para certos grupos de camarões.
+Este trabalho de conclusão de curso apresentou o desenvolvimento e a avaliação de
+um algoritmo de detecção automática de atividade alimentar de camarões, especicamente
+da espécie Litopenaeus vannamei, utilizando ferramentas da biblioteca Librosa em Python.
+Através de uma série de análises comparativas, foi possível vericar a ecácia do algoritmo
+em diferentes condições experimentais, comparando seus resultados com os obtidos pelo
+método semiautomático utilizando o software Raven.
+Compilando as informações discutidas no capitulo 4, nota-se algumas limitações do
+algoritmo de detecção automática. Em particular, a precisão do algoritmo foi signicati-
+vamente reduzida para camarões de menor tamanho (1g), com valores de correlação de
+Pearson predominantemente baixos e altos valores de RMSE. Isso sugere que o algoritmo
+tem diculdade em detectar de forma precisa a atividade alimentar em cenários onde os
+camarões são muito pequenos. Essas limitações apontam para a necessidade de ajustes e
+melhorias no algoritmo para lidar melhor com diferentes tamanhos de camarões e variações
+nas condições de coleta dos sinais de áudio.
+Apesar das limitações, o desenvolvimento deste algoritmo oferece diversas contribui-
+ções importantes tanto para a pesquisa acadŸmica quanto para a indústria de carcinicultura.
+Para a pesquisa acadŸmica, o algoritmo proporciona uma nova ferramenta para a detecção
+de atividade alimentar de camarões, permitindo análises mais rápidas e menos dependentes
+de processos manuais intensivos. A metodologia empregada pode ser aplicada a outros
+estudos de bioacústica, incentivando a automação e o uso de técnicas de processamento
+digital de sinais em diversas áreas de pesquisa. Na indústria de carcinicultura, a im-
+plementação de um algoritmo de detecção automática pode reduzir signicativamente
+os custos operacionais, diminuindo a necessidade de intervenção manual e o tempo de
+análise. A capacidade de monitorar de forma contínua e precisa a atividade alimentar dos
+camarões pode levar a uma melhor gestão alimentar, resultando em aumentos na eciŸncia
+da produção e na saúde dos camarões. Além disso, o uso dessa tecnologia pode ajudar
+na detecção precoce de problemas de saúde e comportamentais, permitindo intervenções
+rápidas e efetivas.
+Para superar as limitações identicadas e aumentar a precisão do algoritmo de
+detecção automática, especialmente em cenários com camarões de menor tamanho, é
+signicativamente a capacidade do algoritmo de distinguir sinais de atividade alimentar de
+ruídos de fundo. Além disso, técnicas de pré-processamento avançadas, como a normalização
+de dados e a ltragem de ruídos, podem ser aplicadas para melhorar a qualidade dos sinais
+de entrada. A utilização de algoritmos de machine learning para ajustar automaticamente
+os parâmetros do modelo em função das características especícas dos sinais de áudio
+capturados também pode aumentar a robustez e a precisão do algoritmo.
+Em conclusão, o desenvolvimento do algoritmo de detecção automática de atividade
+alimentar de camarões representa um avanço signicativo na automação de processos na
+aquicultura. Embora ainda existam desaos a serem superados, as contribuições potenciais
+tanto para a pesquisa quanto para a indústria são vastas. A continuidade deste trabalho, com
+foco em melhorias e adaptações, poderá consolidar ainda mais a ecácia e a aplicabilidade
+desta tecnologia, beneciando amplamente o setor de carcinicultura.
+ARAUJO, J. A. et al. EciŸncia produtiva das fazendas de carcinicultura no estado do
+ceará. RESR, Piracicaba-SP, v. 56, n. 1, p. 035–050, Jan./Mar. 2018.
+BERK, I. Sound production by white shrimp (penaeus setiferus), analysis of another
+crustacean-like sound from the gulf of mexico, and applications for passive sonar in the
+shrimping industry. Journal of Shellﬁsh Research, NATL SHELLFISHERIES ASSOC
+C/O DR. SANDRA E. SHUMWAY, NATURAL SCIENCE . . . , v. 17, n. 5, p. 1497–1500,
+1998.
+Bioacoustics Research Program. Raven Pro: Interactive Sound Analysis Software
+(Version 1.6). 2014. The Cornell Lab of Ornithology, Ithaca, NY. Disponível em:
+<http://ravensoundsoftware.com/>http://ravensoundsoftware.com/.
+COQUEREAU, L. et al. Sound production and associated behaviours of benthic
+invertebrates from a coastal habitat in the north-east atlantic. Marine Biology, Springer
+Science and Business Media LLC, v. 163, n. 5, maio 2016. ISSN 1432-1793. Disponível em:
+<http://dx.doi.org/10.1007/s00227-016-2902-2>http://dx.doi.org/10.1007/s00227-016-
+2902-2.
+FAO. The State of World Fisheries and Aquaculture 2020. FAO,
+2020. ISBN 9789251326923. Disponível em: <http://dx.doi.org/10.4060-
+/ca9229en>http://dx.doi.org/10.4060/ca9229en.
+HAMILTON, S. et al. Size matters: Variability in the acoustic parameters during feeding
+activity of penaeus vannamei in dierent size classes. Aquaculture, Elsevier BV, v. 587,
+p. 740843, jun. 2024. ISSN 0044-8486. Disponível em: <http://dx.doi.org/10.1016/j-
+.aquaculture.2024.740843>http://dx.doi.org/10.1016/j.aquaculture.2024.740843.
+HAMILTON, S. et al. Sound production mechanism in the brazilian spiny lobsters (family
+palinuridae). Zoomorphology, Springer, v. 138, n. 4, p. 475–482, 2019.
+JéZéQUEL, Y. et al. Acoustic behaviour of male european lobsters (homarus gammarus)
+during agonistic encounters. Journal of Experimental Biology, The Company of
+Biologists, jan. 2020. ISSN 0022-0949. Disponível em: <http://dx.doi.org/10.1242/jeb-
+.211276>http://dx.doi.org/10.1242/jeb.211276.
+LYONS, R. Understanding Digital Signal Processing. Prentice
+Hall/PTR, 2004. (Prentice Hall professional technical reference).
+ISBN 9780131089891. Disponível em: <https://books.google.com.br-
+/books?id=f yCQgAACAAJ>https://books.google.com.br/books?id=f_yCQgAACAAJ.
+MCFEE, B. et al. librosa: Audio and Music Signal Analysis in Python. 2015.
+https://librosa.org/. Version 0.8.0. Disponível em: <https://librosa.org-
+/>https://librosa.org/.
+PEIXOTO, S. et al. Acoustic activity of litopenaeus vannamei fed pelleted
+and extruded diets. Aquaculture, Elsevier BV, v. 525, p. 735307, ago. 2020.
+ISSN 0044-8486. Disponível em: <http://dx.doi.org/10.1016/j.aquaculture.2020-
+.735307>http://dx.doi.org/10.1016/j.aquaculture.2020.735307.
+PULGAR-PANTALEON, E. M.; SANCHEZ-GENDRIZ, I.; GUEDES, L. A. Ecoacoustica-
+nalyzer: A long-term acoustic data analysis tool for environmental monitoring. Software Im-
+pacts, Elsevier BV, v. 17, p. 100565, set. 2023. ISSN 2665-9638. Disponível em: <http://dx-
+.doi.org/10.1016/j.simpa.2023.100565>http://dx.doi.org/10.1016/j.simpa.2023.100565.
+Python Software Foundation. Python: A Dynamic, Open Source Programming
+Language. Beaverton, OR, 2023. Version 3.10. Disponível em: <https://www.python.org-
+/>https://www.python.org/.
+REIS, J. et al. Passive acoustic monitoring as a tool to assess feed response and growth of
+shrimp in ponds and research systems. Aquaculture, Elsevier BV, v. 546, p. 737326, jan.
+2022. ISSN 0044-8486. Disponível em: <http://dx.doi.org/10.1016/j.aquaculture.2021-
+.737326>http://dx.doi.org/10.1016/j.aquaculture.2021.737326.
+SANCHEZ-GENDRIZ, I. Signal processing basics applied to ecoacoustics. Ecological Infor-
+matics, Elsevier BV, v. 66, p. 101445, dez. 2021. ISSN 1574-9541. Disponível em: <http://dx-
+.doi.org/10.1016/j.ecoinf.2021.101445>http://dx.doi.org/10.1016/j.ecoinf.2021.101445.
+SCHOBER, P.; BOER, C.; SCHWARTE, L. A. Correlation coecients: Appropriate use
+and interpretation. Anesthesia amp; Analgesia, Ovid Technologies (Wolters Kluwer Health),
+v. 126, n. 5, p. 1763–1768, maio 2018. ISSN 0003-2999. Disponível em: <http://dx.doi.org-
+/10.1213/ANE.0000000000002864>http://dx.doi.org/10.1213/ANE.0000000000002864.
+SILVA, J. F. et al. Acoustic characterization of feeding activity of litopenaeus vannamei in
+captivity. Aquaculture, Elsevier, v. 501, p. 76–81, 2019.
+SIQUEIRA, T. Aquicultura: a nova fronteira para aumentar a produção mundial de
+alimentos de forma sustentável. Boletim regional, urbano e ambiental do Ipea - Instituto
+de Pesquisa Econômica Aplicada, v. 17, p. 53–60, 2017.
+SMITH, D. V.; TABRETT, S. The use of passive acoustics to measure feed consumption
+by penaeus monodon (giant tiger prawn) in cultured systems. Aquacultural Engineering,
+Elsevier BV, v. 57, p. 38–47, nov. 2013. ISSN 0144-8609. Disponível em: <http://dx.doi-
+.org/10.1016/j.aquaeng.2013.06.003>http://dx.doi.org/10.1016/j.aquaeng.2013.06.003.
+SáNCHEZ-GENDRIZ, I. et al. Python-based acoustic detection of penaeus
+vannamei feeding behavior. Aquaculture, Elsevier BV, v. 595, p. 741645, jan. 2025.
+ISSN 0044-8486. Disponível em: <http://dx.doi.org/10.1016/j.aquaculture.2024-
+.741645>http://dx.doi.org/10.1016/j.aquaculture.2024.741645.
+ZUMBA, F. M. et al. Impacto da ciŸncia de dados no modus operandi das
+organizações: uma perspectiva conceitual. OBSERVATÓRIO DE LA ECONOMÍA
+LATINOAMERICANA, South Florida Publishing LLC, v. 21, n. 8, p. 9840–9861,
+ago. 2023. ISSN 1696-8352. Disponível em: <http://dx.doi.org/10.55905/oelv21n8-
+108>http://dx.doi.org/10.55905/oelv21n8-108.
+Anexos
+áudio dos camarões com peso de 1g.
+áudio dos camarões com peso de 3g.
+áudio dos camarões com peso de 6g.
+áudio dos camarões com peso de 9g.
+áudio dos camarões com peso de 12g.
