@@ -1,237 +1,511 @@
 """
-preprocessamento.py
-Pipeline de pré-processamento de texto extraído de PDF.
-Inclui limpeza, NER manual (termos técnicos + acadêmicos),
-filtros de qualidade e extração de metadados estruturados.
+preprocessamento.py — v4
+Pipeline: limpeza → NER híbrido (spaCy + manual) → metadados.
 
-MELHORIAS v2:
-- NER manual expandido com entidades acadêmicas (PESSOA_ACAD, INST, DEPT, CURSO)
-- extrair_metadados() reescrito: captura autor, orientador, coorientador,
-  universidade, departamento, curso, título e ano com regex robustos
-- normalizar_entidade_pessoa() para padronizar nomes (evita duplicatas no grafo)
-- novo label ORIENTADOR e AUTOR para uso direto no grafo relacional
+Hierarquia do grafo:
+  UNIV → DEPT → ORIENTADOR → AUTOR → TRABALHO → AREA → FERRAMENTA
 """
 
-import re
-import unicodedata
-import spacy
+import re, unicodedata
 from collections import Counter
+import spacy
 from spacy.tokens import Doc
 from spacy.util import filter_spans
 
-
-# ─────────────────────────────────────────────
-# NER MANUAL — TECNOLOGIAS (mantido do original)
-# ─────────────────────────────────────────────
-TERMOS_ENG_COMP = {
-    # TECNOLOGIAS / MODELOS / ALGORITMOS (TEC)
-    "LSTM": "TEC", "CNN": "TEC", "RNN": "TEC", "GAN": "TEC",
-    "Transformer": "TEC", "BERT": "TEC", "GPT": "TEC", "LLaMA": "TEC",
-    "YOLO": "TEC", "ResNet": "TEC", "VGG": "TEC", "AlexNet": "TEC",
-    "U-Net": "TEC", "SVM": "TEC", "KNN": "TEC", "Random Forest": "TEC",
-    "XGBoost": "TEC", "LightGBM": "TEC", "CatBoost": "TEC", "K-Means": "TEC",
-    "DBSCAN": "TEC", "PCA": "TEC", "t-SNE": "TEC", "Autoencoder": "TEC",
-    "VAE": "TEC", "DBN": "TEC", "MLP": "TEC", "RBM": "TEC",
-    "Seq2Seq": "TEC", "Attention": "TEC", "Self-Attention": "TEC",
-    "Graph Neural Network": "TEC", "GCN": "TEC", "GAT": "TEC",
-    "RAG": "TEC", "Reinforcement Learning": "TEC", "Federated Learning": "TEC",
-    "Transfer Learning": "TEC", "Multimodal Learning": "TEC",
-
-    # SUBÁREAS (AREA)
-    "Machine Learning": "AREA", "Deep Learning": "AREA", "Redes Neurais": "AREA",
-    "Visão Computacional": "AREA", "Processamento de Linguagem Natural": "AREA",
-    "PLN": "AREA", "NLP": "AREA", "Sistemas Embarcados": "AREA",
-    "Internet das Coisas": "AREA", "IoT": "AREA", "Robótica": "AREA",
-    "Inteligência Artificial": "AREA", "IA": "AREA", "Big Data": "AREA",
-    "Data Science": "AREA", "Engenharia de Software": "AREA",
-    "Computação em Nuvem": "AREA", "Edge Computing": "AREA",
-    "Segurança da Informação": "AREA", "Blockchain": "AREA",
-    "Teoria dos Grafos": "AREA", "Redes Complexas": "AREA",
-    "Processamento de Sinais": "AREA", "Sistemas Distribuídos": "AREA",
-    "Banco de Dados": "AREA", "Computação Gráfica": "AREA",
-
-    # FERRAMENTAS (FERRAMENTA)
-    "TensorFlow": "FERRAMENTA", "PyTorch": "FERRAMENTA", "Keras": "FERRAMENTA",
-    "Scikit-learn": "FERRAMENTA", "Pandas": "FERRAMENTA", "NumPy": "FERRAMENTA",
-    "OpenCV": "FERRAMENTA", "spaCy": "FERRAMENTA", "Hugging Face": "FERRAMENTA",
-    "Transformers": "FERRAMENTA", "LangChain": "FERRAMENTA", "FastAPI": "FERRAMENTA",
-    "Docker": "FERRAMENTA", "Streamlit": "FERRAMENTA", "Git": "FERRAMENTA",
-    "GitHub": "FERRAMENTA", "Jupyter": "FERRAMENTA", "Colab": "FERRAMENTA",
-    "Elasticsearch": "FERRAMENTA", "Kibana": "FERRAMENTA",
-    "NetworkX": "FERRAMENTA", "Gephi": "FERRAMENTA",
-    "nxviz": "FERRAMENTA", "Pyvis": "FERRAMENTA", "Matplotlib": "FERRAMENTA",
-
-    # HARDWARE
-    "GPU": "HARDWARE", "CPU": "HARDWARE", "TPU": "HARDWARE", "FPGA": "HARDWARE",
-    "RAM": "HARDWARE", "Arduino": "HARDWARE", "Raspberry Pi": "HARDWARE",
-    "ESP32": "HARDWARE", "NVIDIA Jetson": "HARDWARE",
-
-    # MÉTRICAS / CONCEITOS
-    "Acurácia": "CONCEITO", "Precisão": "CONCEITO", "Recall": "CONCEITO",
-    "F1-score": "CONCEITO", "Overfitting": "CONCEITO", "Underfitting": "CONCEITO",
-    "Dropout": "CONCEITO", "Batch Normalization": "CONCEITO",
-    "Gradient Descent": "CONCEITO", "Adam": "CONCEITO", "SGD": "CONCEITO",
-    "Embedding": "CONCEITO", "Word2Vec": "CONCEITO", "GloVe": "CONCEITO",
-    "Coeficiente de Agrupamento": "CONCEITO", "Centralidade": "CONCEITO",
-    "Betweenness": "CONCEITO", "Pagerank": "CONCEITO", "Clustering": "CONCEITO",
-    "Densidade": "CONCEITO", "Diâmetro": "CONCEITO", "Componentes Conectados": "CONCEITO",
-    "Named Entity Recognition": "CONCEITO", "NER": "CONCEITO",
-    "co-ocorrência": "CONCEITO", "Co-Ocorrência": "CONCEITO",
+# ══════════════════════════════════════════════════════════════════
+# 1. DICIONÁRIOS NER MANUAL
+# ══════════════════════════════════════════════════════════════════
+TERMOS_TEC = {
+    "LSTM","CNN","RNN","GAN","Transformer","BERT","GPT","LLaMA",
+    "YOLO","ResNet","VGG","AlexNet","U-Net","SVM","KNN",
+    "Random Forest","XGBoost","LightGBM","CatBoost","K-Means",
+    "DBSCAN","PCA","t-SNE","Autoencoder","VAE","DBN","MLP",
+    "Seq2Seq","GCN","GAT","RAG","LoRA","QLoRA",
+    "Graph Neural Network","Federated Learning","Transfer Learning",
+}
+TERMOS_AREA = {
+    "Machine Learning","Deep Learning","Redes Neurais",
+    "Visão Computacional","Processamento de Linguagem Natural",
+    "PLN","NLP","Sistemas Embarcados","Internet das Coisas","IoT",
+    "Robótica","Inteligência Artificial","IA","Big Data",
+    "Data Science","Engenharia de Software","Computação em Nuvem",
+    "Edge Computing","Segurança da Informação","Blockchain",
+    "Teoria dos Grafos","Redes Complexas","Processamento de Sinais",
+    "Sistemas Distribuídos","Banco de Dados","Computação Gráfica",
+    "Redes de Computadores","Automação","Controle Automático",
+    "Aprendizado por Reforço","Multimodal Learning",
+}
+TERMOS_FERRAMENTA = {
+    "TensorFlow","PyTorch","Keras","Scikit-learn","Pandas","NumPy",
+    "OpenCV","spaCy","Hugging Face","LangChain","LangGraph",
+    "LlamaIndex","FastAPI","Docker","Streamlit","Git","GitHub",
+    "Jupyter","Colab","Elasticsearch","Kibana","NetworkX","Gephi",
+    "Pyvis","Matplotlib","Plotly","Seaborn","nxviz",
+    "PostgreSQL","MongoDB","Redis","Kafka","Spark","Airflow",
+    "Kubernetes","Terraform","Grafana","Prometheus",
+    "Ollama","Chroma","FAISS","Pinecone","MLflow","DVC",
+}
+TERMOS_HARDWARE = {
+    "GPU","CPU","TPU","FPGA","RAM","Arduino",
+    "Raspberry Pi","ESP32","NVIDIA Jetson",
+}
+TERMOS_CONCEITO = {
+    "Acurácia","Precisão","Recall","F1-score","Overfitting",
+    "Underfitting","Dropout","Batch Normalization","Gradient Descent",
+    "Adam","SGD","Embedding","Word2Vec","GloVe",
+    "Coeficiente de Agrupamento","Centralidade","Betweenness",
+    "Pagerank","Clustering","Densidade","Diâmetro",
+    "Componentes Conectados","Named Entity Recognition","NER",
+    "co-ocorrência","Co-Ocorrência",
 }
 
-# ─────────────────────────────────────────────
-# NER MANUAL — ENTIDADES ACADÊMICAS  ← NOVO
-# ─────────────────────────────────────────────
+TERMOS_ENG_COMP: dict = {}
+for _t in TERMOS_TEC:        TERMOS_ENG_COMP[_t] = "TEC"
+for _t in TERMOS_AREA:       TERMOS_ENG_COMP[_t] = "AREA"
+for _t in TERMOS_FERRAMENTA: TERMOS_ENG_COMP[_t] = "FERRAMENTA"
+for _t in TERMOS_HARDWARE:   TERMOS_ENG_COMP[_t] = "HARDWARE"
+for _t in TERMOS_CONCEITO:   TERMOS_ENG_COMP[_t] = "CONCEITO"
 
-# Universidades brasileiras (sigla → nome canônico)
+# Professores DCA — armazenados em NFD+lowercase para busca robusta
+PROFESSORES_DCA = {
+    "adelardo adelino dantas de medeiros",
+    "adriao duarte doria neto",
+    "agostinho de medeiros brito junior",
+    "anderson luiz de oliveira cavalcanti",
+    "andre laurindo maitelli",
+    "andres ortiz salazar",
+    "carlos eduardo trabuco dorea",
+    "carlos manuel dias viegas",
+    "diogo pinheiro fernandes pedrosa",
+    "eduardo de lucena falcao",
+    "fabio meneghetti ugulino de araujo",
+    "francisco das chagas mota",
+    "ivanovitch medeiros dantas da silva",
+    "jose ivonildo do rego",
+    "luiz affonso henderson guedes de oliveira",
+    "luiz felipe de queiroz silveira",
+    "luiz marcos garcia goncalves",
+    "manoel firmino de medeiros junior",
+    "marcelo augusto costa fernandes",
+    "pablo javier alsina",
+    "paulo sergio da motta pires",
+    "ricardo ferreira pinheiro",
+    "samuel xavier de souza",
+    "sebastian yuri cavalcanti catunda",
+    "tiago tavares leite barros",
+}
+
 UNIVERSIDADES = {
-    # Nordeste
-    "UFRN":    "Universidade Federal do Rio Grande do Norte",
-    "UFPB":    "Universidade Federal da Paraíba",
-    "UFC":     "Universidade Federal do Ceará",
-    "UFPE":    "Universidade Federal de Pernambuco",
-    "UFAL":    "Universidade Federal de Alagoas",
-    "UFBA":    "Universidade Federal da Bahia",
-    "UFERSA":  "Universidade Federal Rural do Semi-Árido",
-    "IFRN":    "Instituto Federal do Rio Grande do Norte",
-    # Demais regiões
-    "USP":     "Universidade de São Paulo",
-    "UNICAMP": "Universidade Estadual de Campinas",
-    "UNESP":   "Universidade Estadual Paulista",
-    "UFMG":    "Universidade Federal de Minas Gerais",
-    "UFSC":    "Universidade Federal de Santa Catarina",
-    "UFRJ":    "Universidade Federal do Rio de Janeiro",
-    "UFPR":    "Universidade Federal do Paraná",
-    "UnB":     "Universidade de Brasília",
-    "UFAM":    "Universidade Federal do Amazonas",
-    "UFPA":    "Universidade Federal do Pará",
-    "UFES":    "Universidade Federal do Espírito Santo",
-    "UFG":     "Universidade Federal de Goiás",
-    "UFSCAR":  "Universidade Federal de São Carlos",
-    "FIOCRUZ": "Fundação Oswaldo Cruz",
+    "UFRN":"Universidade Federal do Rio Grande do Norte",
+    "UFPB":"Universidade Federal da Paraíba",
+    "UFC":"Universidade Federal do Ceará",
+    "UFPE":"Universidade Federal de Pernambuco",
+    "UFAL":"Universidade Federal de Alagoas",
+    "UFBA":"Universidade Federal da Bahia",
+    "UFERSA":"Universidade Federal Rural do Semi-Árido",
+    "IFRN":"Instituto Federal do Rio Grande do Norte",
+    "USP":"Universidade de São Paulo",
+    "UNICAMP":"Universidade Estadual de Campinas",
+    "UFMG":"Universidade Federal de Minas Gerais",
+    "UFSC":"Universidade Federal de Santa Catarina",
+    "UFRJ":"Universidade Federal do Rio de Janeiro",
+    "UFPR":"Universidade Federal do Paraná",
+    "UnB":"Universidade de Brasília",
 }
 
-# Expansão de nomes longos das mesmas universidades
+# chaves em NFD+lowercase para comparação robusta
 UNIVERSIDADES_NOMES_LONGOS = {
-    "universidade federal do rio grande do norte": "UFRN",
-    "universidade federal da paraíba":             "UFPB",
-    "universidade federal do ceará":               "UFC",
-    "universidade federal de pernambuco":          "UFPE",
-    "universidade federal de alagoas":             "UFAL",
-    "universidade federal da bahia":               "UFBA",
-    "universidade federal rural do semi-árido":    "UFERSA",
-    "instituto federal do rio grande do norte":    "IFRN",
-    "universidade de são paulo":                   "USP",
-    "universidade estadual de campinas":           "UNICAMP",
-    "universidade federal de minas gerais":        "UFMG",
-    "universidade federal de santa catarina":      "UFSC",
-    "universidade federal do rio de janeiro":      "UFRJ",
-    "universidade federal do paraná":              "UFPR",
-    "universidade de brasília":                    "UnB",
+    "universidade federal do rio grande do norte":"UFRN",
+    "universidade federal da paraiba":"UFPB",
+    "universidade federal do ceara":"UFC",
+    "universidade federal de pernambuco":"UFPE",
+    "universidade federal de alagoas":"UFAL",
+    "universidade federal da bahia":"UFBA",
+    "universidade federal rural do semi-arido":"UFERSA",
+    "instituto federal do rio grande do norte":"IFRN",
+    "universidade de sao paulo":"USP",
+    "universidade estadual de campinas":"UNICAMP",
+    "universidade federal de minas gerais":"UFMG",
+    "universidade federal de santa catarina":"UFSC",
+    "universidade federal do rio de janeiro":"UFRJ",
+    "universidade federal do parana":"UFPR",
+    "universidade de brasilia":"UnB",
 }
 
-# Departamentos e centros comuns
 DEPARTAMENTOS = {
-    "DCA":    "Departamento de Computação e Automação",
-    "DIMAp":  "Departamento de Informática e Matemática Aplicada",
-    "CT":     "Centro de Tecnologia",
-    "CCET":   "Centro de Ciências Exatas e da Terra",
-    "IMD":    "Instituto Metrópole Digital",
-    "ECT":    "Escola de Ciências e Tecnologia",
-    "DEE":    "Departamento de Engenharia Elétrica",
-    "DEN":    "Departamento de Engenharia",
-    "PPGEEC": "Programa de Pós-Graduação em Engenharia Elétrica e de Computação",
-    "PPgEEC": "Programa de Pós-Graduação em Engenharia Elétrica e de Computação",
-    "PPGSC":  "Programa de Pós-Graduação em Sistemas e Computação",
-    "PPGCC":  "Programa de Pós-Graduação em Ciência da Computação",
+    "DCA":"Departamento de Computação e Automação",
+    "DIMAp":"Departamento de Informática e Matemática Aplicada",
+    "CT":"Centro de Tecnologia",
+    "CCET":"Centro de Ciências Exatas e da Terra",
+    "IMD":"Instituto Metrópole Digital",
+    "ECT":"Escola de Ciências e Tecnologia",
+    "DEE":"Departamento de Engenharia Elétrica",
+    "PPGEEC":"Prog. PG Eng. Elétrica e Computação",
+    "PPgEEC":"Prog. PG Eng. Elétrica e Computação",
+    "PPGSC":"Prog. PG Sistemas e Computação",
+    "PPGCC":"Prog. PG Ciência da Computação",
 }
 
-# Cursos de graduação / pós
 CURSOS = {
-    "Engenharia de Computação":        "CURSO",
-    "Ciência da Computação":           "CURSO",
-    "Sistemas de Informação":          "CURSO",
-    "Engenharia Elétrica":             "CURSO",
-    "Engenharia de Software":          "CURSO",
-    "Tecnologia da Informação":        "CURSO",
-    "Redes de Computadores":           "CURSO",
-    "Análise e Desenvolvimento de Sistemas": "CURSO",
-    "Engenharia de Telecomunicações":  "CURSO",
-    "Engenharia Mecatrônica":          "CURSO",
+    "Engenharia de Computação":"CURSO",
+    "Ciência da Computação":"CURSO",
+    "Sistemas de Informação":"CURSO",
+    "Engenharia Elétrica":"CURSO",
+    "Engenharia de Software":"CURSO",
+    "Tecnologia da Informação":"CURSO",
+    "Redes de Computadores":"CURSO",
+    "Análise e Desenvolvimento de Sistemas":"CURSO",
+    "Engenharia de Telecomunicações":"CURSO",
+    "Engenharia Mecatrônica":"CURSO",
 }
 
-# Prefixos de tratamento acadêmico (usados na regex de orientador/banca)
-PREFIXOS_ACADEMICOS = (
-    r"Prof\.?\s*(?:Dr\.?|Me\.?|MSc\.?|Esp\.?)?"
-    r"|Profa?\.?\s*(?:Dra?\.?|Me\.?|MSc\.?)?"
-    r"|Dr\.?\s*|Dra?\.?\s*"
-    r"|Me\.?\s*|MSc\.?\s*"
-    r"|Esp\.?\s*"
+PREFIXOS_RX = (
+    r"(?:Prof\.?\s*(?:Dr\.?|Dra?\.?|Me\.?|MSc\.?)?\s*"
+    r"|Profa?\.?\s*(?:Dra?\.?|Me\.?|MSc?\.?)?\s*"
+    r"|Dr\.?\s*|Dra?\.?\s*|Me\.?\s*|MSc\.?\s*|Esp\.?\s*)"
 )
 
-
-# ─────────────────────────────────────────────
-# CONSTANTES DE LIMPEZA (mantidas do original)
-# ─────────────────────────────────────────────
 SUBSTITUICOES = [
-    (r"Ÿ", "ê"), (r"ﬁ", "fi"), (r"ﬂ", "fl"), (r"ﬀ", "ff"),
-    (r"ﬃ", "ffi"), (r"ﬄ", "ffl"), (r"\u00A0", " "), (r"\u2009", " "),
-    (r"[\u2013\u2014]", "-"), (r"[\u201C\u201D\u201E]", '"'),
-    (r"[\u2018\u2019]", "'"),
+    (r"Ÿ","ê"),(r"ﬁ","fi"),(r"ﬂ","fl"),(r"ﬀ","ff"),
+    (r"ﬃ","ffi"),(r"ﬄ","ffl"),(r"\u00A0"," "),(r"\u2009"," "),
+    (r"[\u2013\u2014]","-"),(r"[\u201C\u201D\u201E]",'"'),
+    (r"[\u2018\u2019]","'"),
 ]
 
 ABREVIACOES = re.compile(
     r"\b(Prof|Profa?|Dr|Dra?|Sr|Sra|Eng|Adv|et al|Apud|Op\.?\s*cit|Ibid"
     r"|fig|tab|eq|cap|vol|num|núm|pág|pp"
-    r"|jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez"
-    r"|[A-Z])\.",
+    r"|jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez|[A-Z])\.",
     re.IGNORECASE,
 )
 
 SIGLAS_TECNICAS = re.compile(
     r"^(LSTM|CNN|RNN|GAN|NLP|NER|API|GPU|CPU|RAM"
     r"|UFRN|UFPB|UFC|USP|UFMG|UFSC|UFAL|UFPE|UFERSA|IFRN"
-    r"|DCA|DIMAp|CT|IMD|ECT|CCET"
+    r"|DCA|DIMAp|CT|IMD|ECT|CCET|DEE|PPGEEC|PPgEEC|PPGSC|PPGCC"
     r"|HTTP|REST|SQL|NoSQL|JSON|XML|CSV|PDF"
     r"|BFS|DFS|KNN|SVM|MLP|DBN|AE|DAE|SAE"
-    r"|IoT|ML|DL|AI|LLM|RAG|PLN|NLP"
-    r"|IEEE|ACM|ABNT|NBR)$"
+    r"|IoT|ML|DL|AI|LLM|RAG|PLN|IEEE|ACM|ABNT|NBR)$"
 )
 
+RUIDO_ESTRUTURAL = re.compile(
+    r"\b(lista de (ilustra[çc][õo]es?|figuras?|tabelas?|abreviaturas?|siglas?)"
+    r"|(fundamenta[çc][aã]o|referencial)\s+te[oó]rica?"
+    r"|cap[íi]tulo\s+(conclus[aã]o|experimentos?|resultados?|introdu[çc][aã]o)"
+    r"|sumário\s+sumário|resultados?\s+figura|implementa[çc][aã]o\s+figura"
+    r"|p[aá]gina\s+na\s+internet|this\s+work\s+presents?|moreover"
+    r"|furthermore|nevertheless)\b",
+    re.IGNORECASE,
+)
 
-# ─────────────────────────────────────────────
-# ETAPA 1 — Leitura
-# ─────────────────────────────────────────────
+ENTIDADE_ARTEFATO = re.compile(
+    r"^(all\s+experiments?\s+were|american\s+standard\s+code"
+    r"|this\s+(work|study|paper)\s+(presents?|proposes?|describes?)"
+    r"|including\s+data\s+load|enables?\s+the\s+integrat"
+    r"|to\s+address\s+the|rich\s+framework\s+of"
+    r"|license\s+c[bc]|abstract\s+this\s+study|source\s*:\s*author)",
+    re.IGNORECASE,
+)
+
+STOPWORDS_EN = {
+    "the","this","using","were","with","that","from","into","and",
+    "for","are","has","have","been","its","their","these","those",
+    "which","while","although","despite","must","even","along","where",
+}
+
+MAX_TOKENS_ENTIDADE = 4
+
+_LABELS_CONFIAVEIS = {
+    "TEC","AREA","FERRAMENTA","HARDWARE","CONCEITO",
+    "INST","DEPT","CURSO","ORIENTADOR",
+}
+
+# ══════════════════════════════════════════════════════════════════
+# 2. UTILITÁRIOS
+# ══════════════════════════════════════════════════════════════════
+
+def _nfd(texto: str) -> str:
+    """NFD sem diacríticos, lowercase — para comparação robusta."""
+    return "".join(
+        c for c in unicodedata.normalize("NFD", texto)
+        if unicodedata.category(c) != "Mn"
+    ).lower()
+
+# ══════════════════════════════════════════════════════════════════
+# 3. SINGLETON SPACY
+# ══════════════════════════════════════════════════════════════════
+_nlp = None
+
+def _carregar_modelo():
+    global _nlp
+    if _nlp is not None:
+        return _nlp
+    for modelo in ("pt_core_news_lg", "pt_core_news_sm"):
+        try:
+            _nlp = spacy.load(modelo)
+            _nlp.max_length = 500_000
+            print(f"  Modelo spaCy: {modelo}")
+            return _nlp
+        except OSError:
+            continue
+    raise RuntimeError("Execute: python -m spacy download pt_core_news_sm")
+
+# ══════════════════════════════════════════════════════════════════
+# 4. NER MANUAL
+# ══════════════════════════════════════════════════════════════════
+
+def aplicar_ner_manual(doc: Doc) -> Doc:
+    """
+    Adiciona entidades dos dicionários manuais ao doc spaCy.
+    Labels: TEC | AREA | FERRAMENTA | HARDWARE | CONCEITO
+            INST | DEPT | CURSO | ORIENTADOR
+    """
+    novas = []
+    texto_lower = doc.text.lower()
+    texto_nfd   = _nfd(doc.text)
+
+    # termos técnicos
+    for termo, label in TERMOS_ENG_COMP.items():
+        for m in re.finditer(rf"\b{re.escape(termo.lower())}\b", texto_lower):
+            sp = doc.char_span(m.start(), m.end(), label=label)
+            if sp: novas.append(sp)
+
+    # universidades — sigla
+    for sigla in UNIVERSIDADES:
+        for m in re.finditer(rf"\b{re.escape(sigla)}\b", doc.text):
+            sp = doc.char_span(m.start(), m.end(), label="INST")
+            if sp: novas.append(sp)
+
+    # universidades — nome longo (NFD)
+    for nome_nfd in UNIVERSIDADES_NOMES_LONGOS:
+        for m in re.finditer(re.escape(nome_nfd), texto_nfd):
+            sp = doc.char_span(m.start(), m.end(), label="INST")
+            if sp: novas.append(sp)
+
+    # departamentos
+    for sigla in DEPARTAMENTOS:
+        for m in re.finditer(rf"\b{re.escape(sigla)}\b", doc.text):
+            sp = doc.char_span(m.start(), m.end(), label="DEPT")
+            if sp: novas.append(sp)
+
+    # cursos (NFD)
+    for nome_curso in CURSOS:
+        for m in re.finditer(re.escape(_nfd(nome_curso)), texto_nfd):
+            sp = doc.char_span(m.start(), m.end(), label="CURSO")
+            if sp: novas.append(sp)
+
+    # professores DCA — busca NFD (case/acento insensitive)
+    for prof_nfd in PROFESSORES_DCA:
+        for m in re.finditer(re.escape(prof_nfd), texto_nfd):
+            sp = doc.char_span(m.start(), m.end(), label="ORIENTADOR")
+            if sp: novas.append(sp)
+
+    doc.ents = filter_spans(list(doc.ents) + novas)
+    return doc
+
+# ══════════════════════════════════════════════════════════════════
+# 5. FILTRO PÓS-NER
+# ══════════════════════════════════════════════════════════════════
+
+def filtrar_entidade(texto_ent: str, label: str) -> bool:
+    """True → mantém | False → descarta."""
+    t = texto_ent.strip()
+    if label in _LABELS_CONFIAVEIS:
+        return len(t) > 1
+    if len(t) <= 2 or t.isdigit():
+        return False
+    if len(t.split()) > MAX_TOKENS_ENTIDADE:
+        return False
+    if ENTIDADE_ARTEFATO.match(t):
+        return False
+    if label == "MISC" and set(t.lower().split()) & STOPWORDS_EN:
+        return False
+    if RUIDO_ESTRUTURAL.search(t):
+        return False
+    return True
+
+# ══════════════════════════════════════════════════════════════════
+# 6. NORMALIZAÇÃO DE NOMES
+# ══════════════════════════════════════════════════════════════════
+
+def normalizar_nome_pessoa(nome: str) -> str:
+    """
+    Remove prefixos acadêmicos → Title Case.
+    Ex: 'Prof. Dr. João da Silva' → 'João Da Silva'
+    Retorna Title Case (não lowercase) para legibilidade nos grafos.
+    """
+    nome = re.sub(r"^" + PREFIXOS_RX, "", nome, flags=re.IGNORECASE).strip()
+    nome = re.sub(r"^[.,;:\-]+", "", nome).strip()
+    return " ".join(p.capitalize() for p in nome.split())
+
+# ══════════════════════════════════════════════════════════════════
+# 7. PALAVRAS-CHAVE DO TCC
+# ══════════════════════════════════════════════════════════════════
+
+def extrair_palavras_chave(doc) -> list:
+    """
+    Extrai palavras-chave do TCC a partir do NER.
+    Prioridade: AREA > TEC > FERRAMENTA > CONCEITO.
+    Deduplicado e ordenado por frequência decrescente.
+    """
+    contagem: dict = {}
+    labels_kw = {"AREA", "TEC", "FERRAMENTA", "CONCEITO"}
+    for ent in doc.ents:
+        if ent.label_ in labels_kw and filtrar_entidade(ent.text, ent.label_):
+            chave = _nfd(ent.text.strip())
+            contagem[chave] = contagem.get(chave, 0) + 1
+    return [
+        k.title()
+        for k, _ in sorted(contagem.items(), key=lambda x: x[1], reverse=True)
+    ]
+
+# ══════════════════════════════════════════════════════════════════
+# 8. EXTRAÇÃO DE METADADOS
+# ══════════════════════════════════════════════════════════════════
+
+def extrair_metadados(texto_bruto: str, nome_arquivo: str = "") -> dict:
+    """
+    Extrai metadados da capa/preâmbulo (primeiros 6000 chars).
+    Roda ANTES do preprocessar() para não perder a capa.
+    """
+    cab     = texto_bruto[:6000]
+    cab_nfd = _nfd(cab)
+
+    # Título
+    titulo = None
+    m = re.search(
+        r"([A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][^\n]{10,120})\n[^\n]*"
+        r"(Trabalho de Conclus|Monografia|Disserta|Tese)",
+        cab, re.IGNORECASE | re.DOTALL,
+    )
+    if m: titulo = m.group(1).strip()
+
+    # Autor
+    autor = None
+    m = re.search(
+        r"(?:Autor[a]?|Aluno[a]?)\s*:?\s*\n?\s*" + PREFIXOS_RX + r"?"
+        r"([A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+"
+        r"(?:\s+[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+){1,4})",
+        cab, re.IGNORECASE,
+    )
+    if m: autor = normalizar_nome_pessoa(m.group(1).strip())
+    if not autor:
+        for linha in cab.split("\n")[:30]:
+            linha = linha.strip()
+            if re.match(
+                r"^[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+"
+                r"(\s+[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+){1,4}$", linha,
+            ) and "UNIVERSIDADE" not in linha.upper():
+                c = normalizar_nome_pessoa(linha)
+                if len(c.split()) >= 2:
+                    autor = c; break
+
+    # Orientador
+    orientador = None
+    m = re.search(
+        r"(?:Orientador[a]?|Advisor)\s*:?\s*\n?\s*" + PREFIXOS_RX + r"?\s*"
+        r"([A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+"
+        r"(?:\s+[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+){1,4})",
+        cab, re.IGNORECASE,
+    )
+    if m: orientador = normalizar_nome_pessoa(m.group(1).strip())
+
+    # Coorientador
+    coorientador = None
+    m = re.search(
+        r"(?:Co-?[Oo]rientador[a]?)\s*:?\s*\n?\s*" + PREFIXOS_RX + r"?\s*"
+        r"([A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+"
+        r"(?:\s+[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+){1,4})",
+        cab, re.IGNORECASE,
+    )
+    if m: coorientador = normalizar_nome_pessoa(m.group(1).strip())
+
+    # Universidade
+    universidade, sigla_univ = None, None
+    for nome_nfd, sigla in UNIVERSIDADES_NOMES_LONGOS.items():
+        if nome_nfd in cab_nfd:
+            sigla_univ = sigla; universidade = UNIVERSIDADES[sigla]; break
+    if not universidade:
+        for sigla, nome in UNIVERSIDADES.items():
+            if re.search(rf"\b{sigla}\b", cab):
+                sigla_univ, universidade = sigla, nome; break
+
+    # Departamento
+    departamento = None
+    for sigla, nome in DEPARTAMENTOS.items():
+        if re.search(rf"\b{re.escape(sigla)}\b", cab):
+            departamento = nome; break
+    if not departamento:
+        m = re.search(
+            r"((?:Departamento|Centro|Instituto|Escola|Programa)\s+de\s+"
+            r"[A-ZÁÉÍÓÚ][^\n]{5,80})", cab, re.IGNORECASE,
+        )
+        if m: departamento = m.group(1).strip()
+
+    # Curso
+    curso = None
+    for nome_curso in CURSOS:
+        if _nfd(nome_curso) in cab_nfd:
+            curso = nome_curso; break
+
+    # Ano
+    anos = re.findall(r"\b(20\d{2}|19\d{2})\b", cab)
+    ano  = max(set(anos), key=anos.count) if anos else None
+
+    meta = {
+        "arquivo":      nome_arquivo,
+        "titulo":       titulo or nome_arquivo.replace(".txt",""),
+        "autor":        autor,
+        "orientador":   orientador,
+        "coorientador": coorientador,
+        "universidade": universidade,
+        "sigla_univ":   sigla_univ or "UFRN",
+        "departamento": departamento,
+        "curso":        curso,
+        "ano":          ano,
+    }
+    print("\n  ── Metadados extraídos ──")
+    for k, v in meta.items():
+        if v: print(f"    {k:<14}: {v}")
+    return meta
+
+# ══════════════════════════════════════════════════════════════════
+# 9. DIAGNÓSTICO
+# ══════════════════════════════════════════════════════════════════
+
+def diagnosticar(texto: str, n: int = 20) -> None:
+    letras_pt = set("áéíóúàâêôãõçüÁÉÍÓÚÀÂÊÔÃÕÇÜ")
+    suspeitos = [c for c in texto if ord(c) > 127 and c not in letras_pt]
+    contagem  = Counter(suspeitos).most_common(n)
+    if contagem:
+        print("  ── Chars suspeitos ──")
+        for char, freq in contagem:
+            print(f"    U+{ord(char):04X}  '{char}'  →  {freq}×")
+
+# ══════════════════════════════════════════════════════════════════
+# 10. PIPELINE DE LIMPEZA
+# ══════════════════════════════════════════════════════════════════
+
 def ler_arquivo(caminho: str) -> str:
     with open(caminho, encoding="utf-8", errors="replace") as f:
         return f.read()
 
-
-# ─────────────────────────────────────────────
-# ETAPA 2 — Normalização de caracteres
-# ─────────────────────────────────────────────
 def normalizar_caracteres(texto: str) -> str:
     for padrao, substituto in SUBSTITUICOES:
         texto = re.sub(padrao, substituto, texto)
     return texto
 
-
-# ─────────────────────────────────────────────
-# ETAPA 3 — Recorte do corpo técnico
-# ─────────────────────────────────────────────
 def recortar_corpo(texto: str) -> str:
-    inicio = re.search(r"\b(RESUMO|ABSTRACT)\b", texto)
-    fim    = re.search(
-        r"\b(REFER[ÊEĹ]NCIAS?|BIBLIOGRAPHY|BIBLIOGRAF[ÍI]A)\b", texto
+    texto = re.sub(
+        r"LISTA\s+DE\s+(ABREVIATURAS?|SIGLAS?|SÍMBOLOS?).+?(?=RESUMO|ABSTRACT)",
+        "", texto, flags=re.DOTALL | re.IGNORECASE,
     )
+    inicio = re.search(r"\b(RESUMO|ABSTRACT)\b", texto)
+    fim    = re.search(r"\b(REFER[ÊEĹ]NCIAS?|BIBLIOGRAPHY|BIBLIOGRAF[ÍI]A)\b", texto)
     if inicio and fim and inicio.start() < fim.start():
         return texto[inicio.start(): fim.start()]
     return texto
 
-
-# ─────────────────────────────────────────────
-# ETAPA 4 — Remoção de ruídos estruturais
-# ─────────────────────────────────────────────
 def remover_ruidos(texto: str) -> str:
     texto = re.sub(r"^\d{1,4}\s*$", "", texto, flags=re.MULTILINE)
     texto = re.sub(
@@ -239,11 +513,11 @@ def remover_ruidos(texto: str) -> str:
         "", texto, flags=re.MULTILINE | re.IGNORECASE,
     )
     texto = re.sub(r"^Fonte:.*$", "", texto, flags=re.MULTILINE | re.IGNORECASE)
-
+    texto = RUIDO_ESTRUTURAL.sub("", texto)
+    texto = re.sub(r"https?://\S+|www\.\S+", "", texto, flags=re.MULTILINE)
     def _remover_se_nao_sigla(m):
         linha = m.group(0).strip()
         return m.group(0) if SIGLAS_TECNICAS.match(linha) else ""
-
     texto = re.sub(
         r"^[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ\s]{2,60}$",
         _remover_se_nao_sigla, texto, flags=re.MULTILINE,
@@ -251,10 +525,6 @@ def remover_ruidos(texto: str) -> str:
     texto = re.sub(r"^\s*\S\s*$", "", texto, flags=re.MULTILINE)
     return texto
 
-
-# ─────────────────────────────────────────────
-# ETAPA 5 — Restauração de parágrafos
-# ─────────────────────────────────────────────
 def restaurar_paragrafos(texto: str) -> str:
     MARCA = "\x00"
     texto = ABREVIACOES.sub(lambda m: m.group(0).replace(".", MARCA), texto)
@@ -264,268 +534,16 @@ def restaurar_paragrafos(texto: str) -> str:
     texto = re.sub(r"\n{3,}", "\n\n", texto)
     return texto.strip()
 
-
-# ─────────────────────────────────────────────
-# ETAPA 6 — Limpeza final
-# ─────────────────────────────────────────────
 def limpeza_final(texto: str) -> str:
     texto = re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]", "", texto)
     texto = re.sub(r"[\uE000-\uF8FF]+", "", texto)
     texto = "".join(
         c for c in texto
-        if unicodedata.category(c)[0] not in ("C", "Z") or c in ("\n", "\t", " ")
+        if unicodedata.category(c)[0] not in ("C","Z") or c in ("\n","\t"," ")
     )
     paragrafos = [p.strip() for p in texto.split("\n\n") if p.strip()]
     return "\n\n".join(paragrafos)
 
-
-# ─────────────────────────────────────────────
-# DIAGNÓSTICO
-# ─────────────────────────────────────────────
-def diagnosticar(texto: str, n: int = 20) -> None:
-    letras_pt = set("áéíóúàâêôãõçüÁÉÍÓÚÀÂÊÔÃÕÇÜ")
-    suspeitos = [c for c in texto if ord(c) > 127 and c not in letras_pt]
-    contagem  = Counter(suspeitos).most_common(n)
-    print("─── Chars suspeitos restantes ───")
-    for char, freq in contagem:
-        print(f"  U+{ord(char):04X}  '{char}'  →  {freq}×")
-
-
-# ─────────────────────────────────────────────
-# UTILITÁRIO — normalizar nome de pessoa
-# ─────────────────────────────────────────────
-def normalizar_nome_pessoa(nome: str) -> str:
-    """
-    Remove prefixos acadêmicos e normaliza capitalização.
-    Ex.: 'Prof. Dr. João Silva' → 'João Silva'
-         'JOÃO SILVA' → 'João Silva'
-    """
-    # remove prefixos
-    nome = re.sub(
-        r"^(Prof\.?\s*(?:Dr\.?|Dra?\.?|Me\.?|MSc\.?)?\s*"
-        r"|Profa?\.?\s*(?:Dra?\.?|Me\.?|MSc\.?)?\s*"
-        r"|Dr\.?\s*|Dra?\.?\s*|Me\.?\s*|MSc\.?\s*|Esp\.?\s*)",
-        "", nome, flags=re.IGNORECASE,
-    ).strip()
-
-    # Título Case
-    partes = nome.split()
-    conectivos = {"de", "da", "do", "dos", "das", "e", "ou"}
-    nome = " ".join(
-        p.capitalize() if p.lower() not in conectivos else p.lower()
-        for p in partes
-    )
-    return nome
-
-
-# ─────────────────────────────────────────────
-# EXTRAÇÃO DE METADADOS — REESCRITO  ← NOVO
-# ─────────────────────────────────────────────
-def extrair_metadados(texto_bruto: str, nome_arquivo: str = "") -> dict:
-    """
-    Extrai metadados estruturados da capa/preâmbulo do TCC.
-
-    Retorna dict com:
-      arquivo, titulo, autor, orientador, coorientador,
-      universidade, sigla_univ, departamento, curso, ano
-    """
-    cabecalho = texto_bruto[:6000]   # capa + folha de rosto cabem aqui
-
-    # ── Título ──────────────────────────────────────────────────────────────
-    titulo = None
-    # Padrão: linha(s) ANTES da linha "Trabalho de Conclusão" ou "Monografia"
-    m = re.search(
-        r"([A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][^\n]{10,120})\n[^\n]*"
-        r"(Trabalho de Conclus|Monografia|Disserta|Tese)",
-        cabecalho, re.IGNORECASE | re.DOTALL,
-    )
-    if m:
-        titulo = m.group(1).strip()
-
-    # ── Autor ────────────────────────────────────────────────────────────────
-    autor = None
-    # Busca linha após "Autor:" / "Aluno:"
-    m = re.search(
-        r"(?:Autor[a]?|Aluno[a]?)\s*:?\s*\n?\s*"
-        r"(" + PREFIXOS_ACADEMICOS + r")?([A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+(?:\s+[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+){1,4})",
-        cabecalho, re.IGNORECASE,
-    )
-    if m:
-        autor = normalizar_nome_pessoa(m.group(0).split(":")[-1].strip())
-
-    # Se não encontrou via label, tenta heurística: nome próprio na capa
-    if not autor:
-        linhas = cabecalho.split("\n")
-        for linha in linhas[:30]:
-            linha = linha.strip()
-            # Nome próprio simples (2-5 palavras, sem números, sem caixa alta total)
-            if re.match(
-                r"^[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+"
-                r"(\s+[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+){1,4}$",
-                linha,
-            ) and "UNIVERSIDADE" not in linha.upper():
-                candidato = normalizar_nome_pessoa(linha)
-                if len(candidato.split()) >= 2:
-                    autor = candidato
-                    break
-
-    # ── Orientador ───────────────────────────────────────────────────────────
-    orientador = None
-    m = re.search(
-        r"(?:Orientador[a]?|Advisor)\s*:?\s*\n?\s*"
-        r"(?:" + PREFIXOS_ACADEMICOS + r")?\s*"
-        r"([A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+(?:\s+[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+){1,4})",
-        cabecalho, re.IGNORECASE,
-    )
-    if m:
-        orientador = normalizar_nome_pessoa(m.group(1).strip())
-
-    # ── Coorientador ─────────────────────────────────────────────────────────
-    coorientador = None
-    m = re.search(
-        r"(?:Co-?[Oo]rientador[a]?|Co-?[Aa]dvisor)\s*:?\s*\n?\s*"
-        r"(?:" + PREFIXOS_ACADEMICOS + r")?\s*"
-        r"([A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+(?:\s+[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç]+){1,4})",
-        cabecalho, re.IGNORECASE,
-    )
-    if m:
-        coorientador = normalizar_nome_pessoa(m.group(1).strip())
-
-    # ── Universidade ─────────────────────────────────────────────────────────
-    universidade = None
-    sigla_univ   = None
-
-    # Tenta pelo nome longo primeiro
-    for nome_longo, sigla in UNIVERSIDADES_NOMES_LONGOS.items():
-        if nome_longo in cabecalho.lower():
-            sigla_univ   = sigla
-            universidade = UNIVERSIDADES[sigla]
-            break
-
-    # Tenta pela sigla se não achou pelo nome
-    if not universidade:
-        for sigla, nome in UNIVERSIDADES.items():
-            if re.search(rf"\b{sigla}\b", cabecalho):
-                sigla_univ   = sigla
-                universidade = nome
-                break
-
-    # ── Departamento / Centro ────────────────────────────────────────────────
-    departamento = None
-    for sigla, nome in DEPARTAMENTOS.items():
-        if re.search(rf"\b{re.escape(sigla)}\b", cabecalho):
-            departamento = nome
-            break
-    # Também tenta pelo nome longo
-    if not departamento:
-        m = re.search(
-            r"((?:Departamento|Centro|Instituto|Escola|Programa)\s+de\s+[A-ZÁÉÍÓÚ][^\n]{5,80})",
-            cabecalho, re.IGNORECASE,
-        )
-        if m:
-            departamento = m.group(1).strip()
-
-    # ── Curso ────────────────────────────────────────────────────────────────
-    curso = None
-    for nome_curso in CURSOS:
-        if nome_curso.lower() in cabecalho.lower():
-            curso = nome_curso
-            break
-    if not curso:
-        m = re.search(
-            r"(?:Curso\s+de|Graduação\s+em|Bacharel(?:ado)?\s+em)\s+"
-            r"([A-ZÁÉÍÓÚÀÂÊÔÃÕÇ][a-záéíóúàâêôãõç\s]{5,60})",
-            cabecalho, re.IGNORECASE,
-        )
-        if m:
-            curso = m.group(1).strip()
-
-    # ── Ano ──────────────────────────────────────────────────────────────────
-    ano = None
-    anos = re.findall(r"\b(20\d{2}|19\d{2})\b", cabecalho)
-    if anos:
-        ano = max(set(anos), key=anos.count)
-
-    meta = {
-        "arquivo":      nome_arquivo,
-        "titulo":       titulo,
-        "autor":        autor,
-        "orientador":   orientador,
-        "coorientador": coorientador,
-        "universidade": universidade,
-        "sigla_univ":   sigla_univ,
-        "departamento": departamento,
-        "curso":        curso,
-        "ano":          ano,
-    }
-
-    print("\n  ── Metadados extraídos ──")
-    for k, v in meta.items():
-        print(f"    {k:<14}: {v}")
-
-    return meta
-
-
-# ─────────────────────────────────────────────
-# NER MANUAL — aplica dicionários ao doc spaCy
-# ─────────────────────────────────────────────
-def aplicar_ner_manual(doc: Doc) -> Doc:
-    """
-    Aplica TERMOS_ENG_COMP + entidades acadêmicas sem sobrescrever
-    entidades existentes e sem sobreposição (usa filter_spans).
-    """
-    novas_ents = []
-    texto_lower = doc.text.lower()
-
-    # — termos técnicos —
-    for termo, label in TERMOS_ENG_COMP.items():
-        for match in re.finditer(
-            rf"\b{re.escape(termo.lower())}\b", texto_lower
-        ):
-            sp = doc.char_span(match.start(), match.end(), label=label)
-            if sp is not None:
-                novas_ents.append(sp)
-
-    # — siglas de universidades —
-    for sigla in UNIVERSIDADES:
-        for match in re.finditer(rf"\b{re.escape(sigla)}\b", doc.text):
-            sp = doc.char_span(match.start(), match.end(), label="INST")
-            if sp is not None:
-                novas_ents.append(sp)
-
-    # — nomes longos de universidades —
-    for nome_longo, sigla in UNIVERSIDADES_NOMES_LONGOS.items():
-        for match in re.finditer(
-            re.escape(nome_longo), doc.text.lower()
-        ):
-            sp = doc.char_span(match.start(), match.end(), label="INST")
-            if sp is not None:
-                novas_ents.append(sp)
-
-    # — siglas de departamentos —
-    for sigla in DEPARTAMENTOS:
-        for match in re.finditer(rf"\b{re.escape(sigla)}\b", doc.text):
-            sp = doc.char_span(match.start(), match.end(), label="DEPT")
-            if sp is not None:
-                novas_ents.append(sp)
-
-    # — nomes de cursos —
-    for nome_curso in CURSOS:
-        for match in re.finditer(
-            re.escape(nome_curso.lower()), texto_lower
-        ):
-            sp = doc.char_span(match.start(), match.end(), label="CURSO")
-            if sp is not None:
-                novas_ents.append(sp)
-
-    todas = list(doc.ents) + novas_ents
-    doc.ents = filter_spans(todas)
-    return doc
-
-
-# ─────────────────────────────────────────────
-# PIPELINE COMPLETO
-# ─────────────────────────────────────────────
 def preprocessar(caminho: str, diagnostico: bool = False) -> str:
     texto = ler_arquivo(caminho)
     texto = normalizar_caracteres(texto)
@@ -533,27 +551,25 @@ def preprocessar(caminho: str, diagnostico: bool = False) -> str:
     texto = remover_ruidos(texto)
     texto = restaurar_paragrafos(texto)
     texto = limpeza_final(texto)
-    if diagnostico:
-        diagnosticar(texto)
+    if diagnostico: diagnosticar(texto)
     return texto
 
+# ══════════════════════════════════════════════════════════════════
+# 11. PROCESSAMENTO SPACY
+# ══════════════════════════════════════════════════════════════════
 
 def processar_spacy(texto: str):
-    """Carrega modelo português, processa texto e aplica NER manual."""
-    MODELO = "pt_core_news_lg"
-    nlp = spacy.load(MODELO)
-    nlp.max_length = 2_000_000
-    doc = nlp(texto)
+    nlp = _carregar_modelo()
+    if len(texto) >= nlp.max_length:
+        nlp.max_length = len(texto) + 10_000
+    doc = next(nlp.pipe([texto], batch_size=1))
     doc = aplicar_ner_manual(doc)
-
-    print(f"\n─── Sentenças detectadas: {len(list(doc.sents))} ───")
-    for i, sent in enumerate(doc.sents):
-        if i >= 5:
-            break
-        print(f"  [{i+1}] {sent.text[:60]}")
-
-    print(f"\n─── Entidades nomeadas (primeiras 15) ───")
-    for ent in list(doc.ents)[:15]:
-        print(f"  {ent.text:<35} → {ent.label_}")
-
+    total       = len(doc.ents)
+    apos_filtro = [e for e in doc.ents if filtrar_entidade(e.text, e.label_)]
+    print(f"\n  Sentenças : {len(list(doc.sents))}")
+    print(f"  Entidades : {total} brutas → {len(apos_filtro)} após filtro")
+    por_label: dict = {}
+    for e in apos_filtro: por_label.setdefault(e.label_, []).append(e.text)
+    for label, ents in sorted(por_label.items()):
+        print(f"    {label:<12} ({len(ents):>3}): {', '.join(ents[:5])}")
     return doc

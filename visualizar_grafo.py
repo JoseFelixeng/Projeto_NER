@@ -6,7 +6,6 @@ Cole estas funções no final do seu visualizar_grafo.py existente,
 ou importe deste arquivo separado.
 """
 
-import os
 import networkx as nx
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -46,11 +45,7 @@ TAMANHO_TIPO_REL = {
 # ═════════════════════════════════════════════
 # FIGURA ESTÁTICA — GRAFO RELACIONAL
 # ═════════════════════════════════════════════
-def figura_grafo_relacional(
-    G_rel: nx.DiGraph,
-    salvar: str = "grafo_relacional.png",
-    dpi: int = 300,
-) -> str:
+def figura_grafo_relacional(G_rel: nx.DiGraph, salvar: str = "grafo_relacional.png", dpi: int = 300) -> str:
     """
     Figura estática hierárquica do grafo relacional acadêmico.
     Usa layout por camadas: UNIV → DEPT → ORIENTADOR → AUTOR → TRABALHO
@@ -149,6 +144,148 @@ def figura_grafo_relacional(
     print(f"  ✓ Grafo relacional salvo → {salvar}")
     return salvar
 
+def figura_grafo_completo(G, salvar=None, top_nos=None):
+    """
+    Figura do grafo de co-ocorrência (geral).
+    """
+
+    if G.number_of_nodes() == 0:
+        print("  [Grafo vazio]")
+        return ""
+
+    # 🔥 filtro dos nós mais importantes
+    if top_nos is not None:
+        graus = dict(G.degree())
+        top = sorted(graus, key=graus.get, reverse=True)[:top_nos]
+        G = G.subgraph(top)
+
+    pos = nx.spring_layout(G, seed=42)
+
+    plt.figure(figsize=(14, 10))
+    nx.draw(
+        G, pos,
+        node_size=60,
+        with_labels=False,
+        edge_color="gray",
+        alpha=0.6
+    )
+
+    if salvar:
+        plt.savefig(salvar, dpi=300)
+        print(f"  ✓ Grafo salvo → {salvar}")
+
+    plt.close()
+    return salvar
+
+
+def figura_distribuicao_grau(G, salvar=None):
+    """
+    Plota a distribuição de grau do grafo.
+    """
+
+    if G.number_of_nodes() == 0:
+        print("  [Grafo vazio]")
+        return ""
+
+    graus = [d for _, d in G.degree()]
+
+    plt.figure(figsize=(10, 6))
+    plt.hist(graus, bins=30)
+
+    plt.title("Distribuição de Grau")
+    plt.xlabel("Grau")
+    plt.ylabel("Frequência")
+
+    if salvar:
+        plt.savefig(salvar, dpi=300)
+        print(f"  ✓ Distribuição de grau salva → {salvar}")
+
+    plt.close()
+    return salvar
+
+def figura_distribuicao_grau(G, salvar=None):
+    """
+    Plota a distribuição de grau do grafo.
+    """
+
+    if G.number_of_nodes() == 0:
+        print("  [Grafo vazio]")
+        return ""
+
+    graus = [d for _, d in G.degree()]
+
+    plt.figure(figsize=(10, 6))
+    plt.hist(graus, bins=30)
+
+    plt.title("Distribuição de Grau")
+    plt.xlabel("Grau")
+    plt.ylabel("Frequência")
+
+    if salvar:
+        plt.savefig(salvar, dpi=300)
+        print(f"  ✓ Distribuição de grau salva → {salvar}")
+
+    plt.close()
+    return salvar
+
+
+def figura_comparativa(resultados, salvar=None):
+    """
+    Gera gráfico comparativo entre estratégias de co-ocorrência.
+
+    resultados = {
+        "sentenca": {"grafo": G, "metricas": {...}},
+        ...
+    }
+    """
+
+    if not resultados:
+        print("  [Sem resultados para comparar]")
+        return ""
+
+    nomes = []
+    num_nos = []
+    num_arestas = []
+    grau_medio = []
+
+    for nome, dados in resultados.items():
+        G = dados["grafo"]
+        m = dados["metricas"]
+
+        nomes.append(nome)
+        num_nos.append(G.number_of_nodes())
+        num_arestas.append(G.number_of_edges())
+
+        # tenta pegar do dict de métricas, senão calcula
+        if "grau_medio" in m:
+            grau_medio.append(m["grau_medio"])
+        else:
+            grau_medio.append(sum(dict(G.degree()).values()) / max(1, G.number_of_nodes()))
+
+    x = range(len(nomes))
+
+    plt.figure(figsize=(12, 6))
+
+    # três curvas
+    plt.plot(x, num_nos, marker='o', label="Nós")
+    plt.plot(x, num_arestas, marker='s', label="Arestas")
+    plt.plot(x, grau_medio, marker='^', label="Grau médio")
+
+    plt.xticks(x, nomes)
+    plt.title("Comparação entre Estratégias de Co-ocorrência")
+    plt.xlabel("Estratégia")
+    plt.ylabel("Valor")
+    plt.legend()
+    plt.grid(alpha=0.3)
+
+    if salvar:
+        plt.savefig(salvar, dpi=300)
+        print(f"  ✓ Comparação salva → {salvar}")
+
+    plt.close()
+    return salvar
+
+
 
 # ═════════════════════════════════════════════
 # HTML INTERATIVO — GRAFO RELACIONAL (pyvis)
@@ -241,3 +378,220 @@ def visualizar_grafo_relacional_interativo(
     net.save_graph(salvar_html)
     print(f"  ✓ Grafo relacional interativo salvo → {salvar_html}")
     return salvar_html
+
+def visualizar_grafo_interativo(
+    G,
+    salvar_html="grafo.html",
+    altura="800px",
+    filtro_peso_min=1,
+):
+    """
+    Gera visualização interativa (pyvis) para grafos de co-ocorrência NER.
+    """
+
+    if G.number_of_nodes() == 0:
+        print("  [Grafo vazio]")
+        return ""
+
+    net = Network(
+        height=altura,
+        width="100%",
+        bgcolor="#1a1a2e",
+        font_color="#e0e0e0",
+        notebook=False,
+    )
+
+    # ── FILTRO DE ARESTAS POR PESO ──
+    arestas_filtradas = [
+        (u, v, d)
+        for u, v, d in G.edges(data=True)
+        if d.get("peso", 1) >= filtro_peso_min
+    ]
+
+    # pega nós envolvidos
+    nos_validos = set()
+    for u, v, _ in arestas_filtradas:
+        nos_validos.add(u)
+        nos_validos.add(v)
+
+    # ── NÓS ──
+    for no in nos_validos:
+        grau = G.degree(no)
+
+        net.add_node(
+            no,
+            label=str(no)[:30],
+            title=f"{no}<br>Grau: {grau}",
+            size=5 + grau * 2,
+        )
+
+    # ── ARESTAS ──
+    for u, v, d in arestas_filtradas:
+        peso = d.get("peso", 1)
+
+        net.add_edge(
+            u,
+            v,
+            value=peso,
+            title=f"peso={peso}",
+            width=max(1, peso),
+        )
+
+    # ── FÍSICA (layout bonito) ──
+    net.set_options("""
+    {
+      "physics": {
+        "enabled": true,
+        "barnesHut": {
+          "gravitationalConstant": -2000,
+          "centralGravity": 0.3,
+          "springLength": 120,
+          "springConstant": 0.04
+        },
+        "minVelocity": 0.75
+      },
+      "interaction": {
+        "hover": true,
+        "navigationButtons": true,
+        "keyboard": true
+      }
+    }
+    """)
+
+    net.save_graph(salvar_html)
+    print(f"  ✓ Grafo interativo salvo → {salvar_html}")
+    return salvar_html
+
+def visualizar_ego_interativo(
+    G,
+    no_central,
+    raio=1,
+    salvar_html="ego.html",
+    altura="800px",
+    abrir_browser=False,
+):
+    """
+    Visualização interativa (pyvis) do ego-grafo.
+    """
+
+    from pyvis.network import Network
+    import webbrowser
+    import os
+
+    if no_central not in G:
+        print(f"  [Nó '{no_central}' não encontrado no grafo]")
+        return ""
+
+    # cria ego-grafo
+    ego = nx.ego_graph(G, no_central, radius=raio)
+
+    net = Network(
+        height=altura,
+        width="100%",
+        bgcolor="#1a1a2e",
+        font_color="#e0e0e0",
+        notebook=False,
+    )
+
+    # nós
+    for no in ego.nodes():
+        grau = ego.degree(no)
+
+        # destaque pro nó central
+        if no == no_central:
+            cor = "#FF5252"
+            tamanho = 25
+        else:
+            cor = "#4FC3F7"
+            tamanho = 10 + grau * 2
+
+        net.add_node(
+            no,
+            label=str(no)[:30],
+            title=f"{no}<br>Grau: {grau}",
+            color=cor,
+            size=tamanho,
+        )
+
+    # arestas
+    for u, v, d in ego.edges(data=True):
+        peso = d.get("peso", 1)
+
+        net.add_edge(
+            u, v,
+            value=peso,
+            title=f"peso={peso}",
+            width=max(1, peso),
+        )
+
+    net.set_options("""
+    {
+      "physics": {
+        "barnesHut": {
+          "gravitationalConstant": -1500,
+          "springLength": 120
+        }
+      },
+      "interaction": {
+        "hover": true,
+        "navigationButtons": true
+      }
+    }
+    """)
+
+    net.save_graph(salvar_html)
+    print(f"  ✓ Ego-grafo interativo salvo → {salvar_html}")
+
+    if abrir_browser:
+        webbrowser.open("file://" + os.path.abspath(salvar_html))
+
+    return salvar_html
+
+
+def figura_ego(
+    G,
+    no_central,
+    raio=1,
+    salvar=None,
+):
+    """
+    Figura estática do ego-grafo.
+    """
+
+    if no_central not in G:
+        print(f"  [Nó '{no_central}' não encontrado]")
+        return ""
+
+    ego = nx.ego_graph(G, no_central, radius=raio)
+
+    pos = nx.spring_layout(ego, seed=42)
+
+    plt.figure(figsize=(10, 8))
+
+    # cores
+    cores = []
+    for no in ego.nodes():
+        if no == no_central:
+            cores.append("red")
+        else:
+            cores.append("skyblue")
+
+    nx.draw(
+        ego,
+        pos,
+        node_color=cores,
+        node_size=200,
+        with_labels=True,
+        font_size=8,
+        edge_color="gray",
+        alpha=0.7,
+    )
+
+    plt.title(f"Ego-grafo: {no_central} (raio={raio})")
+
+    if salvar:
+        plt.savefig(salvar, dpi=300)
+        print(f"  ✓ Ego-grafo salvo → {salvar}")
+
+    plt.close()
+    return salvar
