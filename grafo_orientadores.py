@@ -23,7 +23,7 @@ import matplotlib.patches as mpatches
 from collections import defaultdict
 from pyvis.network import Network
 import os
-
+from preprocessamento import ler_arquivo, extrair_metadados
 
 # ─────────────────────────────────────────────
 # PALETA
@@ -113,7 +113,7 @@ def _add_aresta(G: nx.DiGraph, origem: str, destino: str, relacao: str):
 
 
 # ─────────────────────────────────────────────
-# ANÁLISE CIENTÍFICA DO GRAFO DE ORIENTADORES
+# GRAFO DE ORIENTADORES
 # ─────────────────────────────────────────────
 def analisar_grafo_orientadores(G: nx.DiGraph) -> dict:
     """
@@ -355,3 +355,29 @@ def figura_orientadores(
     plt.close()
     print(f"  ✓ Figura orientadores → {salvar}")
     return salvar
+
+
+
+PASTA_TXT = "output"  # ou onde estão seus .txt
+
+lista_metadados = []
+
+for arquivo in os.listdir(PASTA_TXT):
+    if arquivo.endswith(".txt"):
+        caminho = os.path.join(PASTA_TXT, arquivo)
+
+        print(f"\nProcessando: {arquivo}")
+
+        texto = ler_arquivo(caminho)
+
+        meta = extrair_metadados(texto, arquivo)
+        lista_metadados.append(meta)
+
+# 🔥 cria o grafo
+G = construir_grafo_orientadores(lista_metadados)
+
+# 📊 análise
+analisar_grafo_orientadores(G)
+
+# 🌐 visualização
+visualizar_orientadores_interativo(G)

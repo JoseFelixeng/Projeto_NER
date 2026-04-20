@@ -1,13 +1,20 @@
 """
-main.py — v4
-Pipeline completo:
-  limpeza → NER → co-ocorrência → metadados → grafo relacional → análise
+main.py
+
+Arquivo usado para centralizar todas as funções de analise e limpeza
+dos textos
 """
 
 import os
 import preprocessamento as pp
 import create_grafo     as cg
 import visualizar_grafo as vg
+
+from grafo_orientadores import (
+    construir_grafo_orientadores,
+    analisar_grafo_orientadores,
+    visualizar_orientadores_interativo
+)
 
 PASTA         = "./output"
 K_CHARS       = 500

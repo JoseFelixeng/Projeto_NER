@@ -1,9 +1,10 @@
 """
-ADIÇÃO ao visualizar_grafo.py
-Novas funções para o grafo relacional acadêmico.
+--------------------
+visualizar_grafo.py
+--------------------
 
-Cole estas funções no final do seu visualizar_grafo.py existente,
-ou importe deste arquivo separado.
+Usado para gerar as figuras e os grafos interativos usando principalmente 
+a biblioteca pyvis
 """
 
 import networkx as nx
@@ -12,7 +13,7 @@ import matplotlib.patches as mpatches
 from pyvis.network import Network
 
 # ─────────────────────────────────────────────
-# PALETA DO GRAFO RELACIONAL
+# PALETA PADRÂO
 # ─────────────────────────────────────────────
 COR_TIPO_REL = {
     "UNIV":       "#1565C0",   # azul escuro  — universidade
@@ -43,7 +44,7 @@ TAMANHO_TIPO_REL = {
 
 
 # ═════════════════════════════════════════════
-# FIGURA ESTÁTICA — GRAFO RELACIONAL
+# GRAFO RELACIONAL(Figuras)
 # ═════════════════════════════════════════════
 def figura_grafo_relacional(G_rel: nx.DiGraph, salvar: str = "grafo_relacional.png", dpi: int = 300) -> str:
     """
@@ -288,7 +289,7 @@ def figura_comparativa(resultados, salvar=None):
 
 
 # ═════════════════════════════════════════════
-# HTML INTERATIVO — GRAFO RELACIONAL (pyvis)
+# GRAFO RELACIONAL (pyvis)
 # ═════════════════════════════════════════════
 def visualizar_grafo_relacional_interativo(
     G_rel: nx.DiGraph,
