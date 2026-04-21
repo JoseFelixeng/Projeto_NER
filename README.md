@@ -166,4 +166,4 @@ Adicionar link da apresentação aqui.
 
 ## 📌 Conclusão
 
-O projeto integra **PLN + Grafos**, permitindo analisar relações em textos acadêmicos de forma visual e estruturada.
+O projeto integra **PLN + Grafos**, permitindo analisar relações em textos acadêmicos de forma visual e estruturada Co-ocorrência. Além disso é possível destacar que os temas dentro desse período em sua maioria foram relacionados a inteligência artifical, podemos vê isso no destaque do ego gráfico que destacar com o maior numero de relações o nó `Precisão`.
