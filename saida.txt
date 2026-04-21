@@ -1,0 +1,1271 @@
+
+Processando: TCC_EFRAIN_oficial.txt
+
+  ── Metadados extraídos ──
+    arquivo       : TCC_EFRAIN_oficial.txt
+    titulo        : Coorientação: Dr. Ignacio Sánchez Gendriz.
+    autor         : Efrain Marcelo Pulgar Pantaleon
+    orientador    : Ignacio Sánchez Gendriz Universidade Federal
+    coorientador  : Ignacio Sánchez Gendriz Universidade Federal
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: DesenvolvimentoDeUmSistemaSupervisório_Ribeiro_2025.txt
+
+  ── Metadados extraídos ──
+    arquivo       : DesenvolvimentoDeUmSistemaSupervisório_Ribeiro_2025.txt
+    titulo        : Orientador: Dr. Andres Ortiz Salazar
+    autor         : Caio Matheus Lopes Ribeiro
+    orientador    : Andrés Ortiz Salazar
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: EstimacaoAdaptativa_Rodrigues_2025.txt
+
+  ── Metadados extraídos ──
+    arquivo       : EstimacaoAdaptativa_Rodrigues_2025.txt
+    titulo        : tempo de execução de aplicações paralelas
+    autor         : Matheus dos Santos Lopes Rodrigues
+    orientador    : Samuel Xavier De Souza Universidade
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: TCC_Henrique_Hideaki_UFRN_Final.txt
+
+  ── Metadados extraídos ──
+    arquivo       : TCC_Henrique_Hideaki_UFRN_Final.txt
+    titulo        : Orientador: Prof. Dr. Eduardo de Lucena Falcão
+    autor         : Henrique Hideaki Koga
+    orientador    : Eduardo De Lucena Falcão
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: TCC_Final_Gilvandro_Com_Ficha.txt
+
+  ── Metadados extraídos ──
+    arquivo       : TCC_Final_Gilvandro_Com_Ficha.txt
+    titulo        : O PLANEJAMENTO ESTRATÉGICO DE STARTUPS
+    autor         : Gilvandro César Santos de Medeiros
+    orientador    : Orivaldo Vieira Santana Júnior Medeiros
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : CENTRO DE TECNOLOGIA
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: Metodologia Orientada a Grandes Modelos de Linguagens para Extração de Conhecimento em Textos Acadêmicos - TCC___Andrade_Matheus_Gomes_Diniz.txt
+
+  ── Metadados extraídos ──
+    arquivo       : Metodologia Orientada a Grandes Modelos de Linguagens para Extração de Conhecimento em Textos Acadêmicos - TCC___Andrade_Matheus_Gomes_Diniz.txt
+    titulo        : Textos AcadŸmicos
+    autor         : Matheus Gomes Diniz Andrade
+    orientador    : Ivanovitch Me
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: Microsoft Word - TCC_Eliza_Engecomp_21_01 - TCC_Eliza_Engecomp_final.txt
+
+  ── Metadados extraídos ──
+    arquivo       : Microsoft Word - TCC_Eliza_Engecomp_21_01 - TCC_Eliza_Engecomp_final.txt
+    titulo        : Orientação: Dr. Carlos Manuel Dias Viegas.
+    autor         : Elizabete Cristina Venceslau de Lira
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2019
+
+Processando: Desenvolvimento de uma Solução Baseada em Blockchain para Armazenamento e Rastreamento de Dados Veiculares - TCC___Miguel___EngComp.txt
+
+  ── Metadados extraídos ──
+    arquivo       : Desenvolvimento de uma Solução Baseada em Blockchain para Armazenamento e Rastreamento de Dados Veiculares - TCC___Miguel___EngComp.txt
+    titulo        : Dados Veiculares
+    autor         : Miguel Euripedes Nogueira do Amaral
+    orientador    : Ivanovitch Me
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: Interface para Imageamento Geológico utilizando Sensores Ultrassônicos em um Sistema de Caixa de Areia - InterfaceParaImageamento_Klyfton_2025.txt
+
+  ── Metadados extraídos ──
+    arquivo       : Interface para Imageamento Geológico utilizando Sensores Ultrassônicos em um Sistema de Caixa de Areia - InterfaceParaImageamento_Klyfton_2025.txt
+    titulo        : Orientação: Dr. Andrés Ortiz Salazar.
+    autor         : Klyfton Stanley Fernandes da Silva Queiroz
+    orientador    : Andrés Ortiz Sa
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: TCC - MARIA J L MACEDO.txt
+
+  ── Metadados extraídos ──
+    arquivo       : TCC - MARIA J L MACEDO.txt
+    titulo        : Orientação: Dr. Luiz Affonso Henderson Guedes de Oliveira.
+    autor         : Maria Jamilli Lemos de Macedo
+    orientador    : Luiz Affonso Guedes
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Prog. PG Eng. Elétrica e Computação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: Observabilidade_e_Monitoramento_Brito_2025.txt
+
+  ── Metadados extraídos ──
+    arquivo       : Observabilidade_e_Monitoramento_Brito_2025.txt
+    titulo        : Orientador: Prof. Dr. Carlos Manuel Dias Viegas
+    autor         : Reyne Jasson Marcelino de Brito
+    orientador    : Carlos Manuel Dias Viegas
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: Final_Gabriel_Lins_Monografia_Eng_Comp_UFRN - lins_gabriel_sistema_multiagente_LLM_2025_corrigido.txt
+
+  ── Metadados extraídos ──
+    arquivo       : Final_Gabriel_Lins_Monografia_Eng_Comp_UFRN - lins_gabriel_sistema_multiagente_LLM_2025_corrigido.txt
+    titulo        : Orientação: Prof. Dr. Ivanovitch Medeiros Dantas da Silva.
+    autor         : Gabriel Barros Lins Lelis de Oliveira
+    orientador    : Ivanovitch Medeiros Dantas Da Silva
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : CENTRO DE TECNOLOGIA
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: AnalisedeModelos_Oliveira_2025.txt
+
+  ── Metadados extraídos ──
+    arquivo       : AnalisedeModelos_Oliveira_2025.txt
+    titulo        : natural para classiﬁcação de notícias da UFRN
+    autor         : José Augusto Agripino de Oliveira
+    orientador    : Ivanovitch Me
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: TCC-Gustavo.txt
+
+  ── Metadados extraídos ──
+    arquivo       : TCC-Gustavo.txt
+    titulo        : Orientador: Prof. Dr. Luiz Affonso H Guedes de Oliveira
+    autor         : Gustavo Jerônimo Moura de França
+    orientador    : Luiz Affonso
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: Chatbot Inteligente para Acesso a Regulamentos Acadêmicos_ Um Sistema de Recuperação de Informações Baseado em RAG - ChatbotInteligenteParaAcessoADocumentosAcademicos.txt
+
+  ── Metadados extraídos ──
+    arquivo       : Chatbot Inteligente para Acesso a Regulamentos Acadêmicos_ Um Sistema de Recuperação de Informações Baseado em RAG - ChatbotInteligenteParaAcessoADocumentosAcademicos.txt
+    titulo        : Informações Baseado em RAG
+    autor         : João Pedro Freire Cabral
+    orientador    : Jean Mario Moreira De Lima
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: Desenvolvimento de um sistema supervisório para monitoramento contínuo de sinais - DesenvolvimentoDeUmSistemaSupervisorio_Amaral_2025.txt
+
+  ── Metadados extraídos ──
+    arquivo       : Desenvolvimento de um sistema supervisório para monitoramento contínuo de sinais - DesenvolvimentoDeUmSistemaSupervisorio_Amaral_2025.txt
+    titulo        : monitoramento contínuo de sinais
+    orientador    : Andrés Ortiz Salazar Universidade Federal
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: TCC_Vitor_Yeso___DCA_UFRN-8.txt
+
+  ── Metadados extraídos ──
+    arquivo       : TCC_Vitor_Yeso___DCA_UFRN-8.txt
+    titulo        : TCC_Vitor_Yeso___DCA_UFRN-8
+    autor         : Vítor Yeso Fidelis Freitas
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : CENTRO DE TECNOLOGIA
+
+Processando: tcc_ficha.txt
+
+  ── Metadados extraídos ──
+    arquivo       : tcc_ficha.txt
+    titulo        : Coorientação: Dr. Ramon Cristian Fernandes Araújo.
+    autor         : André Eduardo Meneses do Nascimento
+    orientador    : Tiago Tavares Leite Barros Co
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Centro de Tecnologia, Engenharia de Computação, Natal,
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: DIANA_SOUSA_2025.txt
+
+  ── Metadados extraídos ──
+    arquivo       : DIANA_SOUSA_2025.txt
+    titulo        : Orientador: Prof. Dr. Luiz Affonso H. Guedes de Oliveira
+    autor         : Maria Alice de Melo Sousa
+    orientador    : Luiz Affonso
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: Desenvolvimento de uma Ferramenta de Pintura 3D com Rastreamento por Visão Artificial para Determinação de Profundidade - TCC_Lucas_Lima.txt
+
+  ── Metadados extraídos ──
+    arquivo       : Desenvolvimento de uma Ferramenta de Pintura 3D com Rastreamento por Visão Artificial para Determinação de Profundidade - TCC_Lucas_Lima.txt
+    titulo        : Determinação de Profundidade
+    autor         : Lucas Lima
+    orientador    : Agostinho De Medeiros Brito Júnior
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: Predição de risco de mortalidade infantil em neonatos prematuros baseado em aprendizagem de máquina - PredicaodeRisco_Freitas_2025.txt
+
+  ── Metadados extraídos ──
+    arquivo       : Predição de risco de mortalidade infantil em neonatos prematuros baseado em aprendizagem de máquina - PredicaodeRisco_Freitas_2025.txt
+    titulo        : prematuros baseado em aprendizagem de máquina
+    orientador    : Marcelo Augusto Costa Fernandes Universidade
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+Processando: CienciadeDadoAplicadaaSaudeOcupacional_Moreira_2025.txt
+
+  ── Metadados extraídos ──
+    arquivo       : CienciadeDadoAplicadaaSaudeOcupacional_Moreira_2025.txt
+    titulo        : Co-orientador:
+    autor         : Alisson Sousa Moreira
+    orientador    : Luiz Affonso Henderson Guedes De
+    coorientador  : Trabalho De Conclusão De Curso
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+════════════════════════════════════════════════════════════
+  ANÁLISE DO GRAFO DE ORIENTADORES
+════════════════════════════════════════════════════════════
+  Nós     : 64
+  Arestas : 77
+
+  Composição da rede:
+    Trabalhos            → 22
+    Autores              → 20
+    Orientadores         → 18
+    Departamentos        → 4
+
+  Produtividade dos orientadores (top 15):
+  Orientador                                Alunos  Trabalhos
+  ------------------------------------------------------------
+  Ivanovitch Me                                  3          3
+  Luiz Affonso                                   2          2
+  Ignacio Sánchez Gendriz Universidade Federal       1          1
+  Andrés Ortiz Salazar                           1          1
+  Samuel Xavier De Souza Universidade            1          1
+  Eduardo De Lucena Falcão                       1          1
+  Orivaldo Vieira Santana Júnior Medeiros        1          1
+  Andrés Ortiz Sa                                1          1
+  Luiz Affonso Guedes                            1          1
+  Carlos Manuel Dias Viegas                      1          1
+  Ivanovitch Medeiros Dantas Da Silva            1          1
+  Jean Mario Moreira De Lima                     1          1
+  Andrés Ortiz Salazar Universidade Federal       0          1
+  Tiago Tavares Leite Barros Co                  1          1
+  Agostinho De Medeiros Brito Júnior             1          1
+
+  Top 10 por betweenness (pontes entre grupos):
+    Departamento De Computação E Automação   [Departamentos]  0.3891
+    Ivanovitch Me                            [Orientadores]  0.1137
+    Luiz Affonso                             [Orientadores]  0.0778
+    Luiz Affonso Henderson Guedes De         [Orientadores]  0.0586
+    Ignacio Sánchez Gendriz Universidade Federal [Orientadores]  0.0399
+    Andrés Ortiz Salazar                     [Orientadores]  0.0399
+    Samuel Xavier De Souza Universidade      [Orientadores]  0.0399
+    Eduardo De Lucena Falcão                 [Orientadores]  0.0399
+    Andrés Ortiz Sa                          [Orientadores]  0.0399
+    Carlos Manuel Dias Viegas                [Orientadores]  0.0399
+
+  In-degree dos orientadores (trabalhos recebidos):
+    Ignacio Sánchez Gendriz Universidade Federal  in-degree=1
+    Trabalho De Conclusão De Curso            in-degree=1
+    Andrés Ortiz Salazar                      in-degree=0
+    Samuel Xavier De Souza Universidade       in-degree=0
+    Eduardo De Lucena Falcão                  in-degree=0
+    Orivaldo Vieira Santana Júnior Medeiros   in-degree=0
+    Ivanovitch Me                             in-degree=0
+    Andrés Ortiz Sa                           in-degree=0
+    Luiz Affonso Guedes                       in-degree=0
+    Carlos Manuel Dias Viegas                 in-degree=0
+
+  Comunidades detectadas (Louvain): 16
+    Comunidade 1: 12 nós  | orientadores: Ivanovitch Me, Andrés Ortiz Salazar Universidade Federal, Marcelo Augusto Costa Fernandes Universidade
+    Comunidade 2: 7 nós  | orientadores: Orivaldo Vieira Santana Júnior Medeiros, Ivanovitch Medeiros Dantas Da Silva
+    Comunidade 3: 5 nós  | orientadores: Luiz Affonso
+    Comunidade 4: 4 nós  | orientadores: Luiz Affonso Guedes
+    Comunidade 5: 4 nós  | orientadores: Tiago Tavares Leite Barros Co
+
+  Co-orientações registradas: 2
+    Ignacio Sánchez Gendriz Universidade Federal  ↔  Ignacio Sánchez Gendriz Universidade Federal
+    Luiz Affonso Henderson Guedes De  ↔  Trabalho De Conclusão De Curso
+  ✓ Grafo orientadores → grafo_orientadores.html
+
+═════════════════════════════════════════════════════════════════
+Criando as Co-ocorrencias baseadas nos materiais academcios
+═════════════════════════════════════════════════════════════════
+
+22 arquivo(s): AnalisedeModelos_Oliveira_2025.txt, Chatbot Inteligente para Acesso a Regulamentos Acadêmicos_ Um Sistema de Recuperação de Informações Baseado em RAG - ChatbotInteligenteParaAcessoADocumentosAcademicos.txt, CienciadeDadoAplicadaaSaudeOcupacional_Moreira_2025.txt, DIANA_SOUSA_2025.txt, Desenvolvimento de um sistema supervisório para monitoramento contínuo de sinais - DesenvolvimentoDeUmSistemaSupervisorio_Amaral_2025.txt, Desenvolvimento de uma Ferramenta de Pintura 3D com Rastreamento por Visão Artificial para Determinação de Profundidade - TCC_Lucas_Lima.txt, Desenvolvimento de uma Solução Baseada em Blockchain para Armazenamento e Rastreamento de Dados Veiculares - TCC___Miguel___EngComp.txt, DesenvolvimentoDeUmSistemaSupervisório_Ribeiro_2025.txt, EstimacaoAdaptativa_Rodrigues_2025.txt, Final_Gabriel_Lins_Monografia_Eng_Comp_UFRN - lins_gabriel_sistema_multiagente_LLM_2025_corrigido.txt, Interface para Imageamento Geológico utilizando Sensores Ultrassônicos em um Sistema de Caixa de Areia - InterfaceParaImageamento_Klyfton_2025.txt, Metodologia Orientada a Grandes Modelos de Linguagens para Extração de Conhecimento em Textos Acadêmicos - TCC___Andrade_Matheus_Gomes_Diniz.txt, Microsoft Word - TCC_Eliza_Engecomp_21_01 - TCC_Eliza_Engecomp_final.txt, Observabilidade_e_Monitoramento_Brito_2025.txt, Predição de risco de mortalidade infantil em neonatos prematuros baseado em aprendizagem de máquina - PredicaodeRisco_Freitas_2025.txt, TCC - MARIA J L MACEDO.txt, TCC-Gustavo.txt, TCC_EFRAIN_oficial.txt, TCC_Final_Gilvandro_Com_Ficha.txt, TCC_Henrique_Hideaki_UFRN_Final.txt, TCC_Vitor_Yeso___DCA_UFRN-8.txt, tcc_ficha.txt
+
+────────────────────────────────────────────────────────────
+  AnalisedeModelos_Oliveira_2025.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : AnalisedeModelos_Oliveira_2025.txt
+    titulo        : natural para classificação de notícias da UFRN
+    autor         : José Augusto Agripino de Oliveira
+    orientador    : Ivanovitch Me
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 65443  |  Parágrafos: 30
+  Modelo spaCy: pt_core_news_lg
+
+  Sentenças : 1467
+  Entidades : 542 brutas → 333 após filtro
+    AREA         ( 14): processamento de linguagem natural, PLN, Processamento de Linguagem Natural, PLN, processamento de linguagem natural
+    CONCEITO     ( 45): acurácia, precisão, embedding, acurácia, precisão
+    FERRAMENTA   ( 13): DVC, DVC, Hugging Face, DVC, DVC
+    LOC          ( 61): UFRN, Natal, UFRN, RN
+Janeiro, UFRN
+    MISC         (128): Natal, Natal, OpenAI, Hugging Face, Redução de Dimensionalidade
+    ORG          ( 61): PCA, DVC, Weights & Biases, TECUCI, GASPARETTO
+    PER          (  8): Dr.
+Ivanovitch
+Me-, Dr.
+Ivanovitch
+Me-, Benedita Ribeiro, Benedita Ribeiro, Matriz TF-IDF
+    TEC          (  3): XGBoost, PCA, k-means
+  Palavras-chave (12): Precisao, Acuracia, Recall, Dvc, Embedding, Machine Learning, Processamento De Linguagem Natural, Pln
+
+────────────────────────────────────────────────────────────
+  Chatbot Inteligente para Acesso a Regulamentos Acadêmicos_ Um Sistema de Recuperação de Informações Baseado em RAG - ChatbotInteligenteParaAcessoADocumentosAcademicos.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : Chatbot Inteligente para Acesso a Regulamentos Acadêmicos_ Um Sistema de Recuperação de Informações Baseado em RAG - ChatbotInteligenteParaAcessoADocumentosAcademicos.txt
+    titulo        : Informações Baseado em RAG
+    autor         : João Pedro Freire Cabral
+    orientador    : Jean Mario Moreira De Lima
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 111437  |  Parágrafos: 25
+
+  Sentenças : 1295
+  Entidades : 767 brutas → 384 após filtro
+    AREA         (  3): PLN, Processamento de Linguagem Natural, processamento de linguagem natural
+    CONCEITO     ( 49): precisão, precisão, precisão, precisão, precisão
+    FERRAMENTA   (  2): langchain, langchain
+    INST         (  1): UFRN
+    LOC          ( 53): UFRN, RN
+Janeiro, RN
+Janeiro, Brasil, UFRN
+    MISC         (177): Chatbot Inteligente, Regulamentos
+Acadêmicos, Chatbot Inteligente, Regulamentos
+Acadêmicos, Natal
+    ORG          ( 98): Amazon, Reordenação de Documentos, LLMs, LLMs, LLMs
+    TEC          (  1): RAG
+  Palavras-chave (7): Precisao, Embedding, Recall, Processamento De Linguagem Natural, Langchain, Pln, Rag
+
+────────────────────────────────────────────────────────────
+  CienciadeDadoAplicadaaSaudeOcupacional_Moreira_2025.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : CienciadeDadoAplicadaaSaudeOcupacional_Moreira_2025.txt
+    titulo        : Co-orientador:
+    autor         : Alisson Sousa Moreira
+    orientador    : Luiz Affonso Henderson Guedes De
+    coorientador  : Trabalho De Conclusão De Curso
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 35730  |  Parágrafos: 19
+
+  Sentenças : 986
+  Entidades : 303 brutas → 162 após filtro
+    DEPT         (  3): DCA, DCA, DCA
+    FERRAMENTA   (  2): Pandas, Matplotlib
+    LOC          ( 22): Natal, UFRN, Natal, UFRN, UFRN
+    MISC         (106): Unidade SIASS da UFRN, Unidade SIASS da UFRN, Unidade SIASS da UFRN, Natal, Unidade SIASS da UFRN
+    ORG          ( 29): DAS, DAS, Pygsheets, Classes, Pygsheets
+  Palavras-chave (2): Pandas, Matplotlib
+
+────────────────────────────────────────────────────────────
+  DIANA_SOUSA_2025.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : DIANA_SOUSA_2025.txt
+    titulo        : Orientador: Prof. Dr. Luiz Affonso H. Guedes de Oliveira
+    autor         : Maria Alice de Melo Sousa
+    orientador    : Luiz Affonso
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 55186  |  Parágrafos: 24
+
+  Sentenças : 1107
+  Entidades : 274 brutas → 122 após filtro
+    LOC          ( 43): Natal, UFRN, Natal, D.I.A.N.A, UFRN
+    MISC         ( 54): Lúpus Eritematoso Sistêmico, Linguagens, Mobile Computing, Mobile Computing, LEE
+    ORG          ( 24): Diário Interativo Auxiliar, Diário Interativo Auxiliar, Diário Interativo Auxiliar, D.I.A.N.A., Portabilidade
+    PER          (  1): Doenças Autoimunes
+  Palavras-chave (0): 
+
+────────────────────────────────────────────────────────────
+  Desenvolvimento de um sistema supervisório para monitoramento contínuo de sinais - DesenvolvimentoDeUmSistemaSupervisorio_Amaral_2025.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : Desenvolvimento de um sistema supervisório para monitoramento contínuo de sinais - DesenvolvimentoDeUmSistemaSupervisorio_Amaral_2025.txt
+    titulo        : monitoramento contínuo de sinais
+    orientador    : Andrés Ortiz Salazar Universidade Federal
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 85167  |  Parágrafos: 55
+
+  Sentenças : 1579
+  Entidades : 639 brutas → 321 após filtro
+    CONCEITO     (  4): precisão, precisão, precisão, precisão
+    FERRAMENTA   (  2): matplotlib, matplotlib
+    HARDWARE     ( 15): CPU, CPU, CPU, CPU, CPU
+    LOC          ( 67): Natal, UFRN, RN
+Janeiro, Natal, RN
+Janeiro
+    MISC         (152): Natal, LAMP, Code Composer Studio, Digital Signal Controller, Peripheral Interrupt Expansion
+    ORG          ( 77): Interface de Comunicação Serial, SCI, PyQT5, SCI, PyQt5
+    PER          (  4): T. TMS320x2833x, T. TMS320x2833x, GpioCtrlRegs .GPAPUD.bit, GpioCtrlRegs .GPAPUD.bit
+  Palavras-chave (2): Precisao, Matplotlib
+
+────────────────────────────────────────────────────────────
+  Desenvolvimento de uma Ferramenta de Pintura 3D com Rastreamento por Visão Artificial para Determinação de Profundidade - TCC_Lucas_Lima.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : Desenvolvimento de uma Ferramenta de Pintura 3D com Rastreamento por Visão Artificial para Determinação de Profundidade - TCC_Lucas_Lima.txt
+    titulo        : Determinação de Profundidade
+    autor         : Lucas Lima
+    orientador    : Agostinho De Medeiros Brito Júnior
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 45424  |  Parágrafos: 31
+
+  Sentenças : 1414
+  Entidades : 396 brutas → 220 após filtro
+    AREA         (  9): visão computacional, visão computacional, visão computacional, visão computacional, visão computacional
+    CONCEITO     (  6): precisão, precisão, precisão, precisão, precisão
+    FERRAMENTA   (  2): OpenCV, OpenCV
+    LOC          ( 22): RN
+Janeiro, Natal, RN
+Janeiro, Contornos, inRange
+    MISC         (166): Rastreamento, Rastreamento, Rastreamento, Natal, OpenCV
+    ORG          ( 15): PS Move, PS Move, PS Move, Microsoft, Khronos Group
+  Palavras-chave (3): Visao Computacional, Precisao, Opencv
+
+────────────────────────────────────────────────────────────
+  Desenvolvimento de uma Solução Baseada em Blockchain para Armazenamento e Rastreamento de Dados Veiculares - TCC___Miguel___EngComp.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : Desenvolvimento de uma Solução Baseada em Blockchain para Armazenamento e Rastreamento de Dados Veiculares - TCC___Miguel___EngComp.txt
+    titulo        : Dados Veiculares
+    autor         : Miguel Euripedes Nogueira do Amaral
+    orientador    : Ivanovitch Me
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 105989  |  Parágrafos: 32
+
+  Sentenças : 1656
+  Entidades : 1049 brutas → 617 após filtro
+    AREA         (184): blockchain, blockchain, blockchain, blockchain, Blockchain
+    FERRAMENTA   (  3): docker, docker, docker
+    LOC          (109): Hyperledger Besu, Ethereum, Solidity, Fastify, Freematics ONE+
+    MISC         (254): Blockchain para Armazenamento, Blockchain para Armazenamento, IoV, Internet of Vehicles, Hyperledger Besu
+    ORG          ( 52): Rede, HAMMOUD, AYACHE, BAKKALI, DWIVEDI
+    PER          ( 15): Dr.
+Ivanovitch
+Me-, Dr.
+Ivanovitch
+Me-, Hyperledger Besu, Hyperledger Besu, Hyperledger Besu
+  Palavras-chave (4): Blockchain, Banco De Dados, Docker, Iot
+
+────────────────────────────────────────────────────────────
+  DesenvolvimentoDeUmSistemaSupervisório_Ribeiro_2025.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : DesenvolvimentoDeUmSistemaSupervisório_Ribeiro_2025.txt
+    titulo        : Orientador: Dr. Andres Ortiz Salazar
+    autor         : Caio Matheus Lopes Ribeiro
+    orientador    : Andrés Ortiz Salazar
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 51732  |  Parágrafos: 41
+
+  Sentenças : 1420
+  Entidades : 427 brutas → 224 após filtro
+    CONCEITO     (  7): precisão, precisão, Precisão, precisão, precisão
+    DEPT         (  2): DCA, DCA
+    HARDWARE     (  3): arduino, arduino, arduino
+    LOC          ( 52): Supervisório, Natal, UFRN, Natal, Natal
+    MISC         (121): LAMP, LabVIEW, Bancada de Estudos, LAMP, LabVIEW
+    ORG          ( 31): Materiais, DAQ, MPPT, MPPT, SCL
+    PER          (  8): Dr. Andres Ortiz Salazar, Dr. Andres Ortiz Salazar, Dr. Andres Ortiz Salazar, Luis F., Luis F.
+  Palavras-chave (1): Precisao
+
+────────────────────────────────────────────────────────────
+  EstimacaoAdaptativa_Rodrigues_2025.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : EstimacaoAdaptativa_Rodrigues_2025.txt
+    titulo        : tempo de execução de aplicações paralelas
+    autor         : Matheus dos Santos Lopes Rodrigues
+    orientador    : Samuel Xavier De Souza Universidade
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 55213  |  Parágrafos: 30
+
+  Sentenças : 1104
+  Entidades : 405 brutas → 230 após filtro
+    AREA         (  7): Machine Learning, machine learning, redes neurais, machine learning, redes neurais
+    CONCEITO     ( 14): acurácia, acurácia, acurácia, acurácia, precisão
+    HARDWARE     (  4): CPU, CPU, RAM, CPU
+    LOC          ( 51): Natal, UFRN, RN
+Janeiro, UFRN, UFRN
+    MISC         (106): Natal, Natal, Matrix, Pascal Analyzer, Matrix
+    ORG          ( 46): PascalRegressionModel, Estratégia randômica, Estratégia primeiro, Estratégia linear, PascalRegressionModel
+    TEC          (  2): MLP, MLP
+  Palavras-chave (5): Precisao, Acuracia, Machine Learning, Redes Neurais, Mlp
+
+────────────────────────────────────────────────────────────
+  Final_Gabriel_Lins_Monografia_Eng_Comp_UFRN - lins_gabriel_sistema_multiagente_LLM_2025_corrigido.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : Final_Gabriel_Lins_Monografia_Eng_Comp_UFRN - lins_gabriel_sistema_multiagente_LLM_2025_corrigido.txt
+    titulo        : Orientação: Prof. Dr. Ivanovitch Medeiros Dantas da Silva.
+    autor         : Gabriel Barros Lins Lelis de Oliveira
+    orientador    : Ivanovitch Medeiros Dantas Da Silva
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : CENTRO DE TECNOLOGIA
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 86876  |  Parágrafos: 6
+
+  Sentenças : 683
+  Entidades : 391 brutas → 171 após filtro
+    AREA         (  6): inteligência artificial, processamento de linguagem natural, processamento de linguagem natural, inteligência artificial, inteligência artificial
+    CONCEITO     ( 13): precisão, precisão, precisão, precisão, precisão
+    LOC          ( 40): Juiz, CrewAI, LLM-MAS, LLM-MAS, LLM-MAS
+    MISC         ( 78): Analista de Relatórios, GPT-4o-mini, Streamlit, Inteligência Artificial, GPT
+    ORG          ( 31): LLMs, LLMs, HUM, LLMs, LLMs
+    TEC          (  3): LLaMa, LLaMA, LLaMA
+  Palavras-chave (4): Precisao, Inteligencia Artificial, Llama, Processamento De Linguagem Natural
+
+────────────────────────────────────────────────────────────
+  Interface para Imageamento Geológico utilizando Sensores Ultrassônicos em um Sistema de Caixa de Areia - InterfaceParaImageamento_Klyfton_2025.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : Interface para Imageamento Geológico utilizando Sensores Ultrassônicos em um Sistema de Caixa de Areia - InterfaceParaImageamento_Klyfton_2025.txt
+    titulo        : Orientação: Dr. Andrés Ortiz Salazar.
+    autor         : Klyfton Stanley Fernandes da Silva Queiroz
+    orientador    : Andrés Ortiz Sa
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 119084  |  Parágrafos: 34
+
+  Sentenças : 2240
+  Entidades : 995 brutas → 700 após filtro
+    CONCEITO     (  8): precisão, precisão, densidade, densidade, precisão
+    FERRAMENTA   (  8): matplotlib, matplotlib, numpy, pandas, matplotlib
+    HARDWARE     (  7): CPU, ESP32, CPU, CPU, CPU
+    LOC          (259): Rio Grande do Norte, UFRN, RN
+Janeiro, UFRN, UFRN
+    MISC         (359): Imageamento Geológico utilizando
+, Sensores Ultrassônicos, Interface, Natal, Interface
+    ORG          ( 58): Operacional, Offset, Temperatura, TECHNOLOGIES, Operacional
+    PER          (  1): Sensores Ultrassônicos
+  Palavras-chave (5): Precisao, Matplotlib, Densidade, Numpy, Pandas
+
+────────────────────────────────────────────────────────────
+  Metodologia Orientada a Grandes Modelos de Linguagens para Extração de Conhecimento em Textos Acadêmicos - TCC___Andrade_Matheus_Gomes_Diniz.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : Metodologia Orientada a Grandes Modelos de Linguagens para Extração de Conhecimento em Textos Acadêmicos - TCC___Andrade_Matheus_Gomes_Diniz.txt
+    titulo        : Textos Acadêmicos
+    autor         : Matheus Gomes Diniz Andrade
+    orientador    : Ivanovitch Me
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 92730  |  Parágrafos: 25
+
+  Sentenças : 1607
+  Entidades : 823 brutas → 464 após filtro
+    AREA         ( 34): Processamento de Linguagem Natural, processamento de linguagem natural, Processamento de Linguagem Natural, Processamento de Linguagem Natural, PLN
+    CONCEITO     ( 11): precisão, precisão, precisão, precisão, precisão
+    CURSO        (  2): engenharia elétrica, Engenharia elétrica
+    INST         (  1): UFRN
+    LOC          ( 75): UFRN, Grandes Modelos de Linguagem, Grandes Modelos de Linguagem, Consultas, Consultas
+    MISC         (188): Large Language Models, Retrieval-Augmented Generation, LangChain, ChromaDB, Objetivos
+    ORG          (132): LLMs, RAG, ODS, ODS, Objetivos de Desenvolvimento Sustentável
+    PER          ( 16): Dr.
+Ivanovitch
+Me-, Dr.
+Ivanovitch
+Me-, Arthur Andrade Bezerra, Luiz Marcos Garcia Gonçalves
+, Marcelo Augusto Costa Fernandes
+
+    TEC          (  5): RAG, transformer, transformer, LLaMA, llama
+  Palavras-chave (14): Precisao, Blockchain, Processamento De Linguagem Natural, Iot, Redes Neurais, Transformer, Llama, Banco De Dados
+
+────────────────────────────────────────────────────────────
+  Microsoft Word - TCC_Eliza_Engecomp_21_01 - TCC_Eliza_Engecomp_final.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : Microsoft Word - TCC_Eliza_Engecomp_21_01 - TCC_Eliza_Engecomp_final.txt
+    titulo        : Orientação: Dr. Carlos Manuel Dias Viegas.
+    autor         : Elizabete Cristina Venceslau de Lira
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2019
+
+  Chars: 4935  |  Parágrafos: 4
+
+  Sentenças : 66
+  Entidades : 16 brutas → 13 após filtro
+    INST         (  1): UFRN
+    LOC          (  3): UFRN, UFRN, UFRN
+    MISC         (  7): Apache Spark, Matplotlib, Python, Apache Spark, Apache Spark
+    ORG          (  2): INEP, INEP
+  Palavras-chave (0): 
+
+────────────────────────────────────────────────────────────
+  Observabilidade_e_Monitoramento_Brito_2025.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : Observabilidade_e_Monitoramento_Brito_2025.txt
+    titulo        : Orientador: Prof. Dr. Carlos Manuel Dias Viegas
+    autor         : Reyne Jasson Marcelino de Brito
+    orientador    : Carlos Manuel Dias Viegas
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 27010  |  Parágrafos: 14
+
+  Sentenças : 630
+  Entidades : 278 brutas → 186 após filtro
+    AREA         (  6): machine learning, machine learning, machine learning, machine learning, machine learning
+    DEPT         (  3): DCA, DCA, DCA
+    FERRAMENTA   ( 13): Elasticsearch, FastAPI, Elasticsearch, Kibana, fastapi
+    LOC          ( 18): Natal, UFRN, Natal, UFRN, UFRN
+    MISC         (138): REST, Machine Learning, ElasticAPM, Elasticsearch, FastAPI
+    ORG          (  6): Machine Learning, Jagadish, Machine Learning, BaseModel
+, BaseModel
+
+    PER          (  2): Meriem Hnida, Meriem Hnida
+  Palavras-chave (5): Elasticsearch, Machine Learning, Fastapi, Kibana, Numpy
+
+────────────────────────────────────────────────────────────
+  Predição de risco de mortalidade infantil em neonatos prematuros baseado em aprendizagem de máquina - PredicaodeRisco_Freitas_2025.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : Predição de risco de mortalidade infantil em neonatos prematuros baseado em aprendizagem de máquina - PredicaodeRisco_Freitas_2025.txt
+    titulo        : prematuros baseado em aprendizagem de máquina
+    orientador    : Marcelo Augusto Costa Fernandes Universidade
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 118506  |  Parágrafos: 37
+
+  Sentenças : 1513
+  Entidades : 957 brutas → 531 após filtro
+    AREA         ( 14): Machine Learning, machine learning, redes neurais, redes neurais, machine learning
+    CONCEITO     ( 71): precisão, precisão, precisão, precisão, precisão
+    LOC          (107): Rio Grande do Norte, UFRN, RN
+Janeiro, Rio Grande do Norte, UFRN
+    MISC         (245): Natal, Natal, Machine Learning, Gradient Boosting, Redes Neurais
+    ORG          ( 89): Machine Learning, Logistic Regression, Avaliação de Desempenho, Logistic Regression, UNICEF
+    PER          (  3): Regressão Logística, Regressão Logística, Regressão Logística
+    TEC          (  2): kNN, kNN
+  Palavras-chave (7): Precisao, Recall, Acuracia, Machine Learning, Redes Neurais, Overfitting, Knn
+
+────────────────────────────────────────────────────────────
+  TCC - MARIA J L MACEDO.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : TCC - MARIA J L MACEDO.txt
+    titulo        : Orientação: Dr. Luiz Affonso Henderson Guedes de Oliveira.
+    autor         : Maria Jamilli Lemos de Macedo
+    orientador    : Luiz Affonso Guedes
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Prog. PG Eng. Elétrica e Computação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 44350  |  Parágrafos: 5
+
+  Sentenças : 489
+  Entidades : 404 brutas → 262 após filtro
+    AREA         ( 10): machine learning, machine learning, Machine Learning, machine learning, banco de dados
+    CONCEITO     ( 26): precisão, precisão, acurácia, precisão, recall
+    CURSO        (  3): engenharia de software, engenharia de software, engenharia de software
+    LOC          ( 41): UFRN, Rio Grande do Norte, UFRN, Firestore, Firestore
+    MISC         (151): ProLeitura, Firebase, Google Custom Search API, ProLeitura, ProLeitura
+    ORG          ( 29): UCD, Google, Random Forest, MATERIAIS, MATERIAIS
+    TEC          (  2): Random Forest, Random Forest
+  Palavras-chave (7): Precisao, Acuracia, Machine Learning, Recall, Banco De Dados, Random Forest, Overfitting
+
+────────────────────────────────────────────────────────────
+  TCC-Gustavo.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : TCC-Gustavo.txt
+    titulo        : Orientador: Prof. Dr. Luiz Affonso H Guedes de Oliveira
+    autor         : Gustavo Jerônimo Moura de França
+    orientador    : Luiz Affonso
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 64758  |  Parágrafos: 36
+
+  Sentenças : 1459
+  Entidades : 635 brutas → 379 após filtro
+    AREA         ( 31): banco de dados, inteligência artificial, inteligência artificial, banco de dados, inteligência artificial
+    FERRAMENTA   (  3): LangChain, docker, streamlit
+    LOC          ( 65): Natal, UFRN, Natal, UFRN, UFRN
+    MISC         (238): Natal, JSON, MySQL, LangChain, SQL
+    ORG          ( 36): LLMs, Câmara, LLMs, Banco de Dados, Banco de Dados MySql
+    PER          (  6): GPT-4o Mini, GPT-4o Mini, RYDER N., RYDER N., P. P
+  Palavras-chave (7): Banco De Dados, Inteligencia Artificial, Pln, Processamento De Linguagem Natural, Langchain, Docker, Streamlit
+
+────────────────────────────────────────────────────────────
+  TCC_EFRAIN_oficial.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : TCC_EFRAIN_oficial.txt
+    titulo        : Coorientação: Dr. Ignacio Sánchez Gendriz.
+    autor         : Efrain Marcelo Pulgar Pantaleon
+    orientador    : Ignacio Sánchez Gendriz Universidade Federal
+    coorientador  : Ignacio Sánchez Gendriz Universidade Federal
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 59083  |  Parágrafos: 22
+
+  Sentenças : 1008
+  Entidades : 304 brutas → 195 após filtro
+    AREA         (  8): processamento de sinais, processamento de sinais, processamento de sinais, Processamento de Sinais, banco de dados
+    CONCEITO     ( 18): densidade, densidade, densidade, densidade, densidade
+    LOC          ( 48): UFRN, UFRN, UFRN, RN
+Janeiro, RN
+Janeiro
+    MISC         ( 78): Python, Python, Camarões, Python, Python
+    ORG          ( 36): Anexo, Software Raven, RMSE, ANEXO, SIQUEIRA
+    PER          (  7): Dr. Ignacio Sánchez Gendriz, Ignacio Sánchez, Ignacio Sánchez Gendriz, Ignacio Sánchez Gendriz, Dr. Ignacio Sanchez Gendriz
+  Palavras-chave (4): Densidade, Precisao, Processamento De Sinais, Banco De Dados
+
+────────────────────────────────────────────────────────────
+  TCC_Final_Gilvandro_Com_Ficha.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : TCC_Final_Gilvandro_Com_Ficha.txt
+    titulo        : O PLANEJAMENTO ESTRATÉGICO DE STARTUPS
+    autor         : Gilvandro César Santos de Medeiros
+    orientador    : Orivaldo Vieira Santana Júnior Medeiros
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : CENTRO DE TECNOLOGIA
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 37784  |  Parágrafos: 4
+
+  Sentenças : 270
+  Entidades : 237 brutas → 128 após filtro
+    AREA         (  2): Processamento de Linguagem Natural, processamento de linguagem natural
+    LOC          (  2): Copilot, Copilot
+    MISC         ( 63): Large Language Models, Gemini, ChatGPT, OpenAI, Small Language Models
+    ORG          ( 61): LLMs, Google, Microsoft, LLMs, SLMs
+  Palavras-chave (1): Processamento De Linguagem Natural
+
+────────────────────────────────────────────────────────────
+  TCC_Henrique_Hideaki_UFRN_Final.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : TCC_Henrique_Hideaki_UFRN_Final.txt
+    titulo        : Orientador: Prof. Dr. Eduardo de Lucena Falcão
+    autor         : Henrique Hideaki Koga
+    orientador    : Eduardo De Lucena Falcão
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Departamento de Computação e Automação
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 62871  |  Parágrafos: 21
+
+  Sentenças : 1229
+  Entidades : 473 brutas → 267 após filtro
+    CONCEITO     (  3): precisão, precisão, precisão
+    DEPT         (  3): DCA, DCA, DCA
+    FERRAMENTA   (  1): docker
+    LOC          (108): Natal, UFRN, Natal, UFRN, UFRN
+    MISC         (121): Natal, Software Bill of Materials, SLSA, integration, SLSA
+    ORG          ( 29): Organização, SBOMs, Organização, Log4j, CVE
+    PER          (  2): Henrique Hideaki, Henrique Hideaki
+  Palavras-chave (2): Precisao, Docker
+
+────────────────────────────────────────────────────────────
+  TCC_Vitor_Yeso___DCA_UFRN-8.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : TCC_Vitor_Yeso___DCA_UFRN-8.txt
+    titulo        : TCC_Vitor_Yeso___DCA_UFRN-8
+    autor         : Vítor Yeso Fidelis Freitas
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : CENTRO DE TECNOLOGIA
+
+  Chars: 13620  |  Parágrafos: 163
+
+  Sentenças : 911
+  Entidades : 258 brutas → 61 após filtro
+    HARDWARE     (  2): GPU, GPU
+    LOC          ( 11): Poda, Poda, BatchNorm2D, Conv2D, Conv2D
+    MISC         ( 31): ARNC, Introdu ̧c ̃ao
+1.1
+, Referencial Te, ARNC, Resultados
+    ORG          ( 16): Cap, Cap, Cap, Cap, NVIDIA
+    TEC          (  1): CNN
+  Palavras-chave (1): Cnn
+
+────────────────────────────────────────────────────────────
+  tcc_ficha.txt
+────────────────────────────────────────────────────────────
+
+  ── Metadados extraídos ──
+    arquivo       : tcc_ficha.txt
+    titulo        : Coorientação: Dr. Ramon Cristian Fernandes Araújo.
+    autor         : André Eduardo Meneses do Nascimento
+    orientador    : Tiago Tavares Leite Barros Co
+    universidade  : Universidade Federal do Rio Grande do Norte
+    sigla_univ    : UFRN
+    departamento  : Centro de Tecnologia, Engenharia de Computação, Natal,
+    curso         : Engenharia de Computação
+    ano           : 2025
+
+  Chars: 63601  |  Parágrafos: 31
+
+  Sentenças : 1723
+  Entidades : 323 brutas → 197 após filtro
+    AREA         (  6): deep learning, machine learning, deep learning, machine learning, deep learning
+    CONCEITO     (  2): batch normalization, batch normalization
+    LOC          ( 73): Rio Grande do Norte, 20th January, Rio Grande do Norte, UFRN, UFRN
+    MISC         ( 93): Natal, with the, U-Net, Source, Ronneberger et al
+    ORG          ( 13): CNNs, the U-Net architecture, Ronneberger, CNNs, CNNs
+    PER          (  2): Ramon Cristian Fernandes Araújo, Ramon Cristian Fernandes Araújo
+    TEC          (  8): U-Net, U-Net, U-Net, transfer learning, transfer learning
+  Palavras-chave (5): U-Net, Deep Learning, Transfer Learning, Machine Learning, Batch Normalization
+
+  Janelas: sentença=551 | parágrafo=179 | k500=864
+
+
+═════════════════════════════════════════════════════════════════
+  GRAFOS DE CO-OCORRÊNCIA NER
+═════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════
+  ESTRATÉGIA: SENTENCA
+═══════════════════════════════════════════════════════
+  Nós: 396  |  Arestas: 623
+  Densidade: 0.0080  ✓ ok
+  Componentes: 48  |  Maior: 276  |  Clustering: 0.0179
+  Diâmetro: 11
+
+  Top 10 por grau:
+    precisão                            [CONCEITO]  grau=0.1089  freq=60
+    python                              [MISC]  grau=0.0861  freq=36
+    blockchain                          [AREA]  grau=0.0658  freq=40
+    docker                              [MISC]  grau=0.0481  freq=12
+    fastapi                             [MISC]  grau=0.0481  freq=15
+    machine learning                    [AREA]  grau=0.0430  freq=16
+    recall                              [CONCEITO]  grau=0.0405  freq=30
+    streamlit                           [MISC]  grau=0.0405  freq=16
+    banco de dados                      [AREA]  grau=0.0405  freq=26
+    sql                                 [MISC]  grau=0.0380  freq=8
+
+  Top 10 por betweenness:
+    precisão                            [CONCEITO]  0.1662
+    python                              [MISC]  0.1319
+    sql                                 [MISC]  0.1241
+    docker                              [MISC]  0.0852
+    blockchain                          [AREA]  0.0746
+    machine learning                    [AREA]  0.0637
+    inteligência artificial             [AREA]  0.0577
+    streamlit                           [MISC]  0.0533
+    pln                                 [AREA]  0.0504
+    usb                                 [MISC]  0.0448
+
+  Top 10 arestas mais frequentes:
+    precisão                  ↔ recall                     peso=29
+    opencv                    ↔ opengl                     peso=24
+    blockchain                ↔ banco de dados             peso=10
+    gradient boosting         ↔ naive bayes                peso=9
+    acurácia                  ↔ precisão                   peso=7
+    python                    ↔ streamlit                  peso=7
+    acurácia                  ↔ recall                     peso=6
+    postgresql                ↔ banco de dados             peso=6
+    redes neurais             ↔ gradient boosting          peso=6
+    elasticsearch             ↔ kibana                     peso=6
+
+  Distribuição por label NER:
+    MISC         →  367 nós  (92.7%)
+    AREA         →    9 nós  (2.3%)
+    CONCEITO     →    6 nós  (1.5%)
+    TEC          →    6 nós  (1.5%)
+    FERRAMENTA   →    5 nós  (1.3%)
+    HARDWARE     →    1 nós  (0.3%)
+    INST         →    1 nós  (0.3%)
+    CURSO        →    1 nós  (0.3%)
+
+═══════════════════════════════════════════════════════
+  ESTRATÉGIA: PARAGRAFO
+═══════════════════════════════════════════════════════
+  Nós: 729  |  Arestas: 14994
+  Densidade: 0.0565  ✓ ok
+  Componentes: 3  |  Maior: 724  |  Clustering: 0.0802
+  Diâmetro: 5
+
+  Top 10 por grau:
+    precisão                            [CONCEITO]  grau=0.5742  freq=24
+    objetivos                           [MISC]  grau=0.4739  freq=13
+    python                              [MISC]  grau=0.3695  freq=31
+    machine learning                    [AREA]  grau=0.3173  freq=21
+    vericar                             [MISC]  grau=0.3091  freq=5
+    banco de dados                      [AREA]  grau=0.2940  freq=11
+    csv                                 [MISC]  grau=0.2926  freq=7
+    processamento de linguagem natural  [AREA]  grau=0.2857  freq=12
+    json                                [MISC]  grau=0.2582  freq=12
+    recall                              [CONCEITO]  grau=0.2418  freq=6
+
+  Top 10 por betweenness:
+    precisão                            [CONCEITO]  0.2328
+    objetivos                           [MISC]  0.1115
+    machine learning                    [AREA]  0.0815
+    python                              [MISC]  0.0743
+    csv                                 [MISC]  0.0522
+    none                                [MISC]  0.0521
+    natal                               [MISC]  0.0472
+    interface                           [MISC]  0.0331
+    json                                [MISC]  0.0295
+    banco de dados                      [AREA]  0.0273
+
+  Top 10 arestas mais frequentes:
+    elasticsearch             ↔ fastapi                    peso=13
+    processamento de linguagem natural ↔ pln                        peso=11
+    precisão                  ↔ machine learning           peso=11
+    machine learning          ↔ redes neurais              peso=11
+    python                    ↔ streamlit                  peso=11
+    python                    ↔ código                     peso=10
+    elasticsearch             ↔ kibana                     peso=10
+    fastapi                   ↔ kibana                     peso=10
+    machine learning          ↔ fastapi                    peso=9
+    python                    ↔ json                       peso=9
+
+  Distribuição por label NER:
+    MISC         →  696 nós  (95.5%)
+    TEC          →    9 nós  (1.2%)
+    AREA         →    7 nós  (1.0%)
+    CONCEITO     →    7 nós  (1.0%)
+    FERRAMENTA   →    4 nós  (0.5%)
+    HARDWARE     →    2 nós  (0.3%)
+    CURSO        →    2 nós  (0.3%)
+    INST         →    1 nós  (0.1%)
+    DEPT         →    1 nós  (0.1%)
+
+═══════════════════════════════════════════════════════
+  ESTRATÉGIA: K500CHARS
+═══════════════════════════════════════════════════════
+  Nós: 665  |  Arestas: 1797
+  Densidade: 0.0081  ✓ ok
+  Componentes: 28  |  Maior: 583  |  Clustering: 0.0232
+  Diâmetro: 13
+
+  Top 10 por grau:
+    precisão                            [CONCEITO]  grau=0.1235  freq=95
+    python                              [MISC]  grau=0.1054  freq=51
+    blockchain                          [AREA]  grau=0.0813  freq=72
+    machine learning                    [AREA]  grau=0.0783  freq=41
+    banco de dados                      [AREA]  grau=0.0602  freq=41
+    docker                              [MISC]  grau=0.0572  freq=29
+    código                              [MISC]  grau=0.0572  freq=23
+    objetivos                           [MISC]  grau=0.0482  freq=17
+    openai                              [MISC]  grau=0.0437  freq=23
+    csv                                 [MISC]  grau=0.0437  freq=13
+
+  Top 10 por betweenness:
+    precisão                            [CONCEITO]  0.1883
+    objetivos                           [MISC]  0.1698
+    python                              [MISC]  0.1515
+    machine learning                    [AREA]  0.1025
+    docker                              [MISC]  0.0705
+    blockchain                          [AREA]  0.0661
+    csv                                 [MISC]  0.0640
+    none                                [MISC]  0.0496
+    cpu                                 [HARDWARE]  0.0487
+    opencv                              [MISC]  0.0415
+
+  Top 10 arestas mais frequentes:
+    precisão                  ↔ recall                     peso=30
+    opencv                    ↔ opengl                     peso=27
+    blockchain                ↔ banco de dados             peso=17
+    acurácia                  ↔ precisão                   peso=12
+    acurácia                  ↔ recall                     peso=12
+    blockchain                ↔ iot                        peso=11
+    gradient boosting         ↔ naive bayes                peso=11
+    qtwidgets                 ↔ qtcore                     peso=10
+    blockchain                ↔ song                       peso=9
+    elasticapm                ↔ fastapi                    peso=9
+
+  Distribuição por label NER:
+    MISC         →  634 nós  (95.3%)
+    AREA         →    8 nós  (1.2%)
+    TEC          →    8 nós  (1.2%)
+    CONCEITO     →    6 nós  (0.9%)
+    FERRAMENTA   →    4 nós  (0.6%)
+    CURSO        →    2 nós  (0.3%)
+    DEPT         →    1 nós  (0.2%)
+    HARDWARE     →    1 nós  (0.2%)
+    INST         →    1 nós  (0.2%)
+
+══════════════════════════════════════════════════════════════════════
+  RESUMO COMPARATIVO
+  Estratégia         Nós  Arestas  Densidade  Clustering   Componentes
+  --------------------------------------------------------------------
+  sentenca           396      623     0.0080      0.0179            48  ←
+  paragrafo          729    14994     0.0565      0.0802             3  ←
+  k500chars          665     1797     0.0081      0.0232            28
+
+  Melhor equilíbrio: 'paragrafo'
+══════════════════════════════════════════════════════════════════════
+
+
+═════════════════════════════════════════════════════════════════
+  GRAFO RELACIONAL ACADÊMICO
+═════════════════════════════════════════════════════════════════
+
+  Grafo relacional: 122 nós, 260 arestas
+    AREA         → 45
+    TRABALHO     → 22
+    AUTOR        → 20
+    ORIENTADOR   → 18
+    FERRAMENTA   → 12
+    DEPT         → 4
+    UNIV         → 1
+
+════════════════════════════════════════════════════════════
+  ANÁLISE — GRAFO RELACIONAL ACADÊMICO
+════════════════════════════════════════════════════════════
+  Nós: 122  |  Arestas: 260
+
+  ── Áreas com mais projetos (top 10) ──
+    machine learning                 14  ██████████████
+    Precisao                         13  █████████████
+    processamento de linguagem natural   12  ████████████
+    Banco de dados                   10  ██████████
+    IA                                8  ████████
+    PLN                               8  ████████
+    automação                         8  ████████
+    redes neurais                     6  ██████
+    Acuracia                          4  ████
+    Recall                            4  ████
+
+  ── Professores mais envolvidos (top 10) ──
+  Professor                               Alunos  Trab.  Áreas
+  ------------------------------------------------------------
+  Ivanovitch Me                                3      3     12
+  Luiz Affonso                                 2      2      5
+  Jean Mario Moreira De Lima                   1      1      4
+  Luiz Affonso Henderson Guedes De             1      1      1
+  Andrés Ortiz Salazar Universidade Federal       0      1      0
+  Agostinho De Medeiros Brito Júnior           1      1      1
+  Andrés Ortiz Salazar                         1      1      1
+  Samuel Xavier De Souza Universidade          1      1      3
+  Ivanovitch Medeiros Dantas Da Silva          1      1      3
+  Andrés Ortiz Sa                              1      1      1
+
+  ── Ferramentas mais usadas (top 10) ──
+    Matplotlib                   3  ███
+    docker                       3  ███
+    langchain                    2  ██
+    Pandas                       2  ██
+    numpy                        2  ██
+    DVC                          1  █
+    Hugging Face                 1  █
+    OpenCV                       1  █
+    Elasticsearch                1  █
+    FastAPI                      1  █
+
+  ── Top 10 nós ponte (betweenness) ──
+    Precisao                               [AREA]  0.1984
+    machine learning                       [AREA]  0.1837
+    natural para classificação de notícias da UFRN [TRABALHO]  0.1554
+    Departamento de Computação e Automação [DEPT]  0.1375
+    Ivanovitch Me                          [ORIENTADOR]  0.1344
+    IA                                     [AREA]  0.1207
+    Textos Acadêmicos                      [TRABALHO]  0.1193
+    Orientador: Prof. Dr. Carlos Manuel Dias Viegas [TRABALHO]  0.1118
+    automação                              [AREA]  0.0994
+    Orientação: Dr. Andrés Ortiz Salazar.  [TRABALHO]  0.0849
+
+  ── Comunidades Louvain: 9 ──
+    Com.1: 28 nós | orientadores: Orivaldo Vieira Santana Júnior Medeiros, Luiz Affonso, Jean Mario Moreira De Lima
+    Com.2: 25 nós | orientadores: Andrés Ortiz Salazar Universidade Federal, Andrés Ortiz Salazar, Trabalho De Conclusão De Curso
+    Com.3: 17 nós | orientadores: Samuel Xavier De Souza Universidade, Marcelo Augusto Costa Fernandes Universidade, Luiz Affonso Guedes
+    Com.4: 16 nós | orientadores: Ivanovitch Me, Ignacio Sánchez Gendriz Universidade Federal
+    Com.5: 11 nós | orientadores: Carlos Manuel Dias Viegas
+
+
+  Gerando figuras...
+  ✓ Grafo salvo → ./figuras/grafo_sentenca.png
+  ✓ Distribuição de grau salva → ./figuras/dist_grau_sentenca.png
+  ✓ Grafo salvo → ./figuras/grafo_paragrafo.png
+  ✓ Distribuição de grau salva → ./figuras/dist_grau_paragrafo.png
+  ✓ Grafo salvo → ./figuras/grafo_k500chars.png
+  ✓ Distribuição de grau salva → ./figuras/dist_grau_k500chars.png
+  ✓ Comparação salva → ./figuras/comparacao_estrategias.png
+  ✓ Grafo relacional salvo → ./figuras/grafo_relacional.png
+
+  Gerando HTMLs...
+  ✓ Grafo interativo salvo → ./figuras/grafo_sentenca.html
+  ✓ Grafo interativo salvo → ./figuras/grafo_paragrafo.html
+  ✓ Grafo interativo salvo → ./figuras/grafo_k500chars.html
+  ✓ Grafo relacional interativo salvo → ./figuras/grafo_relacional.html
+
+  Nó mais central (sentenca): precisão
+  ✓ Ego-grafo interativo salvo → ./figuras/ego_precisão.html
+  ✓ Ego-grafo salvo → ./figuras/ego_precisão.png
+
+  Busca interativa NER (sair para encerrar)...
+
+  396 entidades. Digite 'sair' para encerrar.
+
+  Termo: 
+  ✓ Concluído. Arquivos em './figuras/'

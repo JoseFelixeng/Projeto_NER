@@ -177,3 +177,5 @@ if __name__ == "__main__":
     )
 
     print(f"\n  ✓ Concluído. Arquivos em '{PASTA_FIGURAS}/'")
+
+    

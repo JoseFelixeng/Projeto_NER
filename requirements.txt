@@ -5,6 +5,3 @@ spacy
 matplotlib
 plotly
 scipy
-# pip install dash networkx pandas plotly
-# python -m spacy download pt_core_news_sm => precisa instalar na mão.
-# python -m spacy download pt_core_news_lgsss

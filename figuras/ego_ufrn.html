@@ -88,7 +88,7 @@
                   
 
                   // parsing and collecting nodes and edges from the python
-                  nodes = new vis.DataSet([{"color": "#4FC3F7", "font": {"color": "#e0e0e0"}, "id": "rag", "label": "rag", "shape": "dot", "size": 12, "title": "rag\u003cbr\u003eGrau: 1"}, {"color": "#FF5252", "font": {"color": "#e0e0e0"}, "id": "ufrn", "label": "ufrn", "shape": "dot", "size": 25, "title": "ufrn\u003cbr\u003eGrau: 1"}]);
+                  nodes = new vis.DataSet([{"borderWidth": 2, "color": {"background": "transparent", "border": "#6A1B9A"}, "font": {"color": "#e0e0e0"}, "id": "rag", "image": "data:image/svg+xml,%0A%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2040%2040%22%3E%0A%20%20%3Ccircle%20cx=%2220%22%20cy=%2220%22%20r=%2219%22%20fill=%22%23EDE7F6%22%20stroke=%22%236A1B9A%22%20stroke-width=%221.5%22/%3E%0A%20%20%3Cpath%20d=%22M20%2010%20l2%203h3l-2.5%202.5%201%203L20%2017l-3.5%201.5%201-3L15%2013h3z%22%20fill=%22%236A1B9A%22/%3E%0A%20%20%3Ccircle%20cx=%2220%22%20cy=%2220%22%20r=%227%22%20fill=%22none%22%20stroke=%22%236A1B9A%22%20stroke-width=%222%22/%3E%0A%20%20%3Ccircle%20cx=%2220%22%20cy=%2220%22%20r=%223%22%20fill=%22%236A1B9A%22/%3E%0A%20%20%3Crect%20x=%2218%22%20y=%228%22%20width=%224%22%20height=%225%22%20rx=%221%22%20fill=%22%236A1B9A%22/%3E%0A%20%20%3Crect%20x=%2218%22%20y=%2227%22%20width=%224%22%20height=%225%22%20rx=%221%22%20fill=%22%236A1B9A%22/%3E%0A%20%20%3Crect%20x=%228%22%20y=%2218%22%20width=%225%22%20height=%224%22%20rx=%221%22%20fill=%22%236A1B9A%22/%3E%0A%20%20%3Crect%20x=%2227%22%20y=%2218%22%20width=%225%22%20height=%224%22%20rx=%221%22%20fill=%22%236A1B9A%22/%3E%0A%3C/svg%3E", "label": "rag", "shape": "circularImage", "size": 20, "title": "\u003cb\u003erag\u003c/b\u003e\u003cbr\u003eTipo: TEC\u003cbr\u003eFreq: 1\u003cbr\u003eGrau: 1"}, {"borderWidth": 3, "color": {"background": "transparent", "border": "#FF5252"}, "font": {"color": "#e0e0e0"}, "id": "ufrn", "image": "data:image/svg+xml,%0A%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2040%2040%22%3E%0A%20%20%3Ccircle%20cx=%2220%22%20cy=%2220%22%20r=%2219%22%20fill=%22%23E3F2FD%22%20stroke=%22%231565C0%22%20stroke-width=%221.5%22/%3E%0A%20%20%3Crect%20x=%229%22%20y=%2229%22%20width=%2222%22%20height=%223%22%20fill=%22%230D47A1%22%20rx=%221%22/%3E%0A%20%20%3Crect%20x=%227%22%20y=%2212%22%20width=%2226%22%20height=%223%22%20fill=%22%230D47A1%22%20rx=%221%22/%3E%0A%20%20%3Cpolygon%20points=%2220,6%208,12%2032,12%22%20fill=%22%231565C0%22/%3E%0A%20%20%3Crect%20x=%2211%22%20y=%2215%22%20width=%223%22%20height=%2214%22%20fill=%22%231565C0%22/%3E%0A%20%20%3Crect%20x=%2218%22%20y=%2215%22%20width=%223%22%20height=%2214%22%20fill=%22%231565C0%22/%3E%0A%20%20%3Crect%20x=%2226%22%20y=%2215%22%20width=%223%22%20height=%2214%22%20fill=%22%231565C0%22/%3E%0A%3C/svg%3E", "label": "ufrn", "shape": "circularImage", "size": 30, "title": "\u003cb\u003eufrn\u003c/b\u003e\u003cbr\u003eTipo: INST\u003cbr\u003eFreq: 1\u003cbr\u003eGrau: 1"}]);
                   edges = new vis.DataSet([{"from": "rag", "title": "peso=1", "to": "ufrn", "value": 1, "width": 1}]);
 
                   nodeColors = {};
@@ -123,5 +123,32 @@
               }
               drawGraph();
         </script>
-    </body>
+    
+<div id="ner-legend" style="
+  position:fixed; bottom:20px; left:20px; z-index:9999;
+  background:rgba(15,15,35,0.92); backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.12); border-radius:12px;
+  padding:14px 18px; font-family:'Segoe UI',sans-serif;
+  max-width:260px; box-shadow:0 4px 24px rgba(0,0,0,0.4);
+  color:#e0e0e0;">
+  <div style="font-size:11px;font-weight:600;letter-spacing:0.08em;
+              text-transform:uppercase;color:#888;margin-bottom:10px;">
+    Tipos de entidade
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:12px;">
+    <span>👤 PER / Pessoa</span>        <span>🎓 Orientador</span>
+    <span>✏️ Autor</span>               <span>🏛️ INST / Univ.</span>
+    <span>🏢 ORG</span>                 <span>🗂️ DEPT</span>
+    <span>📍 LOC</span>                 <span>⚙️ TEC</span>
+    <span>💡 AREA</span>                <span>🔧 FERRAMENTA</span>
+    <span>🖥️ HARDWARE</span>            <span>🕸️ CONCEITO</span>
+    <span>📄 TRABALHO</span>            <span>❓ MISC</span>
+  </div>
+  <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.1);
+              font-size:11px;color:#666;">
+    Tamanho ∝ frequência no corpus
+  </div>
+</div>
+
+</body>
 </html>

@@ -922,18 +922,23 @@ def preprocessar(caminho: str, diagnostico: bool = False) -> str:
 
 def processar_spacy(texto: str):
     nlp = _carregar_modelo()
+
     if len(texto) >= nlp.max_length:
         nlp.max_length = len(texto) + 10_000
+    
     doc = next(nlp.pipe([texto], batch_size=1))
     doc = aplicar_ner_manual(doc)
     doc.ents = filter_spans(doc.ents)  # garantir consistência
     doc = filtrar_por_frequencia(doc)
-    total       = len(doc.ents)
+    total = len(doc.ents)
     apos_filtro = [e for e in doc.ents if filtrar_entidade(e.text, e.label_)]
+    
     print(f"\n  Sentenças : {len(list(doc.sents))}")
     print(f"  Entidades : {total} brutas → {len(apos_filtro)} após filtro")
     por_label: dict = {}
+    
     for e in apos_filtro: por_label.setdefault(e.label_, []).append(e.text)
     for label, ents in sorted(por_label.items()):
         print(f"    {label:<12} ({len(ents):>3}): {', '.join(ents[:5])}")
+    
     return doc
