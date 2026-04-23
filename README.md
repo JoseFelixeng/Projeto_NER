@@ -160,7 +160,9 @@ Este grafo representa uma rede de co-ocorrência construída a partir dos textos
 
 ## 🎥 Vídeo
 
-Adicionar link da apresentação aqui.
+Devido a problemas técnicos não conseguimos anexar o vídeo a plataforma Loom.Por isso postamos o vídeo no YouTube.
+
+Link: https://youtu.be/u6Ta7qVVxqs
 
 ---
 
